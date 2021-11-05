@@ -2,6 +2,9 @@ name: GitHub Actions Demo
 on:
   push:
     branches: [main]
+
+  pull_request:
+    branches: [main]
 jobs:
   Gradebook-Front-Actions:
     runs-on: self-hosted
@@ -12,10 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: User Node.js ${{matrix.node-version}}
+      - name: Use Node.js ${{matrix.node-version}}
         uses: actions/setup-node@v1
         with:
           node-version: ${{matrix.node-version}}
       - run: npm ci
       - run: npm run build
-      - run: npm run test --if-present
+      - run: pm2 restart gradebook-front
