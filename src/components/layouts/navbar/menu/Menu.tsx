@@ -1,29 +1,11 @@
 import Item from "./item/Item";
 
-type item = {
-  content: string;
-  isActive: boolean;
-};
-
-let items: item[];
-
-items = [
-  {
-    content: "Home",
-    isActive: true,
-  },
-  {
-    content: "About us",
-    isActive: false,
-  },
-];
-
 const Menu = () => {
   return (
     <ul className="menu">
-      {items.map((item: item) => {
-        return <Item content={item.content} isActive={item.isActive} />;
-      })}
+      <Item content="Home" isActive={true} />
+      <Item content="Classroom" isActive={false} />
+      <Item content="About us" isActive={false} />
     </ul>
   );
 };

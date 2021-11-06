@@ -1,10 +1,11 @@
 .btn {
   font-size: 1.6rem;
-  cursor: pointer;
   padding: 1.5rem 3rem;
   border: none;
   border-radius: 0.5rem;
   text-transform: capitalize;
+  font-weight: 500;
+  cursor: pointer;
 
   &--primary {
     background-color: $color-primary;
