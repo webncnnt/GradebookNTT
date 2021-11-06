@@ -1,8 +1,10 @@
+import Button from "./components/layouts/button/Button";
 
 function App() {
   return (
     <div className="app">
-      this is app page
+      <Button content='Sign in' type='secondary'/>
+      <Button content='Sign up' type='primary'/>
     </div>
   );
 }
