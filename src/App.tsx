@@ -1,10 +1,9 @@
-import Button from "./components/layouts/button/Button";
+import Navbar from "./components/layouts/navbar/Navbar";
 
 function App() {
   return (
     <div className="app">
-      <Button content='Sign in' type='secondary'/>
-      <Button content='Sign up' type='primary'/>
+      <Navbar />
     </div>
   );
 }

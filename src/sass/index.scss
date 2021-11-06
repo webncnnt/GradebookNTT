@@ -1,12 +1,15 @@
-@import 'abstracts/variable';
-@import 'abstracts/mixin';
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
-@import 'base/base';
-@import 'base/typography';
-@import 'base/utilities';
+@import "abstracts/variable";
+@import "abstracts/mixin";
 
-@import '../components/layouts/button/Button';
+@import "base/base";
+@import "base/typography";
+@import "base/utilities";
 
-@import 'pages/App';
+@import "../components/layouts/button/Button";
+@import "../components/layouts/navbar/menu/menu";
+@import "../components/layouts/navbar/menu/item/Item";
+@import "../components/layouts/navbar/Navbar";
 
-
+@import "pages/App";
