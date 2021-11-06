@@ -1,0 +1,14 @@
+.homeLogged {
+  margin-top: 6rem;
+
+  &__title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+  }
+
+  &__classes {
+    display: flex;
+    justify-content: space-between;
+  }
+}

@@ -4,6 +4,7 @@
 @import "abstracts/mixin";
 
 @import "base/base";
+@import "base/animation";
 @import "base/typography";
 @import "base/utilities";
 
@@ -12,9 +13,10 @@
 @import "../components/layouts/navbar/menu/item/Item";
 @import "../components/layouts/navbar/Navbar";
 @import "../components/layouts/container/Container";
+@import "../components/layouts/card/Card";
+@import "../components/layouts/card/status/Status";
 
 @import "../components/pages/home/slide/Slide";
 
+@import "../components/pages/home-logged/HomeLogged";
 
-
-@import "pages/App";

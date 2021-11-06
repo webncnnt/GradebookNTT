@@ -1,18 +1,33 @@
 .slide {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6rem;
 
-    &__header{
-        font-size: 7rem;
-        font-weight: 900;
-        margin-bottom: 2rem;
-    }
+  &__content {
+    flex: 0 0 50%;
+  }
 
-    &__sub{
-        font-size: 2rem;
-        font-weight: 400;
-        margin-bottom: 4rem;
-    }
+  &__header {
+    font-size: 7rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    animation: moveInTop 1s ease-in-out 0s both;
+  }
+
+  &__sub {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 4rem;
+    animation: moveInLeft 1s ease-in-out 0.3s both;
+  }
+
+  &__image {
+    flex: 0 0 50%;
+    animation: zoomInOut 1s ease-in-out 0s both;
+  }
+}
+
+.image{
+    width: 100%;
 }

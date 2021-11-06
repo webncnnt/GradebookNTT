@@ -1,10 +1,11 @@
-import Home from "./components/pages/home/Home";
+import Layout from "./components/layouts/layout/Layout";
+import HomeLogged from "./components/pages/home-logged/HomeLogged";
 
 function App() {
   return (
-    <div className="app">
-      <Home />
-    </div>
+    <Layout>
+      <HomeLogged />
+    </Layout>
   );
 }
 

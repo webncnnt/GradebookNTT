@@ -1,0 +1,25 @@
+.status {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    display: inline;
+    font-weight: 600;
+
+    &:not(:last-child) {
+        margin-right: 1rem;
+    }
+
+    &--none {
+        background-color: $color-primary-light;
+        color: $color-primary-dark;
+    }
+
+    &--coming {
+        background-color: $color-yellow-light;
+        color: $color-yellow-dark;
+    }
+    &--outdate {
+        background-color: $color-red-light;
+        color: $color-red;
+    }
+}
