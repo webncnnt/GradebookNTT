@@ -1,5 +1,5 @@
-import Button from "../../../layouts/button/Button";
-import Container from "../../../layouts/container/Container";
+import Button from "../../../components/UI/button/Button";
+import Container from "../../../components/layouts/container/Container";
 import imgsrc from "../../../../assets/images/Saly-10.png";
 
 const Slide = () => {

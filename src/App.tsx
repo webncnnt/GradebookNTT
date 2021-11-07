@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 
 import Layout from "./components/layouts/layout/Layout";
-import HomeLogged from "./components/pages/home-logged/HomeLogged";
-import Home from "./components/pages/home/Home";
+import HomeLogged from "./pages/home-logged/HomeLogged";
+import Home from "./pages/home/Home";
 
 function App() {
   return (

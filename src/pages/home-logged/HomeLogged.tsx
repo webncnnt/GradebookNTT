@@ -1,7 +1,7 @@
 import React from "react";
-import Card from "../../layouts/card/Card";
-import Container from "../../layouts/container/Container";
-import CreateClassForm from "../../layouts/form/create-class/CreateClassForm";
+import Card from "../../components/UI/card/Card";
+import Container from "../../components/layouts/container/Container";
+import CreateClassForm from "../../components/UI/form/create-class/CreateClassForm";
 
 const HomeLogged = () => {
   return (
