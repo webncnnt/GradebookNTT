@@ -3,9 +3,9 @@ import Item from "./item/Item";
 const Menu = () => {
   return (
     <ul className="menu">
-      <Item content="Home" isActive={true} />
-      <Item content="Classroom" isActive={false} />
-      <Item content="About us" isActive={false} />
+      <Item content="Home" />
+      <Item content="Classroom" />
+      <Item content="About us" />
     </ul>
   );
 };

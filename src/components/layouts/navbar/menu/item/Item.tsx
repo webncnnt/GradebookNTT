@@ -1,10 +1,17 @@
+import { NavLink } from "react-router-dom";
+
 interface itemProps {
   content: string;
-  isActive: boolean;
 }
 
-const Item = ({ content, isActive }: itemProps) => {
-  return <li className={"item " + (isActive ? "active" : "")}>{content}</li>;
+const Item = ({ content }: itemProps) => {
+  return (
+    <li className="item">
+      <NavLink to={'/' + content} className={({ isActive }) => isActive ? "active" : ""}>
+        {content}
+      </NavLink>
+    </li>
+  );
 };
 
 export default Item;

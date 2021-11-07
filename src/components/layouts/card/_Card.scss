@@ -3,6 +3,7 @@
   flex: 1 1 33.333333%;
   height: 40rem;
   position: relative;
+  animation: zoomInOut 0.5s ease-in-out 0s both;
 
   &:not(:last-child) {
     margin-right: 10rem;
@@ -95,6 +96,4 @@
     font-weight: 100;
     margin-bottom: 2rem;
   }
-
-
 }
