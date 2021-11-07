@@ -3,7 +3,7 @@
   flex: 1 1 33.333333%;
   height: 40rem;
   position: relative;
-  animation: zoomInOut 0.5s ease-in-out 0s both;
+  animation: zoomIn 0.5s ease-in-out 0s both;
 
   &:not(:last-child) {
     margin-right: 10rem;
