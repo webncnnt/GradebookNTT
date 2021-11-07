@@ -1,10 +1,9 @@
-import Button from "../button/Button";
-import Icon from "../icon/Icon";
-import Menu from "./menu/Menu";
 import { Add, Brightness5 } from "@mui/icons-material";
-
-import Avatar from "./avatar/Avatar";
 import avtSrc from '../../../assets/images/avt.png';
+import Icon from "../icon/Icon";
+import Avatar from "./avatar/Avatar";
+import Menu from "./menu/Menu";
+
 
 const Navbar = () => {
   return (
