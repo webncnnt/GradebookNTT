@@ -1,4 +1,5 @@
-import { Add, Brightness5 } from "@mui/icons-material";
+import { Brightness5 } from "@mui/icons-material";
+
 import avtSrc from '../../../assets/images/avt.png';
 import Icon from '../../UI/icon/Icon';
 import Avatar from "./avatar/Avatar";
