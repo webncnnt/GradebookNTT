@@ -2,14 +2,50 @@ import { FileUpload } from "@mui/icons-material";
 
 import Popup from "../../popup/Popup";
 import Button from "../../button/Button";
+import { useState } from "react";
 
 interface popupProps {
   onClose: () => void;
 }
 
 const CreateClassForm = ({ onClose }: popupProps) => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [image, setImage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+  };
+
+  const uploadImageHandle = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    const data = new FormData();
+
+    if (files) {
+      data.append("file", files[0]);
+      data.append("upload_preset", "upload-img");
+
+      setLoading(true);
+
+      try {
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/dtitvei0p/image/upload",
+          {
+            method: "POST",
+            body: data,
+          }
+        );
+
+        if (!res.ok) return;
+
+        const file = await res.json();
+
+        setImage(file.secure_url);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,13 +101,19 @@ const CreateClassForm = ({ onClose }: popupProps) => {
               </label>
 
               <div className="form__avatar">
-                {/* <img src="#" alt="Class's avatar" /> */}
+                {loading ? (
+                  <div>loading...</div>
+                ) : (
+                  <img src={image} alt="Class's avatar" />
+                )}
               </div>
 
               <input
                 type="file"
+                name="file"
                 id="clsAvatar"
                 className="form__input form__input--file"
+                onChange={uploadImageHandle}
               />
             </div>
           </div>
