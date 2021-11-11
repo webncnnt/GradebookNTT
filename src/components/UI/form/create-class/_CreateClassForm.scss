@@ -11,25 +11,37 @@
     margin-bottom: 2rem;
   }
 
+  &__date-file {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+
   &__label {
-    display: block;
     font-size: 1.6rem;
-    transition: all 0.3s;
-    margin-left: 2rem;
     font-weight: 500;
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(-6.5rem);
+    &--text {
+      display: block;
+      transition: all 0.3s;
+      margin-left: 2rem;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(-6.5rem);
+    }
+    &--date {
+      margin-right: 2rem;
+    }
   }
 
   &__input {
+    padding: 1rem 2rem;
+    border: none;
+    box-shadow: 0 0.5rem 4rem rgba($color-black, 0.2);
     &--text {
       width: 100%;
       font-weight: 300;
       font-size: 1.6rem;
-      padding: 1rem 2rem;
-      border: none;
-      box-shadow: 0 0.5rem 4rem rgba($color-black, 0.2);
       border-bottom: 0.2rem solid transparent;
       &:focus {
         outline: none;
@@ -40,19 +52,51 @@
         color: $color-gray;
       }
     }
+
+    &--date {
+      color: #777;
+    }
+
+    &--file {
+      visibility: hidden;
+      opacity: 0;
+      display: none;
+    }
   }
 
-  &__input--text:placeholder-shown + &__label {
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.5);
+    transition: all 0.3s;
+    &:hover {
+      filter: invert(0);
+    }
+  }
+
+  &__input--text:placeholder-shown + &__label--text {
     opacity: 0;
     visibility: hidden;
     transform: translateY(0);
   }
 
-  //   &__input--date:focus + &__label {
-  //     opacity: 0;
-  //     visibility: hidden;
-  //     transform: translateY(0);
-  //   }
+  &__icon--upload {
+    font-size: 3rem !important;
+    cursor: pointer;
+    margin-right: 2rem;
+  }
+
+  &__file{
+    display: flex;
+    align-items: center;
+  }
+
+  &__avatar{
+    width: 15rem;
+    height: 10rem;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 0.5rem 4rem rgba($color-black, 0.2);
+  }
 
   &__group-btn {
     display: flex;

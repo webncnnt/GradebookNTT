@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 
 interface popupProps {
   children: JSX.Element;
@@ -6,10 +5,10 @@ interface popupProps {
 
 const Popup = ({ children }: popupProps) => {
   return (
-    <Fragment>
+    <div>
       <div className="backdrop" />
       <div className="popup">{children}</div>
-    </Fragment>
+    </div>
   );
 };
 

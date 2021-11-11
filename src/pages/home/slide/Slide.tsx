@@ -1,6 +1,6 @@
 import Button from "../../../components/UI/button/Button";
 import Container from "../../../components/layouts/container/Container";
-import imgsrc from "../../../../assets/images/Saly-10.png";
+import imgsrc from "../../../assets/images/Saly-10.png";
 
 const Slide = () => {
   return (
@@ -13,7 +13,7 @@ const Slide = () => {
         </div>
 
         <div className="slide__image">
-        <img src={imgsrc} alt="" className="image" />
+          <img src={imgsrc} alt="" className="image" />
         </div>
       </div>
     </Container>

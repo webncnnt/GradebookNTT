@@ -8,21 +8,21 @@
 @import "base/typography";
 @import "base/utilities";
 
-@import "../components/layouts/button/Button";
+@import "../components/UI/button/Button";
+@import "../components/UI/card/Card";
+@import "../components/UI/card/status/Status";
+@import "../components/UI/icon/Icon";
+@import "../components/UI/popup/Popup";
+@import "../components/UI/icon/frame/Frame";
+@import "../components/UI/form/create-class/CreateClassForm";
 @import "../components/layouts/navbar/menu/menu";
 @import "../components/layouts/navbar/menu/item/Item";
 @import "../components/layouts/navbar/Navbar";
 @import "../components/layouts/navbar/avatar/Avatar";
 @import "../components/layouts/container/Container";
-@import "../components/layouts/card/Card";
-@import "../components/layouts/card/status/Status";
-@import "../components/layouts/icon/Icon";
-@import "../components/layouts/icon/frame/Frame";
-@import "../components/layouts/popup/Popup";
-@import "../components/layouts/form/create-class/CreateClassForm";
 
 
-@import "../components/pages/home/slide/Slide";
+@import "../pages/home/slide/Slide";
 
-@import "../components/pages/home-logged/HomeLogged";
+@import "../pages/home-logged/HomeLogged";
 
