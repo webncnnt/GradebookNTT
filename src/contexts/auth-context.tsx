@@ -37,7 +37,7 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
     const checkToken = async () => {   
       try {
         const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/auth/profile",
+          "https://classroom.eastasia.cloudapp.azure.com/api/profile",
           {
             headers: {
               Authorization: accessTokenFormat,
