@@ -22,6 +22,15 @@ const Register = () => {
   let passAgainIsValid = false;
   let nameIsValid = false;
 
+  if (emailEntered.trim() !== "") emailIsValid = true;
+  if (passwordEntered.trim() !== "") passIsValid = true;
+  if (
+    passwordAgainEntered.trim() !== "" &&
+    passwordAgainEntered === passwordEntered
+  )
+    passAgainIsValid = true;
+  if (fullnameEntered.trim() !== "") nameIsValid = true;
+
   const registerSubmitHandle = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -65,6 +74,7 @@ const Register = () => {
                 }
               />
             </div>
+
             <div className="form__group">
               <InputText
                 placeholder="Mật khẩu"
@@ -77,12 +87,13 @@ const Register = () => {
                 }
               />
             </div>
+
             <div className="form__group">
               <InputText
                 placeholder="Nhập lại mật khẩu"
                 type="password"
                 id="password_register-again"
-                value={passwordEntered}
+                value={passwordAgainEntered}
                 onChange={(e) => setPasswordAgainEntered(e.target.value)}
                 validStatus={
                   isSubmited
@@ -92,12 +103,13 @@ const Register = () => {
                     : undefined
                 }
               />
+
             </div>
             <div className="form__group">
               <InputText
                 placeholder="Họ và tên"
                 id="fullname_register"
-                value={passwordEntered}
+                value={fullnameEntered}
                 onChange={(e) => setFullnameEntered(e.target.value)}
                 validStatus={
                   isSubmited ? (nameIsValid ? "valid" : "invalid") : undefined

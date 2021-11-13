@@ -42,7 +42,7 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
     const checkToken = async () => {
       try {
         const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/profile",
+          "http://localhost:4000/api/profile",
           {
             headers: {
               Authorization: accessTokenFormat,
@@ -80,7 +80,7 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
 
     try {
       const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/auth/register",
+        "http://localhost:4000/api/auth/register",
         {
           method: "POST",
           headers: {
@@ -91,22 +91,24 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
       );
       const result = await res.json();
 
-      if (res.status !== 200) {
+      if (res.status === 409) {
         throw new Error(result.message);
       } else {
         setMessage(result.message);
         setIsRegiterSuccess(true);
       }
+
     } catch (error) {
       console.log(error);
     }
   };
+
   const loginHandler = async (email: string, password: string) => {
     const data = { email: email, password: password };
 
-    try {
+    try {     
       const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/auth/login",
+        "http://localhost:4000/api/auth/login",
         {
           method: "POST",
           headers: {
