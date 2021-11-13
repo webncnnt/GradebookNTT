@@ -6,8 +6,10 @@ type authctxProps = {
 
 interface AuthThemeContext {
   isLoggedIn: boolean;
+  isRegisterSuccess: boolean;
   onLogout: () => void;
   onLogin: (email: string, password: string) => void;
+  onRegister: (email: string, password: string, fullname: string) => void;
   accessToken: string | null;
   message: string;
   user: string;
@@ -15,8 +17,10 @@ interface AuthThemeContext {
 
 export const AuthContext = React.createContext<AuthThemeContext>({
   isLoggedIn: false,
+  isRegisterSuccess: false,
   onLogout: () => {},
   onLogin: (email: string, password: string) => {},
+  onRegister: (email: string, password: string, fullname: string) => {},
   accessToken: null,
   message: "",
   user: "",
@@ -24,6 +28,7 @@ export const AuthContext = React.createContext<AuthThemeContext>({
 
 export const AuthContextProvider = ({ children }: authctxProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isRegisterSuccess, setIsRegiterSuccess] = useState<boolean>(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");
   const [user, setUser] = useState<string>("");
@@ -34,7 +39,7 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
     let accessTokenFormat = "";
     if (accessTokenStore) accessTokenFormat = accessTokenStore;
 
-    const checkToken = async () => {   
+    const checkToken = async () => {
       try {
         const res = await fetch(
           "https://classroom.eastasia.cloudapp.azure.com/api/profile",
@@ -66,6 +71,36 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
     setIsLoggedIn(false);
   };
 
+  const registerHandler = async (
+    email: string,
+    password: string,
+    fullname: string
+  ) => {
+    const data = { email: email, password: password, fullname: fullname };
+
+    try {
+      const res = await fetch(
+        "https://classroom.eastasia.cloudapp.azure.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const result = await res.json();
+
+      if (res.status !== 200) {
+        throw new Error(result.message);
+      } else {
+        setMessage(result.message);
+        setIsRegiterSuccess(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const loginHandler = async (email: string, password: string) => {
     const data = { email: email, password: password };
 
@@ -100,8 +135,10 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
     <AuthContext.Provider
       value={{
         isLoggedIn: isLoggedIn,
+        isRegisterSuccess: isRegisterSuccess,
         onLogin: loginHandler,
         onLogout: logoutHandler,
+        onRegister: registerHandler,
         accessToken: accessToken,
         message: message,
         user: user,
