@@ -1,3 +1,37 @@
 .icon {
-    font-size: 3rem !important;
+  font-size: 2.5rem !important;
+}
+
+.frame {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 100rem;
+  border: 1px solid $color-primary;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: $color-primary;
+    color: $color-white;
+
+    svg {
+        path {
+            fill: $color-white;
+        }
+    }
+  }
+
+  svg {
+      path {
+          fill: $color-primary-dark;
+      }
+  }
+}
+
+.mr4 {
+  margin-right: 4rem;
 }

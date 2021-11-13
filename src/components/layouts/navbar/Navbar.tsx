@@ -1,12 +1,17 @@
+import { useContext } from "react";
 import { Brightness5 } from "@mui/icons-material";
 
-import avtSrc from '../../../assets/images/avt.png';
-import Icon from '../../UI/icon/Icon';
-import Avatar from "./avatar/Avatar";
+import AuthContext from "../../../contexts/auth-context";
+import Button from "../../UI/button/Button";
 import Menu from "./menu/Menu";
-
+import Icon from "../../UI/icon/Icon";
+import Avatar from "../../UI/avatar/Avatar";
+import avtSrc from "../../../assets/images/avt.png";
 
 const Navbar = () => {
+  const authCtx = useContext(AuthContext);
+  
+
   return (
     <nav className="navbar">
       <div className="navbar__logo">Gradebook</div>
@@ -14,24 +19,29 @@ const Navbar = () => {
       <div className="navbar__menu">
         <Menu />
       </div>
-
-      {/* <div className="navbar__btn-group">
-      <div className="navbar__btn">
-        <Button content="Sign in" type="secondary" />
+      {authCtx.isLoggedIn ? (
+        <div className="navbar__btn-group">
+          <div className="navbar__btn">
+            <Icon>
+              <Brightness5 className="icon" />
+            </Icon>
+          </div>
+          <div className="navbar__btn">
+            <Icon>
+              <Avatar imageSrc={avtSrc} />
+            </Icon>
+          </div>
         </div>
-        <div className="navbar__btn">
-        <Button content="Sign up" type="primary" />
+      ) : (
+        <div className="navbar__btn-group">
+          <div className="navbar__btn">
+            <Button content="Đăng nhập" type="secondary" />
+          </div>
+          <div className="navbar__btn">
+            <Button content="Đăng ký" type="primary" />
+          </div>
         </div>
-      </div> */}
-
-      <div className="navbar__btn-group">
-        <div className="navbar__btn">
-          <Icon icon={<Brightness5 className="icon" />} />
-        </div>
-        <div className="navbar__btn">
-          <Icon icon={<Avatar imageSrc={avtSrc}/>} />
-        </div>
-      </div>
+      )}
     </nav>
   );
 };

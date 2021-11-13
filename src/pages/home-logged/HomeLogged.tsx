@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import { Add } from "@mui/icons-material";
 
-import Icon from '../../components/UI/icon/Icon';
+import Icon from "../../components/UI/icon/Icon";
 import Container from "../../components/layouts/container/Container";
 import Card from "../../components/UI/card/Card";
 import CreateClassForm from "../../components/UI/form/create-class/CreateClassForm";
@@ -25,7 +25,9 @@ const HomeLogged = () => {
         <div className="homeLogged__header">
           <h1 className="homeLogged__title">Danh sách lớp học</h1>
           <div className="navbar__btn">
-            <Icon icon={<Add className="icon" onClick={() => setShowPopup(true)}/>} />
+            <Icon>
+              <Add className="icon" onClick={() => setShowPopup(true)} />
+            </Icon>
           </div>
         </div>
         <div className="homeLogged__classes">

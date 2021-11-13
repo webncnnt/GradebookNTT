@@ -1,21 +1,13 @@
-import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
-
+import { useContext } from "react";
 import Layout from "./components/layouts/layout/Layout";
-const Home = lazy(() => import("./pages/home/Home"));
-const HomeLogged = lazy(() => import("./pages/home-logged/HomeLogged"));
+import AuthContext from "./contexts/auth-context";
+import AuthRoutes from "./routes/auth-routes";
+import UnauthRoutes from "./routes/unauth-routes";
 
 function App() {
+  const authCtx = useContext(AuthContext);
   return (
-    <Layout>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Home" element={<Home />} />
-          <Route path="/Classroom" element={<HomeLogged />} />
-        </Routes>
-      </Suspense>
-    </Layout>
+    <Layout>{authCtx.isLoggedIn ? <AuthRoutes /> : <UnauthRoutes />}</Layout>
   );
 }
 

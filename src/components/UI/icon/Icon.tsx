@@ -1,12 +1,10 @@
-import Frame from "./frame/Frame";
-
-
 interface iconProps {
-  icon: JSX.Element;
+  children: JSX.Element;
+  mr4?: boolean;
 }
 
-const Icon = ({ icon }: iconProps) => {
-  return <Frame>{icon}</Frame>;
+const Icon = ({ children, mr4 }: iconProps) => {
+  return <div className={"frame" + (mr4 ? ' mr4' : '')}>{children}</div>;
 };
 
 export default Icon;

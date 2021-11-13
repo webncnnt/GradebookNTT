@@ -7,9 +7,9 @@ const Slide = () => {
     <Container>
       <div className="slide">
         <div className="slide__content">
-          <h1 className="slide__header">Learning and teaching everywhere</h1>
-          <p className="slide__sub">Learn your way. Teach your way.</p>
-          <Button content="Get stated" type="primary" animate={true} />
+          <h1 className="slide__header">Dạy và học tập ở bất kì đâu, bất kì lúc nào</h1>
+          <p className="slide__sub">Dạy và học theo cách của bạn.</p>
+          <Button content="Tham gia ngay" type="primary" animate={true} />
         </div>
 
         <div className="slide__image">

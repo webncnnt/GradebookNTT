@@ -1,0 +1,27 @@
+.input {
+  padding: 1rem 2rem;
+  border: none;
+  box-shadow: 0 0.5rem 4rem rgba($color-black, 0.2);
+  &--text {
+    width: 100%;
+    font-weight: 300;
+    font-size: 1.6rem;
+    border-bottom: 0.2rem solid transparent;
+    &:focus {
+      outline: none;
+      box-shadow: 0 0.5rem 4rem rgba($color-black, 0.2);
+      border-bottom: 0.2rem solid $color-primary;
+    }
+    &::placeholder {
+      color: $color-gray;
+    }
+  }
+}
+
+.valid {
+  border-bottom: 0.2rem solid $color-green;
+}
+
+.invalid {
+  border-bottom: 0.2rem solid $color-red;
+}
