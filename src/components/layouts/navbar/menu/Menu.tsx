@@ -5,7 +5,7 @@ import Item from "./item/Item";
 const Menu = () => {
   const authCtx = useContext(AuthContext);
 
-  if (authCtx.isLoggedIn) {
+  if (!authCtx.isLoggedIn) {
     return (
       <ul className="menu">
         <Item content="Trang chủ" link="home" />

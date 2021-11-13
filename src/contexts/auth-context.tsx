@@ -31,10 +31,34 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
   useEffect(() => {
     const accessTokenStore = localStorage.getItem("isLoggedIn");
 
-    if (accessTokenStore !== null) {
-      setAccessToken(accessTokenStore);
-      setIsLoggedIn(true);
-    }
+    let accessTokenFormat = "";
+    if (accessTokenStore) accessTokenFormat = accessTokenStore;
+
+    const checkToken = async () => {   
+      try {
+        const res = await fetch(
+          "https://classroom.eastasia.cloudapp.azure.com/api/auth/profile",
+          {
+            headers: {
+              Authorization: accessTokenFormat,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const result = await res.json();
+
+        if (res.status !== 200) {
+          throw new Error(result.message);
+        } else {
+          setIsLoggedIn(true);
+          setUser(result.user);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    checkToken();
   }, []);
 
   const logoutHandler = () => {

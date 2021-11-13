@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { Brightness5 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 import AuthContext from "../../../contexts/auth-context";
 import Button from "../../UI/button/Button";
@@ -10,7 +11,7 @@ import avtSrc from "../../../assets/images/avt.png";
 
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
-  
+  const navigate = useNavigate();
 
   return (
     <nav className="navbar">
@@ -35,7 +36,13 @@ const Navbar = () => {
       ) : (
         <div className="navbar__btn-group">
           <div className="navbar__btn">
-            <Button content="Đăng nhập" type="secondary" />
+            <Button
+              content="Đăng nhập"
+              type="secondary"
+              onClick={() => {
+                navigate("/login");
+              }}
+            />
           </div>
           <div className="navbar__btn">
             <Button content="Đăng ký" type="primary" />
