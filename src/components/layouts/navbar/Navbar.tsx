@@ -45,7 +45,13 @@ const Navbar = () => {
             />
           </div>
           <div className="navbar__btn">
-            <Button content="Đăng ký" type="primary" />
+            <Button
+              content="Đăng ký"
+              type="primary"
+              onClick={() => {
+                navigate("/register");
+              }}
+            />
           </div>
         </div>
       )}

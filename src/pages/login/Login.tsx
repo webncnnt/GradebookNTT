@@ -32,7 +32,7 @@ const Login = () => {
 
     if (authCtx.isLoggedIn) {
       console.log(authCtx.message, authCtx.user);
-      navigate('/homeLogged');
+      navigate('/listClasses');
     }
   };
 
@@ -108,6 +108,7 @@ const Login = () => {
               <InputText
                 placeholder="Mật khẩu"
                 id="password"
+                type="password"
                 value={passwordEntered}
                 onChange={(e) => setPasswordEntered(e.target.value)}
                 validStatus={isSubmited ? (passIsValid ? 'valid' : 'invalid') : undefined }
