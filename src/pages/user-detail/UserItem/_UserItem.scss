@@ -1,0 +1,19 @@
+.user-item {
+  display: flex;
+  margin: 2rem 2rem;
+  align-items: center;
+
+  &__icon {
+      margin-right: 2rem;
+    svg {
+        width: 2rem;
+        height: 2rem;
+    }
+  }
+
+  &__content {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: $color-gray;
+  }
+}

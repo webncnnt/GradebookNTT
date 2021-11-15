@@ -1,7 +1,12 @@
 .avt {
-  width: 2.5rem;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 99rem;
+  border: 0.3rem solid $color-primary;
+  overflow: hidden;
 
   img {
     width: 100%;
+    object-fit: cover;
   }
 }

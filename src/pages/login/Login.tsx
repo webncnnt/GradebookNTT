@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../../contexts/auth-context";
 import Icon from "../../components/UI/icon/Icon";
 import Container from "../../components/layouts/container/Container";
-import InputText from "../../components/UI/input-text/InputText";
+import InputText from "../../components/UI/input/input-text/InputText";
 import LoginImage from "../../assets/images/Saly-16.png";
 import Button from "../../components/UI/button/Button";
 

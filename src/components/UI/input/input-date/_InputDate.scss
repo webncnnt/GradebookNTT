@@ -1,0 +1,27 @@
+.input--date {
+  color: #777;
+  font-size: 1.6rem;
+  width: 100%;
+}
+
+.label {
+  font-size: 1.6rem;
+  font-weight: 500;
+  &--date {
+    display: block;
+    transition: all 0.3s;
+    margin-left: 2rem;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-6.5rem);
+  }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.5);
+  transition: all 0.3s;
+  &:hover {
+    filter: invert(0);
+  }
+}

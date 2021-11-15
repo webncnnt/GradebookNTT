@@ -1,0 +1,64 @@
+.user-detail {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+
+    &__info {
+        flex: 0 0 40%;
+        background-color: $color-white;
+        border-radius: 1rem;
+        box-shadow: 0 0 1.5rem rgba($color-black, 0.3);
+        padding: 2rem;
+        margin-right: 2rem;
+    }
+
+    &__header {
+        display: flex;
+        margin-bottom: 4rem;
+    }
+
+    &__avatar{
+        margin-right: 2rem;
+    }
+
+    &__basic-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    &__name {
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+
+    &__faculty {
+        font-size: 1.2rem;
+        font-weight: 300;
+        color: $color-gray;
+    }
+
+    &__group {
+        margin-bottom: 4rem;
+    }
+
+    &__group-title {
+        color: $color-gray;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+    }
+
+
+
+
+
+
+    &__edit {
+        flex: 0 0 60%;
+        background-color: $color-white;
+        border-radius: 1rem;
+        box-shadow: 0 0 1.5rem rgba($color-black, 0.3);
+        padding: 2rem;
+    }
+}

@@ -11,7 +11,8 @@
 @import "../components/UI/button/Button";
 @import "../components/UI/card/Card";
 @import "../components/UI/card/status/Status";
-@import "../components/UI/input-text/InputText";
+@import "../components/UI/input/input-text/InputText";
+@import "../components/UI/input/input-date/InputDate";
 @import "../components/UI/icon/Icon";
 @import "../components/UI/popup/Popup";
 @import "../components/UI/avatar/Avatar";
@@ -24,3 +25,5 @@
 @import "../pages/home/slide/Slide";
 @import "../pages/home-logged/HomeLogged";
 @import "../pages/login/Login";
+@import "../pages/user-detail/UserItem/UserItem";
+@import "../pages/user-detail/UserDetail";
