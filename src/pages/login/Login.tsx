@@ -1,15 +1,14 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../contexts/auth-context";
-import Icon from "../../components/UI/icon/Icon";
-import Container from "../../components/layouts/container/Container";
-import InputText from "../../components/UI/input/input-text/InputText";
 import LoginImage from "../../assets/images/Saly-16.png";
-import Button from "../../components/UI/button/Button";
-import InputPassword from "../../components/UI/input/input-password/InputPassword";
-import GoogleIcon from "../../components/icons/Google";
 import FacebookIcon from "../../components/icons/Facebook";
 import GithubIcon from "../../components/icons/Github";
+import GoogleIcon from "../../components/icons/Google";
+import Container from "../../components/layouts/container/Container";
+import Button from "../../components/UI/button/Button";
+import InputPassword from "../../components/UI/input/input-password/InputPassword";
+import InputText from "../../components/UI/input/input-text/InputText";
+import AuthContext from "../../contexts/auth-context";
 
 const Login = () => {
   const [emailEntered, setEmailEntered] = useState<string>("");
