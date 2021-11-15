@@ -6,6 +6,7 @@ import Container from "../../components/layouts/container/Container";
 import InputText from "../../components/UI/input-text/InputText";
 import RegisterImage from "../../assets/images/Saly-22.png";
 import Button from "../../components/UI/button/Button";
+import InputPassword from "../../components/UI/input/input-password/InputPassword";
 
 const Register = () => {
   const [emailEntered, setEmailEntered] = useState<string>("");
@@ -76,9 +77,8 @@ const Register = () => {
             </div>
 
             <div className="form__group">
-              <InputText
+              <InputPassword
                 placeholder="Mật khẩu"
-                type="password"
                 id="password_register"
                 value={passwordEntered}
                 onChange={(e) => setPasswordEntered(e.target.value)}
@@ -89,9 +89,8 @@ const Register = () => {
             </div>
 
             <div className="form__group">
-              <InputText
+              <InputPassword
                 placeholder="Nhập lại mật khẩu"
-                type="password"
                 id="password_register-again"
                 value={passwordAgainEntered}
                 onChange={(e) => setPasswordAgainEntered(e.target.value)}

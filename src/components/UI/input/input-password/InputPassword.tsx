@@ -1,15 +1,22 @@
 type inputProps = {
-  label: string;
+  placeholder: string;
   id: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   validStatus?: string;
 };
 
-const InputPassword = ({label, id, onChange, value, validStatus }: inputProps) => {
+const InputPassword = ({
+  placeholder,
+  id,
+  onChange,
+  value,
+  validStatus,
+}: inputProps) => {
   return (
     <>
       <input
+        placeholder={placeholder}
         type="password"
         id={id}
         className={"input input--text " + (validStatus ? validStatus : "")}
@@ -17,7 +24,7 @@ const InputPassword = ({label, id, onChange, value, validStatus }: inputProps) =
         onChange={onChange}
       />
       <label htmlFor={id} className="label label--text">
-        {label}
+        {placeholder}
       </label>
     </>
   );

@@ -29,7 +29,7 @@ const ChangePassForm = ({ onClose }: popupProps) => {
           <form onSubmit={handleSubmit}>
             <div className="form__group">
               <InputPassword
-                label="Mật khẩu cũ"
+                placeholder="Mật khẩu cũ"
                 id="old-pass"
                 onChange={(e) => setOldPass(e.target.value)}
                 value={oldPass}
@@ -38,7 +38,7 @@ const ChangePassForm = ({ onClose }: popupProps) => {
 
             <div className="form__group">
               <InputPassword
-                label="Mật khẩu mới"
+                placeholder="Mật khẩu mới"
                 id="new-pass"
                 onChange={(e) => setNewPass(e.target.value)}
                 value={newPass}
@@ -47,7 +47,7 @@ const ChangePassForm = ({ onClose }: popupProps) => {
 
             <div className="form__group">
               <InputPassword
-                label="Nhập lại mật khẩu mới"
+                placeholder="Nhập lại mật khẩu mới"
                 id="new-pass-again"
                 onChange={(e) => setNewPassAgain(e.target.value)}
                 value={newPassAgain}
