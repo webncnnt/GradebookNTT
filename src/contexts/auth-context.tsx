@@ -42,7 +42,7 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
     const checkToken = async () => {
       try {
         const res = await fetch(
-          "http://localhost:4000/api/profile",
+          "https://classroom.eastasia.cloudapp.azure.com/api/profile",
           {
             headers: {
               Authorization: accessTokenFormat,
@@ -80,7 +80,7 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
 
     try {
       const res = await fetch(
-        "http://localhost:4000/api/auth/register",
+        "https://classroom.eastasia.cloudapp.azure.com/api/auth/register",
         {
           method: "POST",
           headers: {
@@ -108,7 +108,7 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
 
     try {     
       const res = await fetch(
-        "http://localhost:4000/api/auth/login",
+        "https://classroom.eastasia.cloudapp.azure.com/api/auth/login",
         {
           method: "POST",
           headers: {
