@@ -32,6 +32,19 @@
       transform: translateY(-2px);
     }
   }
+
+  &--fill-red {
+    background-color: $color-red;
+    color: $color-white;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+      background-color: $color-red-dark;
+      box-shadow: 0 0.3rem 1rem rgba($color-black, 0.5);
+      transform: translateY(-2px);
+    }
+  }
+
 }
 
 .animate {

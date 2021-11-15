@@ -1,0 +1,48 @@
+.input__file {
+  display: flex;
+  align-items: center;
+}
+
+.direction-column {
+  flex-direction: column;
+}
+
+.user-edit__title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 4rem;
+}
+
+.input__avatar {
+  border-radius: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 0.5rem 4rem rgba($color-black, 0.2);
+  overflow: hidden;
+  margin-bottom: 2rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.size-3x2 {
+  width: 15rem;
+  height: 10rem;
+}
+
+.size-4x5 {
+  width: 20rem;
+  height: 25rem;
+}
+
+.input--file {
+  visibility: hidden;
+  opacity: 0;
+  display: none;
+}
+
+.input__icon--upload {
+    cursor: pointer;
+}
