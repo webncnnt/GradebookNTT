@@ -6,12 +6,12 @@ import App from "./App";
 import { AuthContextProvider } from "./contexts/auth-context";
 
 ReactDOM.render(
-  <AuthContextProvider>
-    <BrowserRouter>
+  <BrowserRouter>
+    <AuthContextProvider>
       <React.StrictMode>
         <App />
       </React.StrictMode>
-    </BrowserRouter>
-  </AuthContextProvider>,
+    </AuthContextProvider>
+  </BrowserRouter>,
   document.getElementById("root")
 );

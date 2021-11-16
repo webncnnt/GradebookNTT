@@ -1,9 +1,12 @@
 .navbar {
+  height: 8rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 3rem;
   padding: 0 $gutter-vertical-small;
+  background-color: $color-white;
+  box-shadow: 0 0 1rem rgba($color-black, 0.2);
+  position: relative;
 
   &__logo {
     font-size: 3rem;
@@ -15,7 +18,7 @@
       transform: scale(1.2);
     }
   }
-  
+
   &__btn-group {
     display: flex;
   }
@@ -23,6 +26,41 @@
   &__btn {
     &:not(:last-child) {
       margin-right: 2rem;
+    }
+  }
+}
+
+.drop-down {
+  position: absolute;
+  top: 100%;
+  right: 8rem;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  color: $color-gray-dark;
+  font-weight: 600;
+  font-size: 1.8rem;
+  box-shadow: 0 0 1rem rgba($color-black, 0.2);
+  z-index: 1000;
+  &__items {
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+    height: 6rem;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba($color-gray, 0.3);
+    }
+
+    &:hover {
+      background-color: $color-primary;
+      color: $color-white;
     }
   }
 }

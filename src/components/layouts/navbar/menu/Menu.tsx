@@ -1,9 +1,8 @@
-import { useContext } from "react";
-import AuthContext from "../../../../contexts/auth-context";
+import { useAuth } from "../../../../contexts/auth-context";
 import Item from "./item/Item";
 
 const Menu = () => {
-  const authCtx = useContext(AuthContext);
+  const authCtx = useAuth();
 
   if (!authCtx.isLoggedIn) {
     return (

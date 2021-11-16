@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import LoginImage from "../../assets/images/Saly-16.png";
 import FacebookIcon from "../../components/icons/Facebook";
 import GithubIcon from "../../components/icons/Github";
@@ -8,13 +7,12 @@ import Container from "../../components/layouts/container/Container";
 import Button from "../../components/UI/button/Button";
 import InputPassword from "../../components/UI/input/input-password/InputPassword";
 import InputText from "../../components/UI/input/input-text/InputText";
-import AuthContext from "../../contexts/auth-context";
+import { useAuth } from "../../contexts/auth-context";
 
 const Login = () => {
   const [emailEntered, setEmailEntered] = useState<string>("");
   const [passwordEntered, setPasswordEntered] = useState<string>("");
-  const authCtx = useContext(AuthContext);
-  const navigate = useNavigate();
+  const authCtx = useAuth();
 
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
 
@@ -32,13 +30,7 @@ const Login = () => {
     if (emailIsValid && passIsValid) {
       authCtx.onLogin(emailEntered, passwordEntered);
     }
-
-    if (authCtx.isLoggedIn) {
-      console.log(authCtx.message, authCtx.user);
-      navigate("/listClasses");
-    }
   };
-
   return (
     <Container>
       <div className="login">

@@ -1,12 +1,11 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import AuthContext from "../../contexts/auth-context";
-import Container from "../../components/layouts/container/Container";
-import InputText from "../../components/UI/input-text/InputText";
+import { useState } from "react";
 import RegisterImage from "../../assets/images/Saly-22.png";
+import Container from "../../components/layouts/container/Container";
 import Button from "../../components/UI/button/Button";
+import InputText from "../../components/UI/input-text/InputText";
 import InputPassword from "../../components/UI/input/input-password/InputPassword";
+import { useAuth } from "../../contexts/auth-context";
+
 
 const Register = () => {
   const [emailEntered, setEmailEntered] = useState<string>("");
@@ -15,8 +14,7 @@ const Register = () => {
   const [fullnameEntered, setFullnameEntered] = useState<string>("");
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
 
-  const authCtx = useContext(AuthContext);
-  const navigate = useNavigate();
+  const authCtx = useAuth();
 
   let emailIsValid = false;
   let passIsValid = false;
@@ -48,9 +46,6 @@ const Register = () => {
 
     if (emailIsValid && passIsValid && passAgainIsValid && nameIsValid) {
       authCtx.onRegister(emailEntered, passwordEntered, fullnameEntered);
-    }
-    if (authCtx.isRegisterSuccess) {
-      navigate("/login");
     }
   };
 
@@ -102,7 +97,6 @@ const Register = () => {
                     : undefined
                 }
               />
-
             </div>
             <div className="form__group">
               <InputText

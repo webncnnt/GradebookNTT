@@ -13,17 +13,22 @@ const InputText = ({
   onChange,
   value,
   validStatus,
-  type
+  type,
 }: inputProps) => {
   return (
-    <input
-      placeholder={placeholder}
-      type={type ? type : "text"}
-      id={id}
-      className={"input input--text " + (validStatus ? validStatus : "")}
-      value={value}
-      onChange={onChange}
-    />
+    <>
+      <input
+        placeholder={placeholder}
+        type={type ? type : "text"}
+        id={id}
+        className={"input input--text " + (validStatus ? validStatus : "")}
+        value={value}
+        onChange={onChange}
+      />
+      <label htmlFor={id} className="label label--text">
+        {placeholder}
+      </label>
+    </>
   );
 };
 

@@ -1,8 +1,7 @@
-import { FileUpload } from "@mui/icons-material";
-
 import Popup from "../../popup/Popup";
 import Button from "../../button/Button";
 import { useState } from "react";
+import UploadIcon from "../../../icons/Upload";
 
 interface popupProps {
   onClose: () => void;
@@ -97,7 +96,7 @@ const CreateClassForm = ({ onClose }: popupProps) => {
               </label>
 
               <label htmlFor="clsAvatar">
-                <FileUpload className="form__icon--upload" />
+                <UploadIcon />
               </label>
 
               <div className="form__avatar">

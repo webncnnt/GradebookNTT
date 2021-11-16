@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Schedule } from "@mui/icons-material";
 import FacebookCircleIcon from "../../components/icons/FacebookCircle";
 import LocationIcon from "../../components/icons/Location";
 import MailIcon from "../../components/icons/Mail";
 import PhoneIcon from "../../components/icons/Phone";
+import ScheduleIcon from "../../components/icons/Schedule";
 import UserIcon from "../../components/icons/User";
 import UserStarIcon from "../../components/icons/UserStar";
 import Container from "../../components/layouts/container/Container";
@@ -52,7 +52,7 @@ const UserDetail = () => {
 
             <UserItem icon={<UserIcon />} content={fullname} />
             <UserItem icon={<UserStarIcon />} content={studentId} />
-            <UserItem icon={<Schedule />} content={formatDate(birthday)} />
+            <UserItem icon={<ScheduleIcon />} content={formatDate(birthday)} />
             <UserItem icon={<LocationIcon />} content={address} />
           </div>
 

@@ -1,10 +1,11 @@
 import Icon from "../UI/icon/Icon";
 type iconProps = {
   className?: string;
+  onClick?: () => void;
 };
-const ScheduleIcon = ({ className }: iconProps) => {
+const ScheduleIcon = ({ className, onClick }: iconProps) => {
   return (
-    <Icon className={className}>
+    <Icon className={className} onClick={onClick}>
       <svg
         width="16"
         height="16"

@@ -1,21 +1,30 @@
-import { useContext } from "react";
-import { Brightness5 } from "@mui/icons-material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import AuthContext from "../../../contexts/auth-context";
-import Button from "../../UI/button/Button";
-import Menu from "./menu/Menu";
-import Icon from "../../UI/icon/Icon";
-import Avatar from "../../UI/avatar/Avatar";
 import avtSrc from "../../../assets/images/avt.png";
+import { useAuth } from "../../../contexts/auth-context";
+import SunIcon from "../../icons/Sun";
+import Avatar from "../../UI/avatar/Avatar";
+import Button from "../../UI/button/Button";
+import Icon from "../../UI/icon/Icon";
+import UserDropDown from "./drop-down/UserDropDown";
+import Menu from "./menu/Menu";
+
 
 const Navbar = () => {
-  const authCtx = useContext(AuthContext);
+  const [isShowDropdown, setIsShowDropdown] = useState<boolean>(false);
+  const authCtx = useAuth();
   const navigate = useNavigate();
+
+  const GoToHome = () => {
+    if (authCtx.isLoggedIn) navigate("/listClasses");
+    else navigate("/home");
+  };
 
   return (
     <nav className="navbar">
-      <div className="navbar__logo">Gradebook</div>
+      <div className="navbar__logo" onClick={GoToHome}>
+        Gradebook
+      </div>
 
       <div className="navbar__menu">
         <Menu />
@@ -23,15 +32,17 @@ const Navbar = () => {
       {authCtx.isLoggedIn ? (
         <div className="navbar__btn-group">
           <div className="navbar__btn">
-            <Icon>
-              <Brightness5 className="icon" />
-            </Icon>
+            <SunIcon className="frame" />
           </div>
-          <div className="navbar__btn">
-            <Icon>
+          <div className="navbar__btn navbar__user">
+            <Icon
+              className="frame"
+              onClick={() => setIsShowDropdown((value) => !value)}
+            >
               <Avatar imageSrc={avtSrc} />
             </Icon>
           </div>
+          {isShowDropdown ? <UserDropDown /> : null}
         </div>
       ) : (
         <div className="navbar__btn-group">

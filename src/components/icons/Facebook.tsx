@@ -1,10 +1,11 @@
 import Icon from "../UI/icon/Icon";
 type iconProps = {
   className?: string;
+  onClick?: () => void;
 };
-const FacebookIcon = ({ className }: iconProps) => {
+const FacebookIcon = ({ className, onClick }: iconProps) => {
   return (
-    <Icon className={className}>
+    <Icon className={className} onClick={onClick}>
       <svg
         width="11"
         height="18"

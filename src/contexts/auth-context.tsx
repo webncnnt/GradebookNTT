@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 type authctxProps = {
   children: JSX.Element;
@@ -15,7 +16,7 @@ interface AuthThemeContext {
   user: string;
 }
 
-export const AuthContext = React.createContext<AuthThemeContext>({
+const AuthContext = React.createContext<AuthThemeContext>({
   isLoggedIn: false,
   isRegisterSuccess: false,
   onLogout: () => {},
@@ -26,35 +27,37 @@ export const AuthContext = React.createContext<AuthThemeContext>({
   user: "",
 });
 
-export const AuthContextProvider = ({ children }: authctxProps) => {
+const AuthContextProvider = ({ children }: authctxProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isRegisterSuccess, setIsRegiterSuccess] = useState<boolean>(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");
   const [user, setUser] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const accessTokenStore = localStorage.getItem("isLoggedIn");
+    const accessTokenStore = localStorage.getItem("accessToken");
 
     let accessTokenFormat = "";
     if (accessTokenStore) accessTokenFormat = accessTokenStore;
 
     const checkToken = async () => {
+      console.log(accessTokenFormat);
+      
       try {
-        const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/profile",
-          {
-            headers: {
-              Authorization: accessTokenFormat,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const res = await fetch("http://localhost:8000/api/profile", {
+          headers: {
+            authorization: accessTokenFormat,
+            "Content-Type": "application/json",
+          },
+        });
         const result = await res.json();
 
         if (res.status !== 200) {
           throw new Error(result.message);
         } else {
+          console.log(result.message);
+
           setIsLoggedIn(true);
           setUser(result.user);
         }
@@ -64,10 +67,10 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
     };
 
     checkToken();
-  }, []);
+  });
 
   const logoutHandler = () => {
-    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("accessToken");
     setIsLoggedIn(false);
   };
 
@@ -79,25 +82,22 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
     const data = { email: email, password: password, fullname: fullname };
 
     try {
-      const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch("http://localhost:8000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       const result = await res.json();
 
-      if (res.status === 409) {
+      if (res.status !== 200) {
         throw new Error(result.message);
       } else {
         setMessage(result.message);
         setIsRegiterSuccess(true);
+        navigate("/login");
       }
-
     } catch (error) {
       console.log(error);
     }
@@ -106,31 +106,30 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
   const loginHandler = async (email: string, password: string) => {
     const data = { email: email, password: password };
 
-    try {     
-      const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+    try {
+      const res = await fetch("http://localhost:8000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       const result = await res.json();
 
       if (res.status !== 200) {
         throw new Error(result.message);
       } else {
+        setIsLoggedIn(true);
         setAccessToken(result.accessToken);
         setMessage(result.message);
         setUser(result.user);
-        localStorage.setItem("isLoggedIn", result.accessToken);
-        setIsLoggedIn(true);
+        localStorage.setItem("accessToken", result.accessToken);
+        navigate("/listClasses");
       }
     } catch (error) {
       console.log(error);
     }
+    console.log(isLoggedIn);
   };
 
   return (
@@ -151,4 +150,6 @@ export const AuthContextProvider = ({ children }: authctxProps) => {
   );
 };
 
-export default AuthContext;
+const useAuth = () => useContext(AuthContext);
+
+export { AuthContextProvider, useAuth };

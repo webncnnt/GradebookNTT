@@ -4,7 +4,7 @@ interface avtProps {
 
 const Avatar = ({imageSrc}: avtProps) => {
     return (
-        <div className='avt'>
+        <div>
             <img src={imageSrc} alt="#" />
         </div>
     )

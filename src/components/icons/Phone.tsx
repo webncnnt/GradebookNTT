@@ -2,11 +2,12 @@ import Icon from "../UI/icon/Icon";
 
 type iconProps = {
   className?: string;
+  onClick?: () => void;
 };
 
-const PhoneIcon = ({ className }: iconProps) => {
+const PhoneIcon = ({ className, onClick }: iconProps) => {
   return (
-    <Icon className={className}>
+    <Icon className={className} onClick={onClick}>
       <svg
         width="13"
         height="13"
