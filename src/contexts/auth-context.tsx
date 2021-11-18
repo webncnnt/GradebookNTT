@@ -5,15 +5,31 @@ type authctxProps = {
   children: JSX.Element;
 };
 
+interface userType {
+  id: number;
+  fullname: string;
+  email: string;
+  password: string;
+  role: number;
+  studentId: number | null;
+  avatar: string | null;
+  dob: string | null;
+  address: string | null;
+  numberPhone: string | null;
+  facebook: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface AuthThemeContext {
   isLoggedIn: boolean;
   isRegisterSuccess: boolean;
   onLogout: () => void;
   onLogin: (email: string, password: string) => void;
   onRegister: (email: string, password: string, fullname: string) => void;
-  accessToken: string | null;
   message: string;
-  user: string;
+  user: userType;
+  setUser: (user: userType) => void;
 }
 
 const AuthContext = React.createContext<AuthThemeContext>({
@@ -22,30 +38,59 @@ const AuthContext = React.createContext<AuthThemeContext>({
   onLogout: () => {},
   onLogin: (email: string, password: string) => {},
   onRegister: (email: string, password: string, fullname: string) => {},
-  accessToken: null,
   message: "",
-  user: "",
+  user: {
+    id: 0,
+    fullname: "",
+    email: "",
+    password: "",
+    role: 0,
+    studentId: null,
+    avatar: null,
+    dob: null,
+    address: null,
+    numberPhone: null,
+    facebook: null,
+    createdAt: "",
+    updatedAt: "",
+  },
+  setUser: (user: userType) => {},
 });
 
 const AuthContextProvider = ({ children }: authctxProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isRegisterSuccess, setIsRegiterSuccess] = useState<boolean>(false);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");
-  const [user, setUser] = useState<string>("");
+  const [user, setUser] = useState<userType>({
+    id: 0,
+    fullname: "",
+    email: "",
+    password: "",
+    role: 0,
+    studentId: null,
+    avatar: null,
+    dob: null,
+    address: null,
+    numberPhone: null,
+    facebook: null,
+    createdAt: "",
+    updatedAt: "",
+  });
+
+  const pathname = window.location.pathname;
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const accessTokenStore = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
 
     let accessTokenFormat = "";
     if (accessTokenStore) accessTokenFormat = accessTokenStore;
 
     const checkToken = async () => {
-      console.log(accessTokenFormat);
-      
       try {
-        const res = await fetch("http://localhost:8000/api/profile", {
+        const res = await fetch("http://localhost:8000/api/profile/" + userId, {
           headers: {
             authorization: accessTokenFormat,
             "Content-Type": "application/json",
@@ -54,12 +99,12 @@ const AuthContextProvider = ({ children }: authctxProps) => {
         const result = await res.json();
 
         if (res.status !== 200) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("userId");
           throw new Error(result.message);
         } else {
-          console.log(result.message);
-
           setIsLoggedIn(true);
-          setUser(result.user);
+          setUser(result.profile);
         }
       } catch (error) {
         console.log(error);
@@ -67,10 +112,11 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     };
 
     checkToken();
-  });
+  }, [pathname]);
 
   const logoutHandler = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId");
     setIsLoggedIn(false);
   };
 
@@ -120,10 +166,10 @@ const AuthContextProvider = ({ children }: authctxProps) => {
         throw new Error(result.message);
       } else {
         setIsLoggedIn(true);
-        setAccessToken(result.accessToken);
         setMessage(result.message);
         setUser(result.user);
         localStorage.setItem("accessToken", result.accessToken);
+        localStorage.setItem("userId", result.user.id);
         navigate("/listClasses");
       }
     } catch (error) {
@@ -140,9 +186,9 @@ const AuthContextProvider = ({ children }: authctxProps) => {
         onLogin: loginHandler,
         onLogout: logoutHandler,
         onRegister: registerHandler,
-        accessToken: accessToken,
         message: message,
         user: user,
+        setUser: setUser,
       }}
     >
       {children}
@@ -153,3 +199,4 @@ const AuthContextProvider = ({ children }: authctxProps) => {
 const useAuth = () => useContext(AuthContext);
 
 export { AuthContextProvider, useAuth };
+

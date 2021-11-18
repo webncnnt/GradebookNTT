@@ -9,7 +9,6 @@ import Icon from "../../UI/icon/Icon";
 import UserDropDown from "./drop-down/UserDropDown";
 import Menu from "./menu/Menu";
 
-
 const Navbar = () => {
   const [isShowDropdown, setIsShowDropdown] = useState<boolean>(false);
   const authCtx = useAuth();
@@ -42,7 +41,6 @@ const Navbar = () => {
               <Avatar imageSrc={avtSrc} />
             </Icon>
           </div>
-          {isShowDropdown ? <UserDropDown /> : null}
         </div>
       ) : (
         <div className="navbar__btn-group">
@@ -66,6 +64,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      {isShowDropdown ? <UserDropDown /> : ""}
     </nav>
   );
 };

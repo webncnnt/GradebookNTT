@@ -7,10 +7,10 @@ type inputImageProps = {
   alt: string;
   src?: string;
   id: string;
+  changeSrc: (src: string) => void;
 };
 
-const InputImage = ({ size, direction, alt, src, id }: inputImageProps) => {
-  const [image, setImage] = useState<string>(() => (src ? src : ""));
+const InputImage = ({ size, direction, alt, src, id, changeSrc }: inputImageProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const uploadImageHandle = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +36,7 @@ const InputImage = ({ size, direction, alt, src, id }: inputImageProps) => {
 
         const file = await res.json();
 
-        setImage(file.secure_url);
+        changeSrc(file.secure_url);
       } catch (error: any) {
         console.log(error.message);
       }
@@ -49,7 +49,7 @@ const InputImage = ({ size, direction, alt, src, id }: inputImageProps) => {
       className={"input__file" + (direction ? " direction-" + direction : "")}
     >
       <div className={"input__avatar" + (size ? " size-" + size : "")}>
-        {loading ? <div>loading...</div> : <img src={image} alt={alt} />}
+        {loading ? <div>loading...</div> : <img src={src} alt={alt} />}
       </div>
 
       <input

@@ -32,6 +32,14 @@
   }
 }
 
+.avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 100rem;
+  border: 1px solid $color-primary;
+  overflow: hidden;
+}
+
 .mr4 {
   margin-right: 4rem;
 }
