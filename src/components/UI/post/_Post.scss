@@ -1,0 +1,49 @@
+.post {
+  padding: 2rem;
+  border-radius: 0.5rem;
+  background-color: $color-white;
+  box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
+  cursor: pointer;
+  margin-bottom: 2rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    &-avatar {
+      margin-right: 2rem;
+    }
+  }
+
+  &__owner {
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+  
+  &__time {
+    font-size: 1.2rem;
+    font-weight: 200;
+  }
+
+  &__menu {
+    margin-left: auto;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 999rem;
+    background-color: $color-white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+
+    &:hover {
+      box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
+    }
+  }
+
+  &__content {
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+}

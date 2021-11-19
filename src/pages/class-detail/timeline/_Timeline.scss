@@ -1,0 +1,14 @@
+.class-timeline {
+    margin-top: 2rem;
+    display: flex;
+    
+    &__notice {
+        flex: 0 0 25%;
+        margin-right: 2rem;
+    }
+
+    &__posts {
+        flex: 0 0 75%;
+    }
+
+}

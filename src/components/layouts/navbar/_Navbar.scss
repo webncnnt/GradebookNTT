@@ -6,7 +6,8 @@
   padding: 0 $gutter-vertical-small;
   background-color: $color-white;
   box-shadow: 0 0 1rem rgba($color-black, 0.2);
-  position: relative;
+  position: sticky;
+  top: 0;
 
   &__logo {
     font-size: 3rem;
@@ -41,6 +42,7 @@
   font-size: 1.8rem;
   box-shadow: 0 0 1rem rgba($color-black, 0.2);
   z-index: 1000;
+  
   &__items {
     list-style: none;
   }

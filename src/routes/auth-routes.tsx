@@ -11,6 +11,7 @@ const AuthRoutes = () => {
         <Route path="/" element={<HomeLogged />} />
         <Route path="/listClasses" element={<HomeLogged />} />
         <Route path="/user-detail" element={<UserDetail />} />
+     
       </Routes>
     </Suspense>
   );

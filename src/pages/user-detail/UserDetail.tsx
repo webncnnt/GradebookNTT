@@ -7,9 +7,9 @@ import ScheduleIcon from "../../components/icons/Schedule";
 import UserIcon from "../../components/icons/User";
 import UserStarIcon from "../../components/icons/UserStar";
 import Container from "../../components/layouts/container/Container";
+import Avatar from "../../components/UI/avatar/Avatar";
 import Button from "../../components/UI/button/Button";
 import ChangePassForm from "../../components/UI/form/change-password/ChangePassForm";
-import Icon from "../../components/UI/icon/Icon";
 import InputDate from "../../components/UI/input/input-date/InputDate";
 import InputImage from "../../components/UI/input/input-image/InputImage";
 import InputText from "../../components/UI/input/input-text/InputText";
@@ -19,7 +19,6 @@ import UserItem from "./UserItem/UserItem";
 const UserDetail = () => {
   const authCtx = useAuth();
   console.log(authCtx.user);
-  
 
   const [fullname, setFullname] = useState<string>(() => {
     return authCtx.user.fullname;
@@ -106,12 +105,13 @@ const UserDetail = () => {
         <div className="user-detail__info">
           <div className="user-detail__header">
             <div className="user-detail__avatar">
-              <Icon className="avatar">
-                <img
-                  src={authCtx.user.avatar ? authCtx.user.avatar : "https://res.cloudinary.com/dtitvei0p/image/upload/v1636946157/upload-img/cdfiqu8sw9gfaaslhs4q.jpg"}
-                  alt=""
-                />
-              </Icon>
+              <Avatar
+                imageSrc={
+                  authCtx.user.avatar
+                    ? authCtx.user.avatar
+                    : "https://res.cloudinary.com/dtitvei0p/image/upload/v1636946157/upload-img/cdfiqu8sw9gfaaslhs4q.jpg"
+                }
+              />
             </div>
             <div className="user-detail__basic-info">
               <div className="user-detail__name">{fullname}</div>
@@ -267,13 +267,13 @@ const formatDate = (date: string): string => {
 const formatIsoDateTime = (date: string): string => {
   const newDate = new Date(date);
 
-  let year:string | number = newDate.getFullYear();
-  let month:string | number = (newDate.getMonth() + 1);
-  let day:string | number = newDate.getDate();
+  let year: string | number = newDate.getFullYear();
+  let month: string | number = newDate.getMonth() + 1;
+  let day: string | number = newDate.getDate();
 
-  if (month < 10) month = '0' + month;
-  if (day < 10) day = '0' + day;
-  return year + '-' + month + '-' + day;
+  if (month < 10) month = "0" + month;
+  if (day < 10) day = "0" + day;
+  return year + "-" + month + "-" + day;
 };
 
 export default UserDetail;
