@@ -27,6 +27,7 @@ interface AuthThemeContext {
   onLogout: () => void;
   onLogin: (email: string, password: string) => void;
   onRegister: (email: string, password: string, fullname: string) => void;
+  onResetPass: (oldPass: string, newPass: string) => void;
   message: string;
   user: userType;
   setUser: (user: userType) => void;
@@ -38,6 +39,7 @@ const AuthContext = React.createContext<AuthThemeContext>({
   onLogout: () => {},
   onLogin: (email: string, password: string) => {},
   onRegister: (email: string, password: string, fullname: string) => {},
+  onResetPass: (oldPass: string, newPass: string) => {},
   message: "",
   user: {
     id: 0,
@@ -178,6 +180,42 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     console.log(isLoggedIn);
   };
 
+  const resetPassword = async (oldPass: string, newPass: string) => {
+    const data = { oldPass: oldPass, newPass: newPass };
+    const userId = user.id;
+
+    const accessTokenStore = localStorage.getItem("accessToken");
+
+    let accessTokenFormat = "";
+    if (accessTokenStore) accessTokenFormat = accessTokenStore;
+
+    try {
+      const res = await fetch(
+        "http://localhost:8000/api/profile/changePass" + userId,
+        {
+          method: "PUT",
+          headers: {
+            authorization: accessTokenFormat,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const result = await res.json();
+
+      if (res.status !== 200) {
+        throw new Error(result.message);
+      } else {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("userId");
+        setIsLoggedIn(false);
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -186,6 +224,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
         onLogin: loginHandler,
         onLogout: logoutHandler,
         onRegister: registerHandler,
+        onResetPass: resetPassword,
         message: message,
         user: user,
         setUser: setUser,
@@ -199,4 +238,3 @@ const AuthContextProvider = ({ children }: authctxProps) => {
 const useAuth = () => useContext(AuthContext);
 
 export { AuthContextProvider, useAuth };
-

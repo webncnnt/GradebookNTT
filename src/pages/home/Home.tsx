@@ -1,4 +1,6 @@
 import { Fragment } from "react";
+
+
 import Slide from "./slide/Slide";
 
 const Home = () => {

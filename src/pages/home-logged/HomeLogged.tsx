@@ -11,6 +11,7 @@ const HomeLogged = () => {
 
   return (
     <Container>
+      
       <CSSTransition
         in={showPopup}
         timeout={300}
@@ -24,7 +25,7 @@ const HomeLogged = () => {
         <div className="homeLogged__header">
           <h1 className="homeLogged__title">Danh sách lớp học</h1>
           <div className="navbar__btn">
-            <AddIcon className='frame'/>
+            <AddIcon className='frame' onClick={() => setShowPopup(true)}/>
           </div>
         </div>
         <div className="homeLogged__classes">

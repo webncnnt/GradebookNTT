@@ -3,6 +3,8 @@ import { useState } from "react";
 import Popup from "../../popup/Popup";
 import Button from "../../button/Button";
 import InputPassword from "../../input/input-password/InputPassword";
+import { useAuth } from "../../../../contexts/auth-context";
+import Loading from "../../../layouts/loading/Loading";
 
 interface popupProps {
   onClose: () => void;
@@ -14,15 +16,31 @@ const ChangePassForm = ({ onClose }: popupProps) => {
   const [newPassAgain, setNewPassAgain] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const authCtx = useAuth();
+
+  let oldPassIsValid = false;
+  let newPassIsValid = false;
+  let newPassAgainIsValid = false;
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+
+    if (oldPass.trim() !== "") oldPassIsValid = true;
+    if (newPass.trim() !== "") newPassIsValid = true;
+    if (newPassAgain.trim() !== "" && newPassAgain.trim() === newPass.trim())
+      newPassAgainIsValid = true;
+
     setLoading(true);
+    if (oldPassIsValid && newPassIsValid && newPassAgainIsValid) {
+      authCtx.onResetPass(oldPass, newPass);
+    }
+    setLoading(false);
   };
 
   return (
     <Popup onClose={onClose}>
       {loading ? (
-        <div>Loading...</div>
+        <Loading/>
       ) : (
         <div className="form">
           <h1 className="form__title">Thay đổi mật khẩu</h1>

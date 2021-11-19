@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import UploadIcon from "../../../icons/Upload";
+import Loading from "../../../layouts/loading/Loading";
 
 type inputImageProps = {
   size?: string; //3x2 or 4x5
@@ -49,7 +50,7 @@ const InputImage = ({ size, direction, alt, src, id, changeSrc }: inputImageProp
       className={"input__file" + (direction ? " direction-" + direction : "")}
     >
       <div className={"input__avatar" + (size ? " size-" + size : "")}>
-        {loading ? <div>loading...</div> : <img src={src} alt={alt} />}
+        {loading ? <Loading/> : <img src={src} alt={alt} />}
       </div>
 
       <input

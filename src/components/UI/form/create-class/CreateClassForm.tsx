@@ -2,6 +2,7 @@ import Popup from "../../popup/Popup";
 import Button from "../../button/Button";
 import { useState } from "react";
 import UploadIcon from "../../../icons/Upload";
+import Loading from "../../../layouts/loading/Loading";
 
 interface popupProps {
   onClose: () => void;
@@ -101,7 +102,7 @@ const CreateClassForm = ({ onClose }: popupProps) => {
 
               <div className="form__avatar">
                 {loading ? (
-                  <div>loading...</div>
+                  <Loading/>
                 ) : (
                   <img src={image} alt="Class's avatar" />
                 )}
