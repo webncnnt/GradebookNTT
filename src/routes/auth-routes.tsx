@@ -23,7 +23,7 @@ const AuthRoutes = () => {
         <Route path="/user-detail" element={<UserDetail />} />
         <Route path="/class-detail">
           <Route path=":id">
-            <Route path="" element={<Timeline />} />
+            <Route path="timeline" element={<Timeline />} />
             <Route path="classwork" element={<Classwork />} />
             <Route path="members" element={<Members />} />
             <Route path="info" element={<ClassInfo />} />

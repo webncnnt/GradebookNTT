@@ -23,7 +23,7 @@ const Menu = () => {
       </ul>
     ) : (
       <ul className="menu">
-        <Item content="Dòng thời gian" link={"class-detail/" + 1} />
+        <Item content="Dòng thời gian" link={"class-detail/" + 1 + "/timeline"} />
         <Item content="Hoạt động" link={"class-detail/" + 1 + "/classwork"} />
         <Item content="Thành viên" link={"class-detail/" + 1 + "/members"} />
         <Item content="Thông tin lớp" link={"class-detail/" + 1 + "/info"} />
