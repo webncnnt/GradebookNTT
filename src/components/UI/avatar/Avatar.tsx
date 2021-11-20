@@ -1,14 +1,16 @@
 import Icon from "../icon/Icon";
+import avt from "../../../assets/images/avatar.jpg";
 
-interface avtProps {
-  imageSrc: string;
+type avtProps = {
+  imageSrc?: string;
   alt?: string;
-}
+  onClick?: () => void;
+};
 
-const Avatar = ({ imageSrc, alt }: avtProps) => {
+const Avatar = ({ imageSrc, alt, onClick }: avtProps) => {
   return (
-    <Icon className="avatar">
-      <img src={imageSrc} alt={alt} />
+    <Icon className="avatar" onClick={onClick}>
+      <img src={imageSrc ? imageSrc : avt} alt={alt} />
     </Icon>
   );
 };

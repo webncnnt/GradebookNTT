@@ -1,0 +1,38 @@
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  &__row {
+    height: 6rem;
+    border-bottom: 1px solid rgba($color-gray-medium, 0.5);
+    padding: 0.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $color-primary-light;
+    }
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    height: 6rem;
+
+    span {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.row-active {
+  background-color: $color-primary-light;
+}

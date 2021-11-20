@@ -5,7 +5,6 @@ import { useAuth } from "../../../contexts/auth-context";
 import SunIcon from "../../icons/Sun";
 import Avatar from "../../UI/avatar/Avatar";
 import Button from "../../UI/button/Button";
-import Icon from "../../UI/icon/Icon";
 import UserDropDown from "./drop-down/UserDropDown";
 import Menu from "./menu/Menu";
 
@@ -34,12 +33,10 @@ const Navbar = () => {
             <SunIcon className="frame" />
           </div>
           <div className="navbar__btn navbar__user">
-            <Icon
-              className="frame"
+            <Avatar
+              imageSrc={avtSrc}
               onClick={() => setIsShowDropdown((value) => !value)}
-            >
-              <Avatar imageSrc={avtSrc} />
-            </Icon>
+            />
           </div>
         </div>
       ) : (

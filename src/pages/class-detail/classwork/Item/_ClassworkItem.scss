@@ -1,10 +1,12 @@
-.notice {
+.classwork-item {
   padding: 2rem;
   border-radius: 0.5rem;
   cursor: pointer;
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
 
-  &--comming {
+  &--coming {
     background-color: $color-red-light;
     color: $color-red-dark;
   }
@@ -13,11 +15,15 @@
     background-color: $color-primary-light;
     color: $color-primary-dark;
   }
+ 
+  &--passed {
+    background-color: $color-gray-medium;
+    color: $color-gray-dark;
+  }
 
   &__header {
     display: flex;
     align-items: center;
-    margin-bottom: 2rem;
   }
 
   &__icon {
@@ -31,19 +37,28 @@
     justify-content: center;
     align-items: center;
 
-
     &--far {
       border: 2px solid $color-primary-dark;
     }
 
-    &--comming {
+    &--coming {
       border: 2px solid $color-red-dark;
     }
+
+    &--passed {
+      border: 2px solid $color-gray-dark;
+    }
+  }
+
+  &__title-comment {
+    display: flex;
+    align-items: center;
   }
 
   &__title {
     font-size: 2rem;
     font-weight: 600;
+    margin-right: 2rem;
   }
 
   &__comment {
@@ -68,6 +83,7 @@
   &__time {
     display: flex;
     align-items: center;
+    margin-right: 4rem;
 
     &-icon {
       margin-right: 1rem;
@@ -80,17 +96,26 @@
   }
 }
 
-.comming {
+.coming {
   svg {
     path {
       fill: $color-red-dark;
     }
   }
 }
+
 .far {
   svg {
     path {
       fill: $color-primary-dark;
+    }
+  }
+}
+
+.passed {
+  svg {
+    path {
+      fill: $color-gray-dark;
     }
   }
 }

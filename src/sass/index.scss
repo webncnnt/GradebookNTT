@@ -20,10 +20,12 @@
 @import "../components/UI/notice/Notice";
 @import "../components/UI/form/create-class/CreateClassForm";
 @import "../components/UI/post/Post";
+@import "../components/UI/table/user-table/UserTable";
 @import "../components/layouts/navbar/menu/menu";
 @import "../components/layouts/navbar/menu/item/Item";
 @import "../components/layouts/navbar/Navbar";
 @import "../components/layouts/container/Container";
+@import "../components/user-info/UserInfo";
 
 @import "../pages/home/slide/Slide";
 @import "../pages/home-logged/HomeLogged";
@@ -32,6 +34,7 @@
 @import "../pages/user-detail/UserDetail";
 @import "../pages/register/Register";
 @import "../pages/class-detail/timeline/Timeline";
-@import "../pages/class-detail/member/Member";
+@import "../pages/class-detail/members/Members";
 @import "../pages/class-detail/information/ClassInfo";
 @import "../pages/class-detail/classwork/Classwork";
+@import "../pages/class-detail/classwork/Item/ClassworkItem";

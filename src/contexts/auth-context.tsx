@@ -199,4 +199,3 @@ const AuthContextProvider = ({ children }: authctxProps) => {
 const useAuth = () => useContext(AuthContext);
 
 export { AuthContextProvider, useAuth };
-

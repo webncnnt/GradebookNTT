@@ -1,9 +1,11 @@
 import Status from "./status/Status";
 
+import { useNavigate } from "react-router-dom";
 import imgClass from "../../../assets/images/imgClass.png";
 import Button from "../button/Button";
 
 const Card = () => {
+  const navigate = useNavigate();
   return (
     <div className="card">
       <div className="card__side card__side--front">
@@ -41,7 +43,7 @@ const Card = () => {
           <p className="card__time-value">89 ngày</p>
         </div>
 
-        <Button content="Vào học ngay" type="secondary" />
+        <Button content="Vào học ngay" type="secondary" onClick={() => navigate('/class-detail/1')}/>
       </div>
     </div>
   );
