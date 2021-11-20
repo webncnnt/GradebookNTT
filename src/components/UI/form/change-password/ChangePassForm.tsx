@@ -32,7 +32,7 @@ const ChangePassForm = ({ onClose }: popupProps) => {
 
     setLoading(true);
     if (oldPassIsValid && newPassIsValid && newPassAgainIsValid) {
-      authCtx.onResetPass(oldPass, newPass);
+      authCtx.onChangePass(oldPass, newPass);
     }
     setLoading(false);
   };
