@@ -43,7 +43,7 @@ const Card = () => {
           <p className="card__time-value">89 ngày</p>
         </div>
 
-        <Button content="Vào học ngay" type="secondary" onClick={() => navigate('/class-detail/1')}/>
+        <Button content="Vào học ngay" type="secondary" onClick={() => navigate('/class-detail/1/timeline')}/>
       </div>
     </div>
   );

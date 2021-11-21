@@ -1,7 +1,4 @@
 import { useState } from "react";
-import FacebookCircleIcon from "../../components/icons/FacebookCircle";
-import MailIcon from "../../components/icons/Mail";
-import PhoneIcon from "../../components/icons/Phone";
 import Container from "../../components/layouts/container/Container";
 import Avatar from "../../components/UI/avatar/Avatar";
 import Button from "../../components/UI/button/Button";
@@ -11,7 +8,6 @@ import InputImage from "../../components/UI/input/input-image/InputImage";
 import InputText from "../../components/UI/input/input-text/InputText";
 import UserInfo from "../../components/user-info/UserInfo";
 import { useAuth } from "../../contexts/auth-context";
-import UserItem from "./UserItem/UserItem";
 
 const UserDetail = () => {
   const authCtx = useAuth();
@@ -119,19 +115,6 @@ const UserDetail = () => {
           </div>
 
           <UserInfo fullname="Nguyễn Văn A" email="nguyenvana@gmail.com" />
-
-          <div className="user-detail__group">
-            <h3 className="user-detail__group-title">Thông tin liên lạc</h3>
-            <UserItem
-              icon={<PhoneIcon />}
-              content={authCtx.user.numberPhone ? authCtx.user.numberPhone : ""}
-            />
-            <UserItem icon={<MailIcon />} content={authCtx.user.email} />
-            <UserItem
-              icon={<FacebookCircleIcon />}
-              content={authCtx.user.facebook ? authCtx.user.facebook : ""}
-            />
-          </div>
 
           <Button
             content="Thay đổi mật khẩu"

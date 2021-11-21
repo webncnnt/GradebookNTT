@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import avtSrc from "../../../assets/images/avt.png";
 import { useAuth } from "../../../contexts/auth-context";
 import SunIcon from "../../icons/Sun";
 import Avatar from "../../UI/avatar/Avatar";
@@ -34,7 +33,7 @@ const Navbar = () => {
           </div>
           <div className="navbar__btn navbar__user">
             <Avatar
-              imageSrc={avtSrc}
+              imageSrc={authCtx.user.avatar ? authCtx.user.avatar : ""}
               onClick={() => setIsShowDropdown((value) => !value)}
             />
           </div>
