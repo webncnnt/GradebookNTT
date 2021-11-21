@@ -7,6 +7,7 @@ import Card from "../../components/UI/card/Card";
 import CreateClassForm from "../../components/UI/form/create-class/CreateClassForm";
 
 interface ClassType {
+  id: number;
   clsName: string;
   classImage?: string;
   teachers?: [{ id: number; fullName: string }];
@@ -76,6 +77,8 @@ const HomeLogged = () => {
           {listClasses.map((cls) => {
             return (
               <Card
+                key={cls.id}
+                id={cls.id}
                 clsName={cls.clsName}
                 classImage={cls.classImage}
                 teachers={cls.teachers}

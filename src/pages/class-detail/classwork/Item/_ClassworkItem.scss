@@ -1,0 +1,121 @@
+.classwork-item {
+  padding: 2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+
+  &--coming {
+    background-color: $color-red-light;
+    color: $color-red-dark;
+  }
+
+  &--far {
+    background-color: $color-primary-light;
+    color: $color-primary-dark;
+  }
+ 
+  &--passed {
+    background-color: $color-gray-medium;
+    color: $color-gray-dark;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 999rem;
+    background-color: $color-white;
+    padding: 1rem;
+    margin-right: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &--far {
+      border: 2px solid $color-primary-dark;
+    }
+
+    &--coming {
+      border: 2px solid $color-red-dark;
+    }
+
+    &--passed {
+      border: 2px solid $color-gray-dark;
+    }
+  }
+
+  &__title-comment {
+    display: flex;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-right: 2rem;
+  }
+
+  &__comment {
+    display: flex;
+
+    &-icon {
+      margin-right: 1rem;
+    }
+
+    &-count {
+      font-size: 1.6rem;
+      font-weight: 300;
+    }
+  }
+
+  &__deadline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__time {
+    display: flex;
+    align-items: center;
+    margin-right: 4rem;
+
+    &-icon {
+      margin-right: 1rem;
+    }
+
+    &-content {
+      font-size: 1.6rem;
+      font-weight: 500;
+    }
+  }
+}
+
+.coming {
+  svg {
+    path {
+      fill: $color-red-dark;
+    }
+  }
+}
+
+.far {
+  svg {
+    path {
+      fill: $color-primary-dark;
+    }
+  }
+}
+
+.passed {
+  svg {
+    path {
+      fill: $color-gray-dark;
+    }
+  }
+}

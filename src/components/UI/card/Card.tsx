@@ -1,14 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import Status from "./status/Status";
 
 type cardProps = {
+  id: number;
   clsName: string;
   classImage?: string;
-  teachers?: [{ id: number, fullName: string }];
+  teachers?: [{ id: number; fullName: string }];
   experidDate?: string;
 };
 
 const Card = ({ clsName, classImage, teachers, experidDate }: cardProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="card">
       <div className="card__side card__side--front">
@@ -45,7 +49,11 @@ const Card = ({ clsName, classImage, teachers, experidDate }: cardProps) => {
           <p className="card__time-value">89 ngày</p>
         </div>
 
-        <Button content="Vào học ngay" type="secondary" />
+        <Button
+          content="Vào học ngay"
+          type="secondary"
+          onClick={() => navigate("/class-detail/1/timeline")}
+        />
       </div>
     </div>
   );
