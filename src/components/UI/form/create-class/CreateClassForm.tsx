@@ -1,51 +1,61 @@
-import Popup from "../../popup/Popup";
-import Button from "../../button/Button";
 import { useState } from "react";
-import UploadIcon from "../../../icons/Upload";
-import Loading from "../../../layouts/loading/Loading";
+import Button from "../../button/Button";
+import InputText from "../../input-text/InputText";
+import InputDate from "../../input/input-date/InputDate";
+import InputImage from "../../input/input-image/InputImage";
+import Popup from "../../popup/Popup";
 
-interface popupProps {
+type popupProps = {
   onClose: () => void;
-}
+  setSubmited: () => void;
+};
 
-const CreateClassForm = ({ onClose }: popupProps) => {
-  const [image, setImage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+const CreateClassForm = ({ onClose, setSubmited }: popupProps) => {
+  const [clsName, setClsName] = useState<string>("");
+  const [coverImage, setCoverImage] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [expiredTime, setExpiredTime] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+
+    const data = {
+      className: clsName,
+      coverImage: coverImage,
+      description: description,
+      expiredTime: expiredTime,
+    };
+
+    const fetchApi = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/classes", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        const result = await res.json();
+
+        if (res.status !== 201) {
+          throw new Error(result.message);
+        } else {
+          console.log(result.message);
+        }
+        setSubmited();
+        onClose();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (clsName.trim() !== "") {
+      fetchApi();
+    }
   };
 
-  const uploadImageHandle = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    const data = new FormData();
-
-    if (files) {
-      data.append("file", files[0]);
-      data.append("upload_preset", "upload-img");
-
-      setLoading(true);
-
-      try {
-        const res = await fetch(
-          "https://api.cloudinary.com/v1_1/dtitvei0p/image/upload",
-          {
-            method: "POST",
-            body: data,
-          }
-        );
-
-        if (!res.ok) return;
-
-        const file = await res.json();
-
-        setImage(file.secure_url);
-      } catch (error: any) {
-        console.log(error.message);
-      }
-
-      setLoading(false);
-    }
+  const changeImage = (src: string) => {
+    setCoverImage(src);
   };
 
   return (
@@ -54,66 +64,42 @@ const CreateClassForm = ({ onClose }: popupProps) => {
         <h1 className="form__title">Tạo lớp học</h1>
         <form onSubmit={handleSubmit}>
           <div className="form__group">
-            <input
+            <InputText
               placeholder="Tên lớp"
-              type="text"
-              id="clsName"
-              className="form__input form__input--text"
+              id="class-name"
+              onChange={(e) => setClsName(e.target.value)}
+              value={clsName}
             />
-            <label htmlFor="clsName" className="form__label form__label--text">
-              Tên lớp
-            </label>
           </div>
 
           <div className="form__group">
-            <input
+            <InputText
               placeholder="Mô tả"
-              type="text"
               id="clsDesc"
-              className="form__input form__input--text"
+              onChange={(e) => setDescription(e.target.value)}
+              value={description}
             />
-            <label htmlFor="clsDesc" className="form__label form__label--text">
-              Mô tả
-            </label>
           </div>
 
           <div className="form__date-file">
             <div className="form__date">
-              <label
-                htmlFor="clsExpired"
-                className="form__label form__label--date"
-              >
-                Ngày kết thúc
-              </label>
-              <input
-                type="date"
+              <InputDate
+                name="Ngày kết thúc"
                 id="clsExpired"
-                className="form__input form__input--date"
+                onChange={(e) => setExpiredTime(e.target.value)}
+                value={expiredTime}
               />
             </div>
             <div className="form__file">
               <label className="form__label form__label--date">
                 Ảnh đại diện
               </label>
-
-              <label htmlFor="clsAvatar">
-                <UploadIcon />
-              </label>
-
-              <div className="form__avatar">
-                {loading ? (
-                  <Loading/>
-                ) : (
-                  <img src={image} alt="Class's avatar" />
-                )}
-              </div>
-
-              <input
-                type="file"
-                name="file"
-                id="clsAvatar"
-                className="form__input form__input--file"
-                onChange={uploadImageHandle}
+              <InputImage
+                size="3x2"
+                direction="row"
+                src={coverImage}
+                id="class-image"
+                changeSrc={changeImage}
               />
             </div>
           </div>

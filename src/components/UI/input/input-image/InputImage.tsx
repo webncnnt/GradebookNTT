@@ -5,7 +5,7 @@ import Loading from "../../../layouts/loading/Loading";
 type inputImageProps = {
   size?: string; //3x2 or 4x5
   direction?: string; // row or column
-  alt: string;
+  alt?: string;
   src?: string;
   id: string;
   changeSrc: (src: string) => void;

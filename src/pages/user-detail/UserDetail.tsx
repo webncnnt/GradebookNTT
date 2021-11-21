@@ -61,12 +61,13 @@ const UserDetail = () => {
     const data = {
       fullname: fullname,
       studentId: studentId,
-      dob: formatDate(birthday),
+      dob: birthday.trim() !== "" ? formatDate(birthday) : "01/01/2000",
       address: address,
       numberPhone: phone,
       avatar: avatar,
       facebook: facebook,
     };
+    
     const accessTokenStore = localStorage.getItem("accessToken");
 
     let accessTokenFormat = "";

@@ -1,13 +1,10 @@
 .card {
   perspective: 150rem;
-  flex: 1 1 33.333333%;
+  flex: 0 0 31%;
   height: 40rem;
   position: relative;
   animation: zoomIn 0.5s ease-in-out 0s both;
 
-  &:not(:last-child) {
-    margin-right: 5rem;
-  }
 
   &__side {
     width: 100%;
