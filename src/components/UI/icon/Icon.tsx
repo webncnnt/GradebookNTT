@@ -1,5 +1,5 @@
 type iconProps = {
-  children: JSX.Element;
+  children: JSX.Element | String | Number;
   className?: string;
   onClick?: () => void;
 };

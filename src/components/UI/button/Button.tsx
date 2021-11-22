@@ -1,15 +1,30 @@
 interface btnProps {
   content: string;
-  type: string;
+  type?: string;
   animate?: boolean;
   fullsize?: boolean;
   onClick?: () => void;
+  btnType?: string; //submit | reset | button
 }
 
-const Button = ({ content, type, animate, onClick, fullsize }: btnProps) => {
+const Button = ({
+  content,
+  type,
+  animate,
+  onClick,
+  fullsize,
+  btnType,
+}: btnProps) => {
   return (
     <button
-      className={"btn btn--" + type + (animate ? " animate" : "") + ' ' + (fullsize ? 'full': '')}
+      type={btnType ? (btnType === "submit" ? "submit" : "reset") : "button"}
+      className={
+        "btn btn--" +
+        type +
+        (animate ? " animate" : "") +
+        " " +
+        (fullsize ? "full" : "")
+      }
       onClick={onClick}
     >
       {content}

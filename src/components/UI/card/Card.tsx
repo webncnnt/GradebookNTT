@@ -10,7 +10,7 @@ type cardProps = {
   experidDate?: string;
 };
 
-const Card = ({ clsName, classImage, teachers, experidDate }: cardProps) => {
+const Card = ({id, clsName, classImage, teachers, experidDate }: cardProps) => {
   const navigate = useNavigate();
 
   return (
@@ -37,7 +37,10 @@ const Card = ({ clsName, classImage, teachers, experidDate }: cardProps) => {
 
           <div className="card__status">
             {experidDate ? (
-              <Status content={experidDate} status="none" />
+              <Status
+                content={formatDate(formatIsoDateTime(experidDate))}
+                status="none"
+              />
             ) : null}
           </div>
         </div>
@@ -52,11 +55,34 @@ const Card = ({ clsName, classImage, teachers, experidDate }: cardProps) => {
         <Button
           content="Vào học ngay"
           type="secondary"
-          onClick={() => navigate("/class-detail/1/timeline")}
+          onClick={() => navigate("/class-detail/" + id +"/timeline")}
         />
       </div>
     </div>
   );
+};
+
+/*
+format date: yyyy-mm-dd -> dd/mm/yyyy
+input: date: string:  yyyy-mm-dd
+output: date: string:  dd/mm/yyyy
+*/
+const formatDate = (date: string): string => {
+  const dateArray = date.split("-");
+  dateArray.reverse();
+  return dateArray.join("/");
+};
+
+const formatIsoDateTime = (date: string): string => {
+  const newDate = new Date(date);
+
+  let year: string | number = newDate.getFullYear();
+  let month: string | number = newDate.getMonth() + 1;
+  let day: string | number = newDate.getDate();
+
+  if (month < 10) month = "0" + month;
+  if (day < 10) day = "0" + day;
+  return year + "-" + month + "-" + day;
 };
 
 export default Card;

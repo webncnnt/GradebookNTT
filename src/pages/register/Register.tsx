@@ -118,7 +118,7 @@ const Register = () => {
             </div>
 
             <div className="form__group">
-              <Button content="Đăng ký" type="primary" fullsize={true} />
+              <Button btnType="submit" content="Đăng ký" type="primary" fullsize={true} />
             </div>
             <div className="register__redirect">
               Bạn đã có tài khoản? <span>Đăng nhập</span>

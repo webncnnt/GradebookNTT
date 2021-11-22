@@ -1,3 +1,10 @@
+.table {
+  height: 50rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .user-table {
   width: 100%;
   border-collapse: collapse;

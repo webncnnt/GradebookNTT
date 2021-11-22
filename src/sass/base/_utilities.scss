@@ -1,7 +1,35 @@
 .w100 {
-    width: 100%;
+  width: 100%;
 }
 
 .mb2 {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
+}
+
+.mr4 {
+  margin-right: 4rem;
+}
+
+.fz1 {
+  font-size: 1.6rem;
+}
+
+.icon-fill {
+  &--black {
+    svg {
+      path {
+        fill: $color-black !important;
+      }
+    }
+  }
+}
+
+.icon-stroke {
+  &--black {
+    svg {
+      path {
+        stroke: $color-black !important;
+      }
+    }
+  }
 }

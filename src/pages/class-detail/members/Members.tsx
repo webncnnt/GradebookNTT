@@ -1,10 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "../../../components/layouts/container/Container";
 import UserTable from "../../../components/UI/table/user-table/UserTable";
-import UserInfo from "../../../components/user-info/UserInfo";
+import MemberDetail from "./members-detail/MemberDetail";
+
+interface memberInfo {
+  id: number;
+  fullName: string;
+  avatar?: string;
+}
 
 const Members = () => {
-  const [isShowTeacherList, setIsShowTeacherList] = useState<boolean>(true);
+  const [listTeachers, setListTeachers] = useState<memberInfo[]>([]);
+  const [listStudents, setListStudents] = useState<memberInfo[]>([]);
+  const [isShowListTeacher, setIsShowListTeacher] = useState<boolean>(true);
+  const [memberIdDetail, setMemberIdDetail] = useState<number>(0);
+
+  const pathname = window.location.pathname;
+
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:8000/api/classes/" +
+            pathname.split("/")[2] +
+            "/members"
+        );
+        const result = await res.json();
+
+        if (res.status !== 200) {
+          throw new Error(result.message);
+        } else {
+          setListStudents(result.data.students);
+          setListTeachers(result.data.teachers);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchApi();
+  }, [pathname]);
+
+  const chooseMember = (id: number) => {
+    setMemberIdDetail(id);
+  };
+
   return (
     <Container>
       <div className="members">
@@ -14,34 +54,40 @@ const Members = () => {
             <ul className="members__menu">
               <li
                 className={
-                  "members__menu-item" + (isShowTeacherList ? " active" : "")
+                  "members__menu-item" + (isShowListTeacher ? " active" : "")
                 }
-                onClick={() => setIsShowTeacherList(true)}
+                onClick={() => setIsShowListTeacher(true)}
               >
                 Giảng viên
               </li>
               <li
                 className={
-                  "members__menu-item" + (!isShowTeacherList ? " active" : "")
+                  "members__menu-item" + (!isShowListTeacher ? " active" : "")
                 }
-                onClick={() => setIsShowTeacherList(false)}
+                onClick={() => setIsShowListTeacher(false)}
               >
                 Học viên
               </li>
             </ul>
             <div className="members__list">
-              {isShowTeacherList ? <UserTable /> : <UserTable />}
+              {isShowListTeacher ? (
+                <UserTable
+                  listUsers={listTeachers}
+                  onChooseMember={chooseMember}
+                  memberIdChoose={memberIdDetail}
+                />
+              ) : (
+                <UserTable
+                  listUsers={listStudents}
+                  onChooseMember={chooseMember}
+                  memberIdChoose={memberIdDetail}
+                />
+              )}
             </div>
           </div>
         </div>
         <div className="members__detail">
-          <div className="members__detail-avatar">
-            <img
-              src="https://res.cloudinary.com/dtitvei0p/image/upload/v1636946157/upload-img/cdfiqu8sw9gfaaslhs4q.jpg"
-              alt=""
-            />
-          </div>
-          <UserInfo fullname="Nguyễn Văn A" email="nguyenvana@gmail.com" />
+          <MemberDetail memberId={memberIdDetail} />
         </div>
       </div>
     </Container>

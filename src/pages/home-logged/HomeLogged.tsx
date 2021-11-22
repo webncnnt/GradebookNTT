@@ -30,6 +30,7 @@ const HomeLogged = () => {
         } else {
           const dataFormat = result.data.map((item: any) => {
             return {
+              id: item.id,
               clsName: item.className,
               classImage: item.coverImage,
               teachers: item.teachers,
@@ -74,7 +75,7 @@ const HomeLogged = () => {
           </div>
         </div>
         <div className="homeLogged__classes">
-          {listClasses.map((cls) => {
+          {listClasses.map((cls) => {           
             return (
               <Card
                 key={cls.id}

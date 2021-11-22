@@ -106,10 +106,21 @@ const CreateClassForm = ({ onClose, setSubmited }: popupProps) => {
 
           <div className="form__group-btn">
             <div className="form__btn">
-              <Button content="Tạo" type="primary" />
+              <Button
+                btnType="submit"
+                content="Tạo"
+                type="primary"
+                animate={true}
+              />
             </div>
             <div className="form__btn">
-              <Button content="Hủy" type="secondary" onClick={onClose} />
+              <Button
+                btnType="reset"
+                content="Hủy"
+                type="secondary"
+                onClick={onClose}
+                animate={true}
+              />
             </div>
           </div>
         </form>

@@ -88,7 +88,7 @@ const Login = () => {
             </div>
 
             <div className="form__group">
-              <Button content="Đăng nhập" type="primary" fullsize={true} />
+              <Button btnType="submit" content="Đăng nhập" type="primary" fullsize={true} />
             </div>
             <div className="login__redirect">
               Bạn chưa có tài khoản? <span>Đăng ký</span>

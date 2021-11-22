@@ -52,12 +52,16 @@
 
     img {
       height: 100%;
+      width: 100%;
       object-fit: cover;
     }
   }
 
   &__body {
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   &__title {

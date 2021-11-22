@@ -59,7 +59,7 @@ const UserDetail = () => {
       avatar: avatar,
       facebook: facebook,
     };
-    
+
     const accessTokenStore = localStorage.getItem("accessToken");
 
     let accessTokenFormat = "";
@@ -115,7 +115,15 @@ const UserDetail = () => {
             </div>
           </div>
 
-          <UserInfo fullname="Nguyễn Văn A" email="nguyenvana@gmail.com" />
+          <UserInfo
+            fullname={authCtx.user.fullname}
+            studentId={authCtx.user.studentId ? authCtx.user.studentId : 0}
+            birthday={authCtx.user.dob ? formatDate(formatIsoDateTime(authCtx.user.dob)) : ""}
+            address={authCtx.user.address ? authCtx.user.address : ""}
+            numberPhone={authCtx.user.numberPhone ? authCtx.user.numberPhone : ""}
+            email={authCtx.user.email}
+            facebook={authCtx.user.facebook ? authCtx.user.facebook : ""}
+          />
 
           <Button
             content="Thay đổi mật khẩu"

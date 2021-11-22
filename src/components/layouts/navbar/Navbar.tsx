@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CSSTransition } from "react-transition-group";
 import { useAuth } from "../../../contexts/auth-context";
 import SunIcon from "../../icons/Sun";
 import Avatar from "../../UI/avatar/Avatar";
@@ -60,7 +61,15 @@ const Navbar = () => {
           </div>
         </div>
       )}
-      {isShowDropdown ? <UserDropDown /> : ""}
+      <CSSTransition
+        in={isShowDropdown}
+        timeout={100}
+        classNames="dropdownTransition"
+        unmountOnExit
+        mountOnEnter
+      >
+        <UserDropDown onClick={() => setIsShowDropdown(false)}/>
+      </CSSTransition>
     </nav>
   );
 };
