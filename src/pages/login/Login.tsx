@@ -1,4 +1,5 @@
 import { useState } from "react";
+import GoogleLogin from "react-google-login";
 import LoginImage from "../../assets/images/Saly-16.png";
 import FacebookIcon from "../../components/icons/Facebook";
 import GithubIcon from "../../components/icons/Github";
@@ -31,6 +32,17 @@ const Login = () => {
       authCtx.onLogin(emailEntered, passwordEntered);
     }
   };
+
+  const responseGoogleSuccess = async (respone: any) => {
+    console.log(respone.tokenId);
+    
+    authCtx.onLoginWithGoogle(respone.tokenId);
+  };
+
+  const responseGoogleFailure = (respone: any) => {
+    console.log(respone);
+  };
+
   return (
     <Container>
       <div className="login">
@@ -43,7 +55,18 @@ const Login = () => {
           <p className="login__sub-title mb2">Đăng nhập hệ thống bằng</p>
 
           <div className="login__group-icon mb2">
-            <GoogleIcon className="frame mr4" />
+            <GoogleLogin
+              clientId="387536783121-a5pvnmho8o42rdfgtb9f6i8r37bhbq14.apps.googleusercontent.com"
+              render={(renderProps) => (
+                <GoogleIcon
+                  className="frame mr4"
+                  onClick={renderProps.onClick}
+                />
+              )}
+              onSuccess={responseGoogleSuccess}
+              onFailure={responseGoogleFailure}
+              cookiePolicy={"single_host_origin"}
+            />
             <FacebookIcon className="frame mr4" />
             <GithubIcon className="frame" />
           </div>
@@ -88,7 +111,12 @@ const Login = () => {
             </div>
 
             <div className="form__group">
-              <Button btnType="submit" content="Đăng nhập" type="primary" fullsize={true} />
+              <Button
+                btnType="submit"
+                content="Đăng nhập"
+                type="primary"
+                fullsize={true}
+              />
             </div>
             <div className="login__redirect">
               Bạn chưa có tài khoản? <span>Đăng ký</span>

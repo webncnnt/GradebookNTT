@@ -26,6 +26,7 @@ interface AuthThemeContext {
   isRegisterSuccess: boolean;
   onLogout: () => void;
   onLogin: (email: string, password: string) => void;
+  onLoginWithGoogle: (tokenId: string) => void;
   onRegister: (email: string, password: string, fullname: string) => void;
   onChangePass: (oldPass: string, newPass: string) => void;
   message: string;
@@ -38,6 +39,7 @@ const AuthContext = React.createContext<AuthThemeContext>({
   isRegisterSuccess: false,
   onLogout: () => {},
   onLogin: (email: string, password: string) => {},
+  onLoginWithGoogle: (tokenId: string) => {},
   onRegister: (email: string, password: string, fullname: string) => {},
   onChangePass: (oldPass: string, newPass: string) => {},
   message: "",
@@ -84,32 +86,64 @@ const AuthContextProvider = ({ children }: authctxProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const accessTokenStore = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
+    const accessTokenStore = localStorage.getItem("accessToken");
+    const googleTokenStore = localStorage.getItem("googleToken");
 
-    let accessTokenFormat = "";
-    if (accessTokenStore) accessTokenFormat = accessTokenStore;
+    let tokenFormat = "";
+    if (accessTokenStore) tokenFormat = accessTokenStore;
+    if (googleTokenStore) tokenFormat = googleTokenStore;
 
     const checkToken = async () => {
-      try {
-        const res = await fetch("http://localhost:8000/api/profile/" + userId, {
-          headers: {
-            authorization: accessTokenFormat,
-            "Content-Type": "application/json",
-          },
-        });
-        const result = await res.json();
+      if (accessTokenStore) {
+        try {
+          const res = await fetch(
+            "http://localhost:8000/api/profile/" + userId,
+            {
+              headers: {
+                authorization: tokenFormat,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const result = await res.json();
 
-        if (res.status !== 200) {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("userId");
-          throw new Error(result.message);
-        } else {
-          setIsLoggedIn(true);
-          setUser(result.profile);
+          if (res.status !== 200) {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("googleToken");
+            localStorage.removeItem("userId");
+            throw new Error(result.message);
+          } else {
+            setIsLoggedIn(true);
+            setUser(result.profile);
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
+      } else {
+        try {
+          const res = await fetch(
+            "http://localhost:8000/api/profile/" + userId,
+            {
+              headers: {
+                tokenidgg: tokenFormat,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const result = await res.json();
+
+          if (res.status !== 200) {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("userId");
+            throw new Error(result.message);
+          } else {
+            setIsLoggedIn(true);
+            setUser(result.profile);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
 
@@ -118,8 +152,10 @@ const AuthContextProvider = ({ children }: authctxProps) => {
 
   const logoutHandler = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("googleToken");
     localStorage.removeItem("userId");
     setIsLoggedIn(false);
+    navigate("/login");
   };
 
   const registerHandler = async (
@@ -180,10 +216,39 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     console.log(isLoggedIn);
   };
 
+  const loginGoogleHandler = async (tokenId: string) => {
+    const data = { token: tokenId };
+
+    try {
+      const res = await fetch("http://localhost:8000/api/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (res.status !== 200) {
+        throw new Error(result.message);
+      } else {
+        setIsLoggedIn(true);
+        setUser(result);
+        localStorage.setItem("googleToken", tokenId);
+        localStorage.setItem("userId", result.id);
+        navigate("/listClasses");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(isLoggedIn);
+  };
+
   const changePassword = async (oldPass: string, newPass: string) => {
     const data = { oldPass: oldPass, newPass: newPass };
     const userId = user.id;
-    
+
     try {
       const res = await fetch(
         "http://localhost:8000/api/auth/changePwd/" + userId,
@@ -216,6 +281,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
         isLoggedIn: isLoggedIn,
         isRegisterSuccess: isRegisterSuccess,
         onLogin: loginHandler,
+        onLoginWithGoogle: loginGoogleHandler,
         onLogout: logoutHandler,
         onRegister: registerHandler,
         onChangePass: changePassword,

@@ -61,19 +61,32 @@ const UserDetail = () => {
     };
 
     const accessTokenStore = localStorage.getItem("accessToken");
+    const googleTokenStore = localStorage.getItem("googleToken");
 
-    let accessTokenFormat = "";
-    if (accessTokenStore) accessTokenFormat = accessTokenStore;
+    let tokenFormat = "";
+    if (accessTokenStore) tokenFormat = accessTokenStore;
+    if (googleTokenStore) tokenFormat = googleTokenStore;
+
+    let resHeaders: HeadersInit;
+
+    if (accessTokenStore) {
+      resHeaders = {
+        authorization: tokenFormat,
+        "Content-Type": "application/json",
+      };
+    } else {
+      resHeaders = {
+        tokenIdGG: tokenFormat,
+        "Content-Type": "application/json",
+      };
+    }
 
     try {
       const res = await fetch(
         "http://localhost:8000/api/profile/" + authCtx.user.id,
         {
           method: "PUT",
-          headers: {
-            authorization: accessTokenFormat,
-            "Content-Type": "application/json",
-          },
+          headers: resHeaders,
           body: JSON.stringify(data),
         }
       );
@@ -118,9 +131,15 @@ const UserDetail = () => {
           <UserInfo
             fullname={authCtx.user.fullname}
             studentId={authCtx.user.studentId ? authCtx.user.studentId : 0}
-            birthday={authCtx.user.dob ? formatDate(formatIsoDateTime(authCtx.user.dob)) : ""}
+            birthday={
+              authCtx.user.dob
+                ? formatDate(formatIsoDateTime(authCtx.user.dob))
+                : ""
+            }
             address={authCtx.user.address ? authCtx.user.address : ""}
-            numberPhone={authCtx.user.numberPhone ? authCtx.user.numberPhone : ""}
+            numberPhone={
+              authCtx.user.numberPhone ? authCtx.user.numberPhone : ""
+            }
             email={authCtx.user.email}
             facebook={authCtx.user.facebook ? authCtx.user.facebook : ""}
           />
@@ -207,10 +226,10 @@ const UserDetail = () => {
 
             <div className="form__group-btn">
               <div className="form__btn">
-                <Button content="Lưu" type="primary" />
+                <Button btnType="submit" content="Lưu" type="primary" />
               </div>
               <div className="form__btn">
-                <Button content="Hủy" type="fill-red" />
+                <Button btnType="reset" content="Hủy" type="fill-red" />
               </div>
             </div>
           </form>

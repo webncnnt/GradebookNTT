@@ -25,44 +25,78 @@ const MemberDetail = ({ memberId }: memberDetailProps) => {
     numberPhone: "",
     avatar: "",
     email: "",
-    facebook: ""
+    facebook: "",
   });
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       const accessTokenStore = localStorage.getItem("accessToken");
+      const googleTokenStore = localStorage.getItem("googleToken");
 
-      let accessTokenFormat = "";
-      if (accessTokenStore) accessTokenFormat = accessTokenStore;
+      let tokenFormat = "";
+      if (accessTokenStore) tokenFormat = accessTokenStore;
+      if (googleTokenStore) tokenFormat = googleTokenStore;
 
-      try {
-        const res = await fetch(
-          "http://localhost:8000/api/profile/" + memberId,
-          {
-            headers: {
-              Authorization: accessTokenFormat,
-            },
+      if (accessTokenStore) {
+        try {
+          const res = await fetch(
+            "http://localhost:8000/api/profile/" + memberId,
+            {
+              headers: {
+                Authorization: tokenFormat,
+              },
+            }
+          );
+          const result = await res.json();
+
+          if (res.status !== 200) {
+            throw new Error(result.message);
+          } else {
+            const profileFormat = {
+              fullName: result.profile.fullname,
+              studentId: parseInt(result.profile.studentId),
+              birthday: formatDate(formatIsoDateTime(result.profile.dob)),
+              address: result.profile.address,
+              numberPhone: result.profile.numberPhone,
+              avatar: result.profile.avatar,
+              email: result.profile.email,
+              facebook: result.profile.facebook,
+            };
+            setUserInfo(profileFormat);
           }
-        );
-        const result = await res.json();
-
-        if (res.status !== 200) {
-          throw new Error(result.message);
-        } else {
-          const profileFormat = {
-            fullName: result.profile.fullname,
-            studentId: parseInt(result.profile.studentId),
-            birthday: formatDate(formatIsoDateTime(result.profile.dob)),
-            address: result.profile.address,
-            numberPhone: result.profile.numberPhone,
-            avatar: result.profile.avatar,
-            email: result.profile.email,
-            facebook: result.profile.facebook,
-          };
-          setUserInfo(profileFormat);
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
+      } else {
+        try {
+          const res = await fetch(
+            "http://localhost:8000/api/profile/" + memberId,
+            {
+              headers: {
+                tokenidgg: tokenFormat,
+              },
+            }
+          );
+          const result = await res.json();
+
+          if (res.status !== 200) {
+            throw new Error(result.message);
+          } else {
+            const profileFormat = {
+              fullName: result.profile.fullname,
+              studentId: parseInt(result.profile.studentId),
+              birthday: formatDate(formatIsoDateTime(result.profile.dob)),
+              address: result.profile.address,
+              numberPhone: result.profile.numberPhone,
+              avatar: result.profile.avatar,
+              email: result.profile.email,
+              facebook: result.profile.facebook,
+            };
+            setUserInfo(profileFormat);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     fetchUserInfo();
