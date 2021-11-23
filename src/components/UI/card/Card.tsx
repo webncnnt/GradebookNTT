@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import Status from "./status/Status";
@@ -6,12 +7,58 @@ type cardProps = {
   id: number;
   clsName: string;
   classImage?: string;
-  teachers?: [{ id: number; fullName: string }];
+  desc?: string;
+  ownerId: number;
   experidDate?: string;
 };
 
-const Card = ({id, clsName, classImage, teachers, experidDate }: cardProps) => {
+const Card = ({ id, clsName, classImage,desc, ownerId, experidDate }: cardProps) => {
+  const [owner, setOwner] = useState<string>("");
   const navigate = useNavigate();
+  
+  
+
+  useEffect(() => {
+    const accessTokenStore = localStorage.getItem("accessToken");
+    const googleTokenStore = localStorage.getItem("googleToken");
+
+    let tokenFormat = "";
+    if (accessTokenStore) tokenFormat = accessTokenStore;
+    if (googleTokenStore) tokenFormat = googleTokenStore;
+
+    const fetchApi = async () => {
+      let resHeaders: HeadersInit;
+      if (accessTokenStore) {
+        resHeaders = {
+          authorization: tokenFormat,
+        }
+      } else {
+        resHeaders = {
+          tokenidgg: tokenFormat,
+        }
+      }
+
+      try {
+        const res = await fetch(
+          "http://localhost:8000/api/profile/" + ownerId,
+          {
+            headers: resHeaders,
+          }
+        );
+        const result = await res.json();
+
+        if (res.status !== 200) {
+          throw new Error(result.message);
+        } else {
+          setOwner(result.profile.fullname);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchApi();
+  }, [ownerId]);
 
   return (
     <div className="card">
@@ -24,15 +71,11 @@ const Card = ({id, clsName, classImage, teachers, experidDate }: cardProps) => {
 
         <div className="card__body">
           <h3 className="card__title">{clsName}</h3>
-
+          <p className="card__desc">{desc}</p>
           <div className="card__teachers">
-            {teachers?.map((teacher) => {
-              return (
-                <div className="card__teacher" key={teacher.id}>
-                  Giáo viên: <span>{teacher.fullName}</span>
-                </div>
-              );
-            })}
+            <div className="card__teacher">
+              Người tạo: <span>{owner}</span>
+            </div>
           </div>
 
           <div className="card__status">
@@ -55,7 +98,7 @@ const Card = ({id, clsName, classImage, teachers, experidDate }: cardProps) => {
         <Button
           content="Vào học ngay"
           type="secondary"
-          onClick={() => navigate("/class-detail/" + id +"/timeline")}
+          onClick={() => navigate("/class-detail/" + id + "/timeline")}
         />
       </div>
     </div>

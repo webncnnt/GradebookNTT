@@ -7,6 +7,7 @@ import Avatar from "../../UI/avatar/Avatar";
 import Button from "../../UI/button/Button";
 import UserDropDown from "./drop-down/UserDropDown";
 import Menu from "./menu/Menu";
+import defaultAvt from "../../../assets/images/avatar.jpg";
 
 const Navbar = () => {
   const [isShowDropdown, setIsShowDropdown] = useState<boolean>(false);
@@ -34,7 +35,7 @@ const Navbar = () => {
           </div>
           <div className="navbar__btn navbar__user">
             <Avatar
-              imageSrc={authCtx.user.avatar ? authCtx.user.avatar : ""}
+              imageSrc={authCtx.user.avatar ? authCtx.user.avatar : defaultAvt}
               onClick={() => setIsShowDropdown((value) => !value)}
             />
           </div>

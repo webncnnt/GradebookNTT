@@ -34,8 +34,6 @@ const Login = () => {
   };
 
   const responseGoogleSuccess = async (respone: any) => {
-    console.log(respone.tokenId);
-    
     authCtx.onLoginWithGoogle(respone.tokenId);
   };
 

@@ -7,6 +7,8 @@ interface memberInfo {
   id: number;
   fullName: string;
   avatar?: string;
+  email: string;
+  joinDate: string;
 }
 
 const Members = () => {
@@ -23,15 +25,56 @@ const Members = () => {
         const res = await fetch(
           "http://localhost:8000/api/classes/" +
             pathname.split("/")[2] +
-            "/members"
+            "/teachers"
         );
         const result = await res.json();
 
         if (res.status !== 200) {
           throw new Error(result.message);
         } else {
-          setListStudents(result.data.students);
-          setListTeachers(result.data.teachers);
+          const memberInfoFormat = result.data.teachers.map((member: any) => {
+            return {
+              id: member.profile.id,
+              fullName: member.profile.fullName,
+              avatar: member.profile.avatar,
+              email:  member.profile.email,
+              joinDate: member.joinDate
+            }
+          })
+          setListTeachers(memberInfoFormat);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchApi();
+  }, [pathname]);
+ 
+ 
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:8000/api/classes/" +
+            pathname.split("/")[2] +
+            "/students"
+        );
+        const result = await res.json();
+
+        if (res.status !== 200) {
+          throw new Error(result.message);
+        } else {
+          const memberInfoFormat = result.data.students.map((member: any) => {
+            return {
+              id: member.profile.id,
+              fullName: member.profile.fullName,
+              avatar: member.profile.avatar,
+              email:  member.profile.email,
+              joinDate: member.joinDate
+            }
+          })
+          setListStudents(memberInfoFormat);
         }
       } catch (error) {
         console.log(error);

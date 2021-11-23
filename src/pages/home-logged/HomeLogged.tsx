@@ -10,7 +10,8 @@ interface ClassType {
   id: number;
   clsName: string;
   classImage?: string;
-  teachers?: [{ id: number; fullName: string }];
+  desc?: string;
+  ownerId: number;
   experidDate?: string;
 }
 
@@ -33,7 +34,8 @@ const HomeLogged = () => {
               id: item.id,
               clsName: item.className,
               classImage: item.coverImage,
-              teachers: item.teachers,
+              desc: item.description,
+              ownerId: item.ownerId,
               experidDate: item.expiredTime,
             };
           });
@@ -75,14 +77,15 @@ const HomeLogged = () => {
           </div>
         </div>
         <div className="homeLogged__classes">
-          {listClasses.map((cls) => {           
+          {listClasses.map((cls) => {       
             return (
               <Card
                 key={cls.id}
                 id={cls.id}
                 clsName={cls.clsName}
                 classImage={cls.classImage}
-                teachers={cls.teachers}
+                desc={cls.desc}
+                ownerId={cls.ownerId}
                 experidDate={cls.experidDate}
               />
             );
