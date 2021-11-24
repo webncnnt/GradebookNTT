@@ -7,10 +7,17 @@
     margin-right: 2rem;
   }
 
+  &__title-invite {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+
   &__title {
     font-size: 2.6rem;
     font-weight: 700;
-    margin-bottom: 4rem;
+    
   }
 
   &__menu {

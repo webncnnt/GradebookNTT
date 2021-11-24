@@ -122,6 +122,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("googleToken");
           localStorage.removeItem("userId");
+          navigate("/login");
           throw new Error(result.message);
         } else {
           setIsLoggedIn(true);
@@ -133,7 +134,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     };
 
     checkToken();
-  }, [pathname]);
+  }, [pathname, navigate]);
 
   const logoutHandler = () => {
     localStorage.removeItem("accessToken");

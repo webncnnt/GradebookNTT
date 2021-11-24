@@ -74,10 +74,10 @@ const ChangePassForm = ({ onClose }: popupProps) => {
 
             <div className="form__group-btn">
               <div className="form__btn">
-                <Button content="Lưu" type="primary" />
+                <Button btnType="submit" content="Lưu" type="primary" />
               </div>
               <div className="form__btn">
-                <Button content="Hủy" type="fill-red" onClick={onClose} />
+                <Button btnType="reset" content="Hủy" type="fill-red" onClick={onClose} />
               </div>
             </div>
           </form>

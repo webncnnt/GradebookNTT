@@ -27,14 +27,36 @@ const CreateClassForm = ({ onClose, setSubmited }: popupProps) => {
     };
 
     const fetchApi = async () => {
+      const accessTokenStore = localStorage.getItem("accessToken");
+      const googleTokenStore = localStorage.getItem("googleToken");
+
+      let tokenFormat = "";
+      if (accessTokenStore) tokenFormat = accessTokenStore;
+      if (googleTokenStore) tokenFormat = googleTokenStore;
+
+      let resHeaders: HeadersInit;
+
+      if (accessTokenStore) {
+        resHeaders = {
+          authorization: tokenFormat,
+          "Content-Type": "application/json",
+        };
+      } else {
+        resHeaders = {
+          tokenidgg: tokenFormat,
+          "Content-Type": "application/json",
+        };
+      }
+
       try {
-        const res = await fetch("https://classroom.eastasia.cloudapp.azure.com/api/classes", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
+        const res = await fetch(
+          "https://classroom.eastasia.cloudapp.azure.com/api/classes",
+          {
+            method: "POST",
+            headers: resHeaders,
+            body: JSON.stringify(data),
+          }
+        );
         const result = await res.json();
 
         if (res.status !== 201) {

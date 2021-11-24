@@ -22,8 +22,33 @@ const HomeLogged = () => {
 
   useEffect(() => {
     const fetchApi = async () => {
+      const accessTokenStore = localStorage.getItem("accessToken");
+      const googleTokenStore = localStorage.getItem("googleToken");
+
+      let tokenFormat = "";
+      if (accessTokenStore) tokenFormat = accessTokenStore;
+      if (googleTokenStore) tokenFormat = googleTokenStore;
+
+      let resHeaders: HeadersInit;
+
+      if (accessTokenStore) {
+        resHeaders = {
+          authorization: tokenFormat,
+          "Content-Type": "application/json",
+        };
+      } else {
+        resHeaders = {
+          tokenidgg: tokenFormat,
+          "Content-Type": "application/json",
+        };
+      }
       try {
-        const res = await fetch("https://classroom.eastasia.cloudapp.azure.com/api/classes");
+        const res = await fetch(
+          "https://classroom.eastasia.cloudapp.azure.com/api/classes",
+          {
+            headers: resHeaders,
+          }
+        );
         const result = await res.json();
 
         if (res.status !== 200) {
@@ -77,7 +102,7 @@ const HomeLogged = () => {
           </div>
         </div>
         <div className="homeLogged__classes">
-          {listClasses.map((cls) => {       
+          {listClasses.map((cls) => {
             return (
               <Card
                 key={cls.id}

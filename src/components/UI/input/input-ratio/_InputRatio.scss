@@ -1,0 +1,13 @@
+.input-ratio {
+    &__group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    &__label {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-left: 2rem;
+    }
+}

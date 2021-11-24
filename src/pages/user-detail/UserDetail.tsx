@@ -11,8 +11,7 @@ import { useAuth } from "../../contexts/auth-context";
 
 const UserDetail = () => {
   const authCtx = useAuth();
-  console.log(authCtx.user);
-
+  
   const [fullname, setFullname] = useState<string>(() => {
     return authCtx.user.fullname;
   });

@@ -10,10 +10,34 @@ const ClassInfo = () => {
 
   useEffect(() => {
     const fetchApi = async () => {
+      const accessTokenStore = localStorage.getItem("accessToken");
+      const googleTokenStore = localStorage.getItem("googleToken");
+
+      let tokenFormat = "";
+      if (accessTokenStore) tokenFormat = accessTokenStore;
+      if (googleTokenStore) tokenFormat = googleTokenStore;
+
+      let resHeaders: HeadersInit;
+
+      if (accessTokenStore) {
+        resHeaders = {
+          authorization: tokenFormat,
+          "Content-Type": "application/json",
+        };
+      } else {
+        resHeaders = {
+          tokenIdGG: tokenFormat,
+          "Content-Type": "application/json",
+        };
+      }
+
       try {
         const res = await fetch(
           "https://classroom.eastasia.cloudapp.azure.com/api/classes/" +
-            pathname.split("/")[2]
+            pathname.split("/")[2],
+          {
+            headers: resHeaders,
+          }
         );
         const result = await res.json();
 

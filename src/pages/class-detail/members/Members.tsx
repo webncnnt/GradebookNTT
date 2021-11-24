@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import AddIcon from "../../../components/icons/Add";
 import Container from "../../../components/layouts/container/Container";
+import InviteMemberForm from "../../../components/UI/form/invite-members/InviteMemberForm";
 import UserTable from "../../../components/UI/table/user-table/UserTable";
 import MemberDetail from "./members-detail/MemberDetail";
 
@@ -16,16 +18,40 @@ const Members = () => {
   const [listStudents, setListStudents] = useState<memberInfo[]>([]);
   const [isShowListTeacher, setIsShowListTeacher] = useState<boolean>(true);
   const [memberIdDetail, setMemberIdDetail] = useState<number>(0);
+  const [isShowInviteForm, setIsShowInviteForm] = useState<boolean>(false);
 
   const pathname = window.location.pathname;
 
   useEffect(() => {
     const fetchApi = async () => {
+      const accessTokenStore = localStorage.getItem("accessToken");
+      const googleTokenStore = localStorage.getItem("googleToken");
+
+      let tokenFormat = "";
+      if (accessTokenStore) tokenFormat = accessTokenStore;
+      if (googleTokenStore) tokenFormat = googleTokenStore;
+
+      let resHeaders: HeadersInit;
+
+      if (accessTokenStore) {
+        resHeaders = {
+          authorization: tokenFormat,
+          "Content-Type": "application/json",
+        };
+      } else {
+        resHeaders = {
+          tokenidgg: tokenFormat,
+          "Content-Type": "application/json",
+        };
+      }
       try {
         const res = await fetch(
           "https://classroom.eastasia.cloudapp.azure.com/api/classes/" +
             pathname.split("/")[2] +
-            "/teachers"
+            "/teachers",
+          {
+            headers: resHeaders,
+          }
         );
         const result = await res.json();
 
@@ -37,10 +63,10 @@ const Members = () => {
               id: member.profile.id,
               fullName: member.profile.fullName,
               avatar: member.profile.avatar,
-              email:  member.profile.email,
-              joinDate: member.joinDate
-            }
-          })
+              email: member.profile.email,
+              joinDate: member.joinDate,
+            };
+          });
           setListTeachers(memberInfoFormat);
         }
       } catch (error) {
@@ -50,8 +76,7 @@ const Members = () => {
 
     fetchApi();
   }, [pathname]);
- 
- 
+
   useEffect(() => {
     const fetchApi = async () => {
       try {
@@ -70,10 +95,10 @@ const Members = () => {
               id: member.profile.id,
               fullName: member.profile.fullName,
               avatar: member.profile.avatar,
-              email:  member.profile.email,
-              joinDate: member.joinDate
-            }
-          })
+              email: member.profile.email,
+              joinDate: member.joinDate,
+            };
+          });
           setListStudents(memberInfoFormat);
         }
       } catch (error) {
@@ -90,9 +115,18 @@ const Members = () => {
 
   return (
     <Container>
+      {isShowInviteForm ? (
+        <InviteMemberForm onClose={() => setIsShowInviteForm(false)} />
+      ) : null}
       <div className="members">
         <div className="members__content">
-          <h1 className="members__title">Thành viên</h1>
+          <div className="members__title-invite">
+            <h1 className="members__title">Thành viên</h1>
+            <AddIcon
+              className="frame"
+              onClick={() => setIsShowInviteForm(true)}
+            />
+          </div>
           <div className="members__table">
             <ul className="members__menu">
               <li
