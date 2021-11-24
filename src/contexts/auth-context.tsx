@@ -122,7 +122,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("googleToken");
           localStorage.removeItem("userId");
-          navigate("/login");
+          if (pathname !== "/" && pathname !== "/home" && pathname !== "/register") navigate("/login");
           throw new Error(result.message);
         } else {
           setIsLoggedIn(true);
