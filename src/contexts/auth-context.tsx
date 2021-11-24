@@ -94,56 +94,41 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     if (accessTokenStore) tokenFormat = accessTokenStore;
     if (googleTokenStore) tokenFormat = googleTokenStore;
 
+    let resHeaders: HeadersInit;
+
+    if (accessTokenStore) {
+      resHeaders = {
+        authorization: tokenFormat,
+        "Content-Type": "application/json",
+      };
+    } else {
+      resHeaders = {
+        tokenidgg: tokenFormat,
+        "Content-Type": "application/json",
+      };
+    }
+
     const checkToken = async () => {
-      if (accessTokenStore) {
-        try {
-          const res = await fetch(
-            "http://localhost:8000/api/profile/" + userId,
-            {
-              headers: {
-                authorization: tokenFormat,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const result = await res.json();
-
-          if (res.status !== 200) {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("googleToken");
-            localStorage.removeItem("userId");
-            throw new Error(result.message);
-          } else {
-            setIsLoggedIn(true);
-            setUser(result.profile);
+      try {
+        const res = await fetch(
+          "https://classroom.eastasia.cloudapp.azure.com/api/profile/" + userId,
+          {
+            headers: resHeaders,
           }
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        try {
-          const res = await fetch(
-            "http://localhost:8000/api/profile/" + userId,
-            {
-              headers: {
-                tokenidgg: tokenFormat,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const result = await res.json();
+        );
+        const result = await res.json();
 
-          if (res.status !== 200) {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("userId");
-            throw new Error(result.message);
-          } else {
-            setIsLoggedIn(true);
-            setUser(result.profile);
-          }
-        } catch (error) {
-          console.log(error);
+        if (res.status !== 200) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("googleToken");
+          localStorage.removeItem("userId");
+          throw new Error(result.message);
+        } else {
+          setIsLoggedIn(true);
+          setUser(result.profile);
         }
+      } catch (error) {
+        console.log(error);
       }
     };
 
@@ -166,13 +151,16 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const data = { email: email, password: password, fullname: fullname };
 
     try {
-      const res = await fetch("http://localhost:8000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        "https://classroom.eastasia.cloudapp.azure.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
       const result = await res.json();
 
       if (res.status !== 200) {
@@ -191,13 +179,16 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const data = { email: email, password: password };
 
     try {
-      const res = await fetch("http://localhost:8000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        "https://classroom.eastasia.cloudapp.azure.com/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
       const result = await res.json();
 
       if (res.status !== 200) {
@@ -220,13 +211,16 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const data = { token: tokenId };
 
     try {
-      const res = await fetch("http://localhost:8000/api/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        "https://classroom.eastasia.cloudapp.azure.com/api/auth/google",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       const result = await res.json();
 
@@ -242,7 +236,6 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     } catch (error) {
       console.log(error);
     }
-    console.log(isLoggedIn);
   };
 
   const changePassword = async (oldPass: string, newPass: string) => {
@@ -251,7 +244,8 @@ const AuthContextProvider = ({ children }: authctxProps) => {
 
     try {
       const res = await fetch(
-        "http://localhost:8000/api/auth/changePwd/" + userId,
+        "https://classroom.eastasia.cloudapp.azure.com/api/auth/changePwd/" +
+          userId,
         {
           method: "POST",
           headers: {

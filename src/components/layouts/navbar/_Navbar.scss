@@ -8,6 +8,7 @@
   box-shadow: 0 0 1rem rgba($color-black, 0.2);
   position: sticky;
   top: 0;
+  z-index: 1000;
 
   &__logo {
     font-size: 3rem;

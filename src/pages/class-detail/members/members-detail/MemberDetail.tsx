@@ -40,7 +40,7 @@ const MemberDetail = ({ memberId }: memberDetailProps) => {
       if (accessTokenStore) {
         try {
           const res = await fetch(
-            "http://localhost:8000/api/profile/" + memberId,
+            "https://classroom.eastasia.cloudapp.azure.com/api/profile/" + memberId,
             {
               headers: {
                 Authorization: tokenFormat,
@@ -70,7 +70,7 @@ const MemberDetail = ({ memberId }: memberDetailProps) => {
       } else {
         try {
           const res = await fetch(
-            "http://localhost:8000/api/profile/" + memberId,
+            "https://classroom.eastasia.cloudapp.azure.com/api/profile/" + memberId,
             {
               headers: {
                 tokenidgg: tokenFormat,

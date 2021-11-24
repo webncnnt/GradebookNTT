@@ -23,7 +23,7 @@ const HomeLogged = () => {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/classes");
+        const res = await fetch("https://classroom.eastasia.cloudapp.azure.com/api/classes");
         const result = await res.json();
 
         if (res.status !== 200) {

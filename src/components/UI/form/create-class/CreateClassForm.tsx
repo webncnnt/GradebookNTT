@@ -28,7 +28,7 @@ const CreateClassForm = ({ onClose, setSubmited }: popupProps) => {
 
     const fetchApi = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/classes", {
+        const res = await fetch("https://classroom.eastasia.cloudapp.azure.com/api/classes", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

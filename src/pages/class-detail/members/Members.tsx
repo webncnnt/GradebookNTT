@@ -23,7 +23,7 @@ const Members = () => {
     const fetchApi = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8000/api/classes/" +
+          "https://classroom.eastasia.cloudapp.azure.com/api/classes/" +
             pathname.split("/")[2] +
             "/teachers"
         );
@@ -56,7 +56,7 @@ const Members = () => {
     const fetchApi = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8000/api/classes/" +
+          "https://classroom.eastasia.cloudapp.azure.com/api/classes/" +
             pathname.split("/")[2] +
             "/students"
         );

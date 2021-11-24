@@ -12,9 +12,8 @@ const ClassInfo = () => {
     const fetchApi = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8000/api/classes/" +
-            pathname.split("/")[2] +
-            "/overview"
+          "https://classroom.eastasia.cloudapp.azure.com/api/classes/" +
+            pathname.split("/")[2]
         );
         const result = await res.json();
 
