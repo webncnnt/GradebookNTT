@@ -50,7 +50,7 @@ const CreateClassForm = ({ onClose, setSubmited }: popupProps) => {
 
       try {
         const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/classes",
+          "https://gradebook.codes/api/classes",
           {
             method: "POST",
             headers: resHeaders,

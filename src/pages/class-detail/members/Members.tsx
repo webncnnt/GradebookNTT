@@ -46,7 +46,7 @@ const Members = () => {
       }
       try {
         const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/classes/" +
+          "https://gradebook.codes/api/classes/" +
             pathname.split("/")[2] +
             "/teachers",
           {
@@ -81,7 +81,7 @@ const Members = () => {
     const fetchApi = async () => {
       try {
         const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/classes/" +
+          "https://gradebook.codes/api/classes/" +
             pathname.split("/")[2] +
             "/students"
         );

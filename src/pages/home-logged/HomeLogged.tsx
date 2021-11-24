@@ -44,7 +44,7 @@ const HomeLogged = () => {
       }
       try {
         const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/classes",
+          "https://gradebook.codes/api/classes",
           {
             headers: resHeaders,
           }

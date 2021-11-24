@@ -111,7 +111,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const checkToken = async () => {
       try {
         const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/profile/" + userId,
+          "https://gradebook.codes/api/profile/" + userId,
           {
             headers: resHeaders,
           }
@@ -122,7 +122,13 @@ const AuthContextProvider = ({ children }: authctxProps) => {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("googleToken");
           localStorage.removeItem("userId");
-          navigate("/login");
+          if (
+            pathname !== "/" &&
+            pathname !== "/home" &&
+            pathname !== "/login" &&
+            pathname !== "/register"
+          )
+            navigate("/login");
           throw new Error(result.message);
         } else {
           setIsLoggedIn(true);
@@ -152,16 +158,13 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const data = { email: email, password: password, fullname: fullname };
 
     try {
-      const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch("https://gradebook.codes/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       const result = await res.json();
 
       if (res.status !== 200) {
@@ -180,16 +183,13 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const data = { email: email, password: password };
 
     try {
-      const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch("https://gradebook.codes/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       const result = await res.json();
 
       if (res.status !== 200) {
@@ -212,16 +212,13 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const data = { token: tokenId };
 
     try {
-      const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/auth/google",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch("https://gradebook.codes/api/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       const result = await res.json();
 
@@ -245,8 +242,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
 
     try {
       const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/auth/changePwd/" +
-          userId,
+        "https://gradebook.codes/api/auth/changePwd/" + userId,
         {
           method: "POST",
           headers: {

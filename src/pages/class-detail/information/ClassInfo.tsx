@@ -33,7 +33,7 @@ const ClassInfo = () => {
 
       try {
         const res = await fetch(
-          "https://classroom.eastasia.cloudapp.azure.com/api/classes/" +
+          "https://gradebook.codes/classes/" +
             pathname.split("/")[2],
           {
             headers: resHeaders,

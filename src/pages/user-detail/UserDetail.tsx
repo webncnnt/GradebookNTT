@@ -82,7 +82,7 @@ const UserDetail = () => {
 
     try {
       const res = await fetch(
-        "https://classroom.eastasia.cloudapp.azure.com/api/profile/" + authCtx.user.id,
+        "https://gradebook.codes/api/profile/" + authCtx.user.id,
         {
           method: "PUT",
           headers: resHeaders,

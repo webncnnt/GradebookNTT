@@ -40,7 +40,7 @@ const Card = ({ id, clsName, classImage,desc, ownerId, experidDate }: cardProps)
 
       try {
         const res = await fetch(
-          "http://localhost:8000/api/profile/" + ownerId,
+          "https://gradebook.codes/api/profile/" + ownerId,
           {
             headers: resHeaders,
           }
