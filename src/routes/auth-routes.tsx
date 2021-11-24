@@ -2,9 +2,10 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import Loading from "../components/layouts/loading/Loading";
 
-
 const HomeLogged = lazy(() => import("../pages/home-logged/HomeLogged"));
-const InviteByCodeForm = lazy(() => import("../pages/enroll-class/EnrollClassByCode"));
+const InviteByCodeForm = lazy(
+  () => import("../pages/enroll-class/EnrollClassByCode")
+);
 const UserDetail = lazy(() => import("../pages/user-detail/UserDetail"));
 const Timeline = lazy(() => import("../pages/class-detail/timeline/Timeline"));
 const Classwork = lazy(
@@ -15,9 +16,11 @@ const ClassInfo = lazy(
   () => import("../pages/class-detail/information/ClassInfo")
 );
 
+const Invite = lazy(() => import("../pages/invite/Invite"));
+
 const AuthRoutes = () => {
   return (
-    <Suspense fallback={<Loading/>}>
+    <Suspense fallback={<Loading />}>
       <Routes>
         <Route path="/" element={<HomeLogged />} />
 
@@ -34,6 +37,8 @@ const AuthRoutes = () => {
             <Route path="info" element={<ClassInfo />} />
           </Route>
         </Route>
+
+        <Route path="invites/access_token/:token" element={<Invite />} />
       </Routes>
     </Suspense>
   );
