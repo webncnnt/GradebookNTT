@@ -5,8 +5,11 @@ import Button from "../../components/UI/button/Button";
 const Invite = () => {
   const navigate = useNavigate();
 
+  const pathname = window.location.pathname;
+  const query = window.location.search;
+  
+  
   const onInviteHandle = () => {
-    const pathname = window.location.pathname;
 
     const fetchApi = async () => {
       const accessTokenStore = localStorage.getItem("accessToken");
@@ -31,7 +34,7 @@ const Invite = () => {
       }
 
       try {
-        const res = await fetch("https://gradebook.codes/api" + pathname, {
+        const res = await fetch("https://gradebook.codes/api" + pathname + query, {
           method: "POST",
           headers: resHeaders,
         });

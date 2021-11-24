@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import Status from "./status/Status";
-import defaultClassImg from "../../../assets/images/imgClass2.png"
+import defaultClassImg from "../../../assets/images/imgClass2.png";
 
 type cardProps = {
   id: number;
@@ -13,11 +13,21 @@ type cardProps = {
   experidDate?: string;
 };
 
-const Card = ({ id, clsName, classImage,desc, ownerId, experidDate }: cardProps) => {
+const Card = ({
+  id,
+  clsName,
+  classImage,
+  desc,
+  ownerId,
+  experidDate,
+}: cardProps) => {
   const [owner, setOwner] = useState<string>("");
   const navigate = useNavigate();
-  
-  
+
+  let countdown: number = 0; // deadline countdown = deadline - now
+
+  const now: any = new Date(); //"now"
+  if (experidDate) countdown = miliseconsToDays(Date.parse(experidDate) - now);
 
   useEffect(() => {
     const accessTokenStore = localStorage.getItem("accessToken");
@@ -32,11 +42,11 @@ const Card = ({ id, clsName, classImage,desc, ownerId, experidDate }: cardProps)
       if (accessTokenStore) {
         resHeaders = {
           authorization: tokenFormat,
-        }
+        };
       } else {
         resHeaders = {
           tokenidgg: tokenFormat,
-        }
+        };
       }
 
       try {
@@ -93,7 +103,7 @@ const Card = ({ id, clsName, classImage,desc, ownerId, experidDate }: cardProps)
       <div className="card__side card__side--back">
         <div className="card__time">
           <p className="card__time-only">CÒN LẠI</p>
-          <p className="card__time-value">89 ngày</p>
+          <p className="card__time-value">{countdown} ngày</p>
         </div>
 
         <Button
@@ -127,6 +137,29 @@ const formatIsoDateTime = (date: string): string => {
   if (month < 10) month = "0" + month;
   if (day < 10) day = "0" + day;
   return year + "-" + month + "-" + day;
+};
+
+/*
+convert milisecons to days
+input: milisecons
+output: days
+*/
+const miliseconsToDays = (t: number) => {
+  let cd = 24 * 60 * 60 * 1000,
+    ch = 60 * 60 * 1000,
+    d = Math.floor(t / cd),
+    h = Math.floor((t - d * cd) / ch),
+    m = Math.round((t - d * cd - h * ch) / 60000);
+
+  if (m === 60) {
+    h++;
+    m = 0;
+  }
+  if (h === 24) {
+    d++;
+    h = 0;
+  }
+  return d;
 };
 
 export default Card;

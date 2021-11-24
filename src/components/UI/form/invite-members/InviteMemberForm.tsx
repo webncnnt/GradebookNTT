@@ -64,6 +64,7 @@ const InviteMemberForm = ({ onClose }: inviteFormProps) => {
     };
 
     fetchApi();
+    onClose();
   };
 
   return (
