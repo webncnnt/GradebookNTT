@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import Status from "./status/Status";
+import defaultClassImg from "../../../assets/images/imgClass2.png"
 
 type cardProps = {
   id: number;
@@ -65,7 +66,7 @@ const Card = ({ id, clsName, classImage,desc, ownerId, experidDate }: cardProps)
       <div className="card__side card__side--front">
         <div className="card__head">
           <div className="card__image">
-            <img src={classImage} alt="#" />
+            <img src={classImage ? classImage : defaultClassImg} alt="#" />
           </div>
         </div>
 
