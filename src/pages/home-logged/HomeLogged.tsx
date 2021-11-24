@@ -96,7 +96,7 @@ const HomeLogged = () => {
 
       <div className="homeLogged">
         <div className="homeLogged__header">
-          <h1 className="homeLogged__title">Danh sách lớp học</h1>
+          <h1 className="homeLogged__title">Danh sách lớp</h1>
           <div className="navbar__btn">
             <AddIcon className="frame" onClick={() => setShowPopup(true)} />
           </div>

@@ -21,7 +21,7 @@ const Menu = () => {
     return !isClassDetail ? (
       <ul className="menu">
         <Item content="Danh sách lớp" link="listClasses" />
-        <Item content="Lịch học" link="schedule" />
+        <Item content="Tham gia lớp" link="enrollClass" />
       </ul>
     ) : (
       <ul className="menu">

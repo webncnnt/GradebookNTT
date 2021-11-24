@@ -1,15 +1,15 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "../../components/layouts/container/Container";
 import Button from "../../components/UI/button/Button";
+import InputText from "../../components/UI/input-text/InputText";
 
-const Invite = () => {
+const InviteByCodeForm = () => {
+  const [code, setCode] = useState<string>("");
   const navigate = useNavigate();
 
-  const pathname = window.location.pathname;
-  const query = window.location.search;
-  
-  
-  const onInviteHandle = () => {
+  const onInviteByCodeFormHandle = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     const fetchApi = async () => {
       const accessTokenStore = localStorage.getItem("accessToken");
@@ -34,7 +34,7 @@ const Invite = () => {
       }
 
       try {
-        const res = await fetch("https://gradebook.codes/api" + pathname + query, {
+        const res = await fetch("https://gradebook.codes/api/invites/" + code, {
           method: "POST",
           headers: resHeaders,
         });
@@ -54,13 +54,22 @@ const Invite = () => {
 
   return (
     <Container>
-      <div className="invite">
-        <h1 className="invite__title">Bạn có muốn tham gia vào lớp không</h1>
+      <div className="invite-code">
+        <h1 className="invite-code__title">Nhập mã lớp học để tham gia</h1>
 
-        <Button content="Tham gia" type="primary" onClick={onInviteHandle} />
+        <form className="w100" onSubmit={onInviteByCodeFormHandle}>
+          <InputText
+            id="invite-class-by-code"
+            placeholder="Mã lớp"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+
+          <Button btnType="submit" content="Tham gia" type="primary" />
+        </form>
       </div>
     </Container>
   );
 };
 
-export default Invite;
+export default InviteByCodeForm;

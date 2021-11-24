@@ -4,6 +4,7 @@ import Container from "../../../components/layouts/container/Container";
 const ClassInfo = () => {
   const [clsName, setClsName] = useState<string>("");
   const [clsDescription, setClsDescription] = useState<string>("");
+  const [clsCode, setClsCode] = useState<string>("");
   const [clsExpired, setClsExpired] = useState<string>("");
 
   const pathname = window.location.pathname;
@@ -33,8 +34,7 @@ const ClassInfo = () => {
 
       try {
         const res = await fetch(
-          "https://gradebook.codes/classes/" +
-            pathname.split("/")[2],
+          "https://gradebook.codes/api/classes/" + pathname.split("/")[2],
           {
             headers: resHeaders,
           }
@@ -44,6 +44,8 @@ const ClassInfo = () => {
         if (res.status !== 200) {
           throw new Error(result.message);
         } else {
+          setClsCode(result.data.inviteCode);
+
           setClsName(result.data.className);
           setClsDescription(result.data.description);
           setClsExpired(formatDate(formatIsoDateTime(result.data.expiredTime)));
@@ -61,6 +63,9 @@ const ClassInfo = () => {
       <div className="class-info">
         <h1 className="class-info__name">{clsName}</h1>
         <div className="class-info__description">{clsDescription}</div>
+        <div className="class-info__code">
+          Mã tham gia: <span>{clsCode}</span>
+        </div>
         <div className="class-info__expired">
           Ngày kết thúc: <span>{clsExpired}</span>
         </div>

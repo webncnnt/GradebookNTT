@@ -44,6 +44,7 @@ const Members = () => {
           "Content-Type": "application/json",
         };
       }
+
       try {
         const res = await fetch(
           "https://gradebook.codes/api/classes/" +
@@ -78,18 +79,42 @@ const Members = () => {
   }, [pathname]);
 
   useEffect(() => {
+    const accessTokenStore = localStorage.getItem("accessToken");
+      const googleTokenStore = localStorage.getItem("googleToken");
+
+    let tokenFormat = "";
+    if (accessTokenStore) tokenFormat = accessTokenStore;
+    if (googleTokenStore) tokenFormat = googleTokenStore;
+
+    let resHeaders: HeadersInit;
+
+    if (accessTokenStore) {
+      resHeaders = {
+        authorization: tokenFormat,
+        "Content-Type": "application/json",
+      };
+    } else {
+      resHeaders = {
+        tokenidgg: tokenFormat,
+        "Content-Type": "application/json",
+      };
+    }
     const fetchApi = async () => {
       try {
         const res = await fetch(
           "https://gradebook.codes/api/classes/" +
             pathname.split("/")[2] +
-            "/students"
+            "/students",
+          {
+            headers: resHeaders,
+          }
         );
         const result = await res.json();
 
         if (res.status !== 200) {
           throw new Error(result.message);
         } else {
+          console.log(result.data);
           const memberInfoFormat = result.data.students.map((member: any) => {
             return {
               id: member.profile.id,

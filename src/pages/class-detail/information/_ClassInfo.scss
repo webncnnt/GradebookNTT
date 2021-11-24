@@ -1,26 +1,37 @@
 .class-info {
-    margin-top: 2rem;
+  margin-top: 2rem;
 
-    &__name {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 2rem;
+  &__name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+  }
+
+  &__description {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+  }
+
+  &__code {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: $color-gray;
+    margin-bottom: 2rem;
+    span {
+      margin-left: 2rem;
+      color: $color-black;
     }
+  }
 
-    &__description {
-        font-size: 1.8rem;
-        font-weight: 400;
-        margin-bottom: 2rem;
+  &__expired {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: $color-gray;
+
+    span {
+      margin-left: 2rem;
+      color: $color-black;
     }
-
-    &__expired {
-        font-size: 1.6rem;
-        font-weight: 600;
-        color: $color-gray;
-
-        span {
-            margin-left: 2rem;
-            color: $color-black;
-        }
-    }
+  }
 }
