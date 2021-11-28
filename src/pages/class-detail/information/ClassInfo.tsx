@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Container from "../../../components/layouts/container/Container";
+import useHttp from "../../../hooks/useHttp";
 
 const ClassInfo = () => {
   const [clsName, setClsName] = useState<string>("");
@@ -7,56 +8,33 @@ const ClassInfo = () => {
   const [clsCode, setClsCode] = useState<string>("");
   const [clsExpired, setClsExpired] = useState<string>("");
 
+  const { error, sendRequest } = useHttp();
+
   const pathname = window.location.pathname;
 
   useEffect(() => {
     const fetchApi = async () => {
-      const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
+      const requestConfig = {
+        url: "classes/" + pathname.split("/")[2],
+      };
 
-      let tokenFormat = "";
-      if (accessTokenStore) tokenFormat = accessTokenStore;
-      if (googleTokenStore) tokenFormat = googleTokenStore;
-
-      let resHeaders: HeadersInit;
-
-      if (accessTokenStore) {
-        resHeaders = {
-          authorization: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      } else {
-        resHeaders = {
-          tokenIdGG: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      }
-
-      try {
-        const res = await fetch(
-          "https://gradebook.codes/api/classes/" + pathname.split("/")[2],
-          {
-            headers: resHeaders,
-          }
-        );
-        const result = await res.json();
-
-        if (res.status !== 200) {
-          throw new Error(result.message);
-        } else {
-          setClsCode(result.data.inviteCode);
-
-          setClsName(result.data.className);
-          setClsDescription(result.data.description);
-          setClsExpired(formatDate(formatIsoDateTime(result.data.expiredTime)));
-        }
-      } catch (error) {
+      const handleError = () => {
         console.log(error);
-      }
+      };
+
+      const setLogged = (data: any) => {
+        setClsCode(data.data.inviteCode);
+
+        setClsName(data.data.className);
+        setClsDescription(data.data.description);
+        setClsExpired(formatDate(formatIsoDateTime(data.data.expiredTime)));
+      };
+
+      sendRequest(requestConfig, handleError, setLogged);
     };
 
     fetchApi();
-  }, [pathname]);
+  }, [pathname, error, sendRequest]);
 
   return (
     <Container>
