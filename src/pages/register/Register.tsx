@@ -12,7 +12,7 @@ const Register = () => {
   const [passwordEntered, setPasswordEntered] = useState<string>("");
   const [passwordAgainEntered, setPasswordAgainEntered] = useState<string>("");
   const [fullnameEntered, setFullnameEntered] = useState<string>("");
-  const [isSubmited, setIsSubmited] = useState<boolean>(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   const authCtx = useAuth();
 
@@ -33,7 +33,7 @@ const Register = () => {
   const registerSubmitHandle = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setIsSubmited(true);
+    setIsSubmitted(true);
 
     if (emailEntered.trim() !== "") emailIsValid = true;
     if (passwordEntered.trim() !== "") passIsValid = true;
@@ -66,7 +66,7 @@ const Register = () => {
                 value={emailEntered}
                 onChange={(e) => setEmailEntered(e.target.value)}
                 validStatus={
-                  isSubmited ? (emailIsValid ? "valid" : "invalid") : undefined
+                  isSubmitted ? (emailIsValid ? "valid" : "invalid") : undefined
                 }
               />
             </div>
@@ -78,7 +78,7 @@ const Register = () => {
                 value={passwordEntered}
                 onChange={(e) => setPasswordEntered(e.target.value)}
                 validStatus={
-                  isSubmited ? (passIsValid ? "valid" : "invalid") : undefined
+                  isSubmitted ? (passIsValid ? "valid" : "invalid") : undefined
                 }
               />
             </div>
@@ -90,7 +90,7 @@ const Register = () => {
                 value={passwordAgainEntered}
                 onChange={(e) => setPasswordAgainEntered(e.target.value)}
                 validStatus={
-                  isSubmited
+                  isSubmitted
                     ? passAgainIsValid
                       ? "valid"
                       : "invalid"
@@ -105,7 +105,7 @@ const Register = () => {
                 value={fullnameEntered}
                 onChange={(e) => setFullnameEntered(e.target.value)}
                 validStatus={
-                  isSubmited ? (nameIsValid ? "valid" : "invalid") : undefined
+                  isSubmitted ? (nameIsValid ? "valid" : "invalid") : undefined
                 }
               />
             </div>

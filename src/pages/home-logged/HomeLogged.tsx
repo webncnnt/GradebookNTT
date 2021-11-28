@@ -12,7 +12,7 @@ interface ClassType {
   classImage?: string;
   desc?: string;
   ownerId: number;
-  experidDate?: string;
+  expiredDate?: string;
 }
 
 const HomeLogged = () => {
@@ -61,7 +61,7 @@ const HomeLogged = () => {
               classImage: item.coverImage,
               desc: item.description,
               ownerId: item.ownerId,
-              experidDate: item.expiredTime,
+              expiredDate: item.expiredTime,
             };
           });
           setListClasses(dataFormat);
@@ -111,7 +111,7 @@ const HomeLogged = () => {
                 classImage={cls.classImage}
                 desc={cls.desc}
                 ownerId={cls.ownerId}
-                experidDate={cls.experidDate}
+                expiredDate={cls.expiredDate}
               />
             );
           })}

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useHttp from "../hooks/useHttp";
 
 type authctxProps = {
   children: JSX.Element;
@@ -63,7 +64,7 @@ const AuthContext = React.createContext<AuthThemeContext>({
 
 const AuthContextProvider = ({ children }: authctxProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [isRegisterSuccess, setIsRegiterSuccess] = useState<boolean>(false);
+  const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [user, setUser] = useState<userType>({
     id: 0,
@@ -81,66 +82,44 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     updatedAt: "",
   });
 
+  const { error, sendRequest } = useHttp();
+
   const pathname = window.location.pathname;
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-    const accessTokenStore = localStorage.getItem("accessToken");
-    const googleTokenStore = localStorage.getItem("googleToken");
 
-    let tokenFormat = "";
-    if (accessTokenStore) tokenFormat = accessTokenStore;
-    if (googleTokenStore) tokenFormat = googleTokenStore;
-
-    let resHeaders: HeadersInit;
-
-    if (accessTokenStore) {
-      resHeaders = {
-        authorization: tokenFormat,
-        "Content-Type": "application/json",
-      };
-    } else {
-      resHeaders = {
-        tokenidgg: tokenFormat,
-        "Content-Type": "application/json",
-      };
+    const requestConfig = {
+      url: "profile/" + userId,
     }
 
-    const checkToken = async () => {
-      try {
-        const res = await fetch(
-          "https://gradebook.codes/api/profile/" + userId,
-          {
-            headers: resHeaders,
-          }
-        );
-        const result = await res.json();
+    const handleError = () => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("googleToken");
+      localStorage.removeItem("userId");
+      if (
+        pathname !== "/" &&
+        pathname !== "/home" &&
+        pathname !== "/login" &&
+        pathname !== "/register"
+      )
+        navigate("/login");
+    }
 
-        if (res.status !== 200) {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("googleToken");
-          localStorage.removeItem("userId");
-          if (
-            pathname !== "/" &&
-            pathname !== "/home" &&
-            pathname !== "/login" &&
-            pathname !== "/register"
-          )
-            navigate("/login");
-          throw new Error(result.message);
-        } else {
-          setIsLoggedIn(true);
-          setUser(result.profile);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    const setLogged = (data: any) => {      
+      setIsLoggedIn(true);
+      setUser(data.profile);
+    }
 
-    checkToken();
-  }, [pathname, navigate]);
+    sendRequest(
+      requestConfig,
+      handleError,
+      setLogged
+    );
+  
+  }, [sendRequest, navigate, pathname]);
 
   const logoutHandler = () => {
     localStorage.removeItem("accessToken");
@@ -157,113 +136,125 @@ const AuthContextProvider = ({ children }: authctxProps) => {
   ) => {
     const data = { email: email, password: password, fullname: fullname };
 
-    try {
-      const res = await fetch("https://gradebook.codes/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-
-      if (res.status !== 200) {
-        throw new Error(result.message);
-      } else {
-        setMessage(result.message);
-        setIsRegiterSuccess(true);
-        navigate("/login");
-      }
-    } catch (error) {
-      console.log(error);
+    const requestConfig = {
+      url: "auth/register",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data
     }
+
+    const handleError = () => {
+      console.log(error);
+      
+    }
+
+    const registerSuccess = (data: any) => {      
+      setMessage(data.message);
+        setIsRegisterSuccess(true);
+        navigate("/login");
+    }
+
+    sendRequest(
+      requestConfig,
+      handleError,
+      registerSuccess
+    );
   };
 
   const loginHandler = async (email: string, password: string) => {
     const data = { email: email, password: password };
 
-    try {
-      const res = await fetch("https://gradebook.codes/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-
-      if (res.status !== 200) {
-        throw new Error(result.message);
-      } else {
-        setIsLoggedIn(true);
-        setMessage(result.message);
-        setUser(result.user);
-        localStorage.setItem("accessToken", result.accessToken);
-        localStorage.setItem("userId", result.user.id);
-        navigate("/listClasses");
-      }
-    } catch (error) {
-      console.log(error);
+    const requestConfig = {
+      url: "auth/login",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data
     }
-    console.log(isLoggedIn);
+
+    const handleError = () => {
+      console.log(error);
+      
+    }
+
+    const loginSuccess = (data: any) => {      
+      setIsLoggedIn(true);
+      setMessage(data.message);
+      setUser(data.user);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userId", data.user.id);
+      navigate("/listClasses");
+    }
+
+    sendRequest(
+      requestConfig,
+      handleError,
+      loginSuccess
+    );
   };
 
   const loginGoogleHandler = async (tokenId: string) => {
     const data = { token: tokenId };
 
-    try {
-      const res = await fetch("https://gradebook.codes/api/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await res.json();
-
-      if (res.status !== 200) {
-        throw new Error(result.message);
-      } else {
-        setIsLoggedIn(true);
-        setUser(result);
-        localStorage.setItem("googleToken", tokenId);
-        localStorage.setItem("userId", result.id);
-        navigate("/listClasses");
-      }
-    } catch (error) {
-      console.log(error);
+    const requestConfig = {
+      url: "auth/google",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data
     }
+
+    const handleError = () => {
+      console.log(error);
+      
+    }
+
+    const loginGoogleSuccess = (data: any) => {      
+      setIsLoggedIn(true);
+      setUser(data);
+      localStorage.setItem("googleToken", tokenId);
+      localStorage.setItem("userId", data.id);
+      navigate("/listClasses");
+    }
+
+    sendRequest(
+      requestConfig,
+      handleError,
+      loginGoogleSuccess
+    );
   };
 
   const changePassword = async (oldPass: string, newPass: string) => {
     const data = { oldPass: oldPass, newPass: newPass };
     const userId = user.id;
 
-    try {
-      const res = await fetch(
-        "https://gradebook.codes/api/auth/changePwd/" + userId,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-      const result = await res.json();
-
-      if (res.status !== 200) {
-        throw new Error(result.message);
-      } else {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("userId");
-        setIsLoggedIn(false);
-        navigate("/login");
-      }
-    } catch (error) {
-      console.log(error);
+    const requestConfig = {
+      url: "changePwd/" + userId,
+      method: "POST",
+      body: data
     }
+
+    const handleError = () => {
+      console.log(error);
+      
+    }
+
+    const changePassSuccess = (data: any) => {      
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userId");
+      setIsLoggedIn(false);
+      navigate("/login");
+    }
+
+    sendRequest(
+      requestConfig,
+      handleError,
+      changePassSuccess
+    );
   };
 
   return (

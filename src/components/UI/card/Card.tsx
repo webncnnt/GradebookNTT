@@ -10,7 +10,7 @@ type cardProps = {
   classImage?: string;
   desc?: string;
   ownerId: number;
-  experidDate?: string;
+  expiredDate?: string;
 };
 
 const Card = ({
@@ -19,7 +19,7 @@ const Card = ({
   classImage,
   desc,
   ownerId,
-  experidDate,
+  expiredDate,
 }: cardProps) => {
   const [owner, setOwner] = useState<string>("");
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Card = ({
   let countdown: number = 0; // deadline countdown = deadline - now
 
   const now: any = new Date(); //"now"
-  if (experidDate) countdown = miliseconsToDays(Date.parse(experidDate) - now);
+  if (expiredDate) countdown = millisecondsToDays(Date.parse(expiredDate) - now);
 
   useEffect(() => {
     const accessTokenStore = localStorage.getItem("accessToken");
@@ -90,9 +90,9 @@ const Card = ({
           </div>
 
           <div className="card__status">
-            {experidDate ? (
+            {expiredDate ? (
               <Status
-                content={formatDate(formatIsoDateTime(experidDate))}
+                content={formatDate(formatIsoDateTime(expiredDate))}
                 status="none"
               />
             ) : null}
@@ -140,11 +140,11 @@ const formatIsoDateTime = (date: string): string => {
 };
 
 /*
-convert milisecons to days
-input: milisecons
+convert milliseconds to days
+input: milliseconds
 output: days
 */
-const miliseconsToDays = (t: number) => {
+const millisecondsToDays = (t: number) => {
   let cd = 24 * 60 * 60 * 1000,
     ch = 60 * 60 * 1000,
     d = Math.floor(t / cd),
