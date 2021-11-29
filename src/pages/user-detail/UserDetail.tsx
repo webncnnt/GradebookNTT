@@ -63,7 +63,7 @@ const UserDetail = () => {
 
     const requestConfig = {
       url: "profile/" + authCtx.user.id,
-      method: "POST",
+      method: "PUT",
       body: data
     }
 
@@ -101,7 +101,7 @@ const UserDetail = () => {
               />
             </div>
             <div className="user-detail__basic-info">
-              <div className="user-detail__name">{fullname}</div>
+              <div className="user-detail__name">{authCtx.user.fullname}</div>
               <div className="user-detail__faculty">
                 Khoa công nghệ thông tin
               </div>

@@ -36,6 +36,7 @@ const Members = () => {
     }
     
     const getTeachers = (data: any) => {
+      console.log("Get teacher profile");
       const memberInfoFormat = data.data.teachers.map((member: any) => {
         return {
           id: member.profile.id,
@@ -51,6 +52,7 @@ const Members = () => {
   }, [pathname, error, sendRequest]);
 
   useEffect(() => {
+    console.log("Get students profile");
     const requestConfig = {
       url: "classes/" +
       pathname.split("/")[2] +

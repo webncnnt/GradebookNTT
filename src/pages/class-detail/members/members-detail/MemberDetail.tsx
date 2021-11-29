@@ -29,17 +29,16 @@ const MemberDetail = ({ memberId }: memberDetailProps) => {
     facebook: "",
   });
 
-  const {error, sendRequest} = useHttp();
+  const {sendRequest} = useHttp();
 
   useEffect(() => {
+    console.log("Get user profile");
+    
     const requestConfig = {
       url: "profile/" + memberId
     }
 
-    const handleError = () => {
-     console.log(error);
-     
-    }
+    const handleError = () => {}
 
     const getMemberInfo = (data: any) => {      
       const profileFormat = {
@@ -60,7 +59,8 @@ const MemberDetail = ({ memberId }: memberDetailProps) => {
       handleError,
       getMemberInfo
     );
-  }, [memberId, error, sendRequest]);
+
+  }, [memberId, sendRequest]);
 
   return (
     <>

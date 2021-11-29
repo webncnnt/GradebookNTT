@@ -233,7 +233,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const userId = user.id;
 
     const requestConfig = {
-      url: "changePwd/" + userId,
+      url: "auth/changePwd/" + userId,
       method: "POST",
       body: data
     }
