@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useHttp from "../../../../hooks/useHttp";
 import Button from "../../button/Button";
 import InputText from "../../input-text/InputText";
 import InputRatio from "../../input/input-ratio/InputRatio";
@@ -11,6 +12,7 @@ type inviteFormProps = {
 const InviteByCodeForm = ({ onClose }: inviteFormProps) => {
   const [emailInput, setEmailInput] = useState<string>("");
   const [role, setRole] = useState<string>("1");
+  const {error, sendRequest} = useHttp();
 
   const pathname = window.location.pathname;
 
@@ -19,52 +21,30 @@ const InviteByCodeForm = ({ onClose }: inviteFormProps) => {
 
     const data = { email: emailInput, role: parseInt(role) };
 
-    const fetchApi = async () => {
-      const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
+    const requestConfig = {
+      url: "classes/" +
+      pathname.split("/")[2] +
+      "/invitations",
+      method: "POST",
+      body: data
+    }
 
-      let tokenFormat = "";
-      if (accessTokenStore) tokenFormat = accessTokenStore;
-      if (googleTokenStore) tokenFormat = googleTokenStore;
+    const handleError = () => {
+     console.log(error);
+      onClose();
+    }
 
-      let resHeaders: HeadersInit;
+    const inviteClassSuccess = (data: any) => {      
+      onClose();
+    }
+    
+      sendRequest(
+        requestConfig,
+        handleError,
+        inviteClassSuccess
+      );
+    
 
-      if (accessTokenStore) {
-        resHeaders = {
-          authorization: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      } else {
-        resHeaders = {
-          tokenidgg: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      }
-      try {
-        const res = await fetch(
-          "https://gradebook.codes/api/classes/" +
-            pathname.split("/")[2] +
-            "/invitations",
-          {
-            method: "POST",
-            headers: resHeaders,
-            body: JSON.stringify(data),
-          }
-        );
-        const result = await res.json();
-
-        if (res.status !== 201) {
-          throw new Error(result.message);
-        } else {
-          console.log(result.status);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchApi();
-    onClose();
   };
 
   return (

@@ -8,10 +8,10 @@ import Popup from "../../popup/Popup";
 
 type popupProps = {
   onClose: () => void;
-  setSubmited: () => void;
+  setSubmitted: () => void;
 };
 
-const CreateClassForm = ({ onClose, setSubmited: setSubmitted }: popupProps) => {
+const CreateClassForm = ({ onClose, setSubmitted }: popupProps) => {
   const [clsName, setClsName] = useState<string>("");
   const [coverImage, setCoverImage] = useState<string>("");
   const [description, setDescription] = useState<string>("");

@@ -69,7 +69,7 @@ const HomeLogged = () => {
         classNames="popup"
         unmountOnExit
       >
-        <CreateClassForm onClose={closePopup} setSubmited={setSubmited} />
+        <CreateClassForm onClose={closePopup} setSubmitted={setSubmited} />
       </CSSTransition>
 
       <div className="homeLogged">
