@@ -57,3 +57,56 @@
     }
   }
 }
+
+@include respond(tab-port) {
+  .register {
+    padding: 2rem;
+    background-image: linear-gradient(
+      105deg,
+      rgba($color-blue, 0.5) 0%,
+      rgba($color-blue, 0.5) 45%,
+      $color-white 45%
+    );
+  
+    &__img {
+      flex: 0 0 50%;
+      display: flex;
+      align-items: center;
+  
+      img {
+        width: 80%;
+        height: auto;
+      }
+    }   
+
+    &__content {
+      flex: 0 0 45%;
+    }
+  
+  }
+}
+
+@include respond(phone) {
+  .register {
+    padding: 2rem;
+    background-image: linear-gradient(
+      105deg,
+      rgba($color-blue, 0.5) 0%,
+      $color-white 0%
+    );
+    justify-content: center;
+    
+    &__img {
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    &__content {
+      flex: 0 0 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}

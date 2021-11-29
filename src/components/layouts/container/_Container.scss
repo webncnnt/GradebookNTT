@@ -1,4 +1,13 @@
 .container {
     width: 70%;
     margin: 0 auto;
+
+    @include respond(tab-land) {
+        width: 80%;
+    }
+
+    @include respond(tab-port) {
+        width: 90%;
+    }
+
 }
