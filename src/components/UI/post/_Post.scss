@@ -45,5 +45,9 @@
   &__content {
     font-size: 1.6rem;
     font-weight: 400;
+
+    @include respond(phone) {
+      font-size: 1.8rem;
+    }
   }
 }

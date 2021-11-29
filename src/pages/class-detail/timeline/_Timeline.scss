@@ -5,10 +5,19 @@
     &__notice {
         flex: 0 0 25%;
         margin-right: 2rem;
+
+        @include respond(phone) {
+            display: none;
+            visibility: hidden;
+            opacity: 0;
+        }
     }
 
     &__posts {
         flex: 0 0 75%;
+        @include respond(phone) {
+            flex: 0 0 100%;
+        }
     }
 
 }
