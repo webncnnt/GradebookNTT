@@ -3,6 +3,7 @@ import AddIcon from "../../../components/icons/Add";
 import Container from "../../../components/layouts/container/Container";
 import InviteMemberForm from "../../../components/UI/form/invite-members/InviteMemberForm";
 import UserTable from "../../../components/UI/table/user-table/UserTable";
+import useHttp from "../../../hooks/useHttp";
 import MemberDetail from "./members-detail/MemberDetail";
 
 interface memberInfo {
@@ -20,119 +21,59 @@ const Members = () => {
   const [memberIdDetail, setMemberIdDetail] = useState<number>(0);
   const [isShowInviteForm, setIsShowInviteForm] = useState<boolean>(false);
 
+  const {error, sendRequest} = useHttp();
+
   const pathname = window.location.pathname;
 
   useEffect(() => {
-    const fetchApi = async () => {
-      const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
-
-      let tokenFormat = "";
-      if (accessTokenStore) tokenFormat = accessTokenStore;
-      if (googleTokenStore) tokenFormat = googleTokenStore;
-
-      let resHeaders: HeadersInit;
-
-      if (accessTokenStore) {
-        resHeaders = {
-          authorization: tokenFormat,
-          "Content-Type": "application/json",
+    const requestConfig = {
+      url: "classes/" +
+      pathname.split("/")[2] +
+      "/teachers"
+    }
+    const handleError = () => {
+      console.log(error);
+    }
+    
+    const getTeachers = (data: any) => {
+      const memberInfoFormat = data.data.teachers.map((member: any) => {
+        return {
+          id: member.profile.id,
+          fullName: member.profile.fullName,
+          avatar: member.profile.avatar,
+          email: member.profile.email,
+          joinDate: member.joinDate,
         };
-      } else {
-        resHeaders = {
-          tokenidgg: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      }
-
-      try {
-        const res = await fetch(
-          "https://gradebook.codes/api/classes/" +
-            pathname.split("/")[2] +
-            "/teachers",
-          {
-            headers: resHeaders,
-          }
-        );
-        const result = await res.json();
-
-        if (res.status !== 200) {
-          throw new Error(result.message);
-        } else {
-          const memberInfoFormat = result.data.teachers.map((member: any) => {
-            return {
-              id: member.profile.id,
-              fullName: member.profile.fullName,
-              avatar: member.profile.avatar,
-              email: member.profile.email,
-              joinDate: member.joinDate,
-            };
-          });
-          setListTeachers(memberInfoFormat);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchApi();
-  }, [pathname]);
+      });
+      setListTeachers(memberInfoFormat);
+    }     
+    sendRequest(requestConfig, handleError, getTeachers);
+  }, [pathname, error, sendRequest]);
 
   useEffect(() => {
-    const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
-
-    let tokenFormat = "";
-    if (accessTokenStore) tokenFormat = accessTokenStore;
-    if (googleTokenStore) tokenFormat = googleTokenStore;
-
-    let resHeaders: HeadersInit;
-
-    if (accessTokenStore) {
-      resHeaders = {
-        authorization: tokenFormat,
-        "Content-Type": "application/json",
-      };
-    } else {
-      resHeaders = {
-        tokenidgg: tokenFormat,
-        "Content-Type": "application/json",
-      };
+    const requestConfig = {
+      url: "classes/" +
+      pathname.split("/")[2] +
+      "/students"
     }
-    const fetchApi = async () => {
-      try {
-        const res = await fetch(
-          "https://gradebook.codes/api/classes/" +
-            pathname.split("/")[2] +
-            "/students",
-          {
-            headers: resHeaders,
-          }
-        );
-        const result = await res.json();
-
-        if (res.status !== 200) {
-          throw new Error(result.message);
-        } else {
-          console.log(result.data);
-          const memberInfoFormat = result.data.students.map((member: any) => {
-            return {
-              id: member.profile.id,
-              fullName: member.profile.fullName,
-              avatar: member.profile.avatar,
-              email: member.profile.email,
-              joinDate: member.joinDate,
-            };
-          });
-          setListStudents(memberInfoFormat);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchApi();
-  }, [pathname]);
+    const handleError = () => {
+      console.log(error);
+    }
+    
+    const getStudents = (data: any) => {
+      const memberInfoFormat = data.data.students.map((member: any) => {
+        return {
+          id: member.profile.id,
+          fullName: member.profile.fullName,
+          avatar: member.profile.avatar,
+          email: member.profile.email,
+          joinDate: member.joinDate,
+        };
+      });
+      setListStudents(memberInfoFormat);
+    }     
+    sendRequest(requestConfig, handleError, getStudents);
+  }, [pathname, error, sendRequest]);
 
   const chooseMember = (id: number) => {
     setMemberIdDetail(id);
