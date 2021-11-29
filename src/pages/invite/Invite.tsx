@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import Container from "../../components/layouts/container/Container";
 import Button from "../../components/UI/button/Button";
+import useHttp from "../../hooks/useHttp";
 
 const Invite = () => {
   const navigate = useNavigate();
+  const {error, sendRequest} = useHttp();
 
   const pathname = window.location.pathname;
   const query = window.location.search;
@@ -11,45 +13,24 @@ const Invite = () => {
   
   const onInviteHandle = () => {
 
-    const fetchApi = async () => {
-      const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
+    const requestConfig = {
+      url: pathname + query,
+      method: "POST"
+    }
 
-      let tokenFormat = "";
-      if (accessTokenStore) tokenFormat = accessTokenStore;
-      if (googleTokenStore) tokenFormat = googleTokenStore;
+    const handleError = () => {
+     console.log(error);
+    }
 
-      let resHeaders: HeadersInit;
+    const inviteClassSuccess = (data: any) => {      
+      navigate("/listClasses");
+    }
 
-      if (accessTokenStore) {
-        resHeaders = {
-          authorization: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      } else {
-        resHeaders = {
-          tokenidgg: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      }
-
-      try {
-        const res = await fetch("https://gradebook.codes/api" + pathname + query, {
-          method: "POST",
-          headers: resHeaders,
-        });
-        const result = await res.json();
-
-        if (res.status !== 200) {
-          throw new Error(result.message);
-        } else {
-          navigate("/listClasses");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchApi();
+    sendRequest(
+      requestConfig,
+      handleError,
+      inviteClassSuccess
+    );
   };
 
   return (

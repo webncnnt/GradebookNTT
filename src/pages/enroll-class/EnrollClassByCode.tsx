@@ -3,53 +3,34 @@ import { useNavigate } from "react-router-dom";
 import Container from "../../components/layouts/container/Container";
 import Button from "../../components/UI/button/Button";
 import InputText from "../../components/UI/input-text/InputText";
+import useHttp from "../../hooks/useHttp";
 
 const InviteByCodeForm = () => {
   const [code, setCode] = useState<string>("");
   const navigate = useNavigate();
+  const {error, sendRequest} = useHttp();
 
   const onInviteByCodeFormHandle = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const fetchApi = async () => {
-      const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
+    const requestConfig = {
+      url: "invites/" + code,
+      method: "POST"
+    }
 
-      let tokenFormat = "";
-      if (accessTokenStore) tokenFormat = accessTokenStore;
-      if (googleTokenStore) tokenFormat = googleTokenStore;
+    const handleError = () => {
+     console.log(error);
+    }
 
-      let resHeaders: HeadersInit;
+    const enrollClassSuccess = (data: any) => {      
+      navigate("/listClasses");
+    }
 
-      if (accessTokenStore) {
-        resHeaders = {
-          authorization: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      } else {
-        resHeaders = {
-          tokenidgg: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      }
-
-      try {
-        const res = await fetch("https://gradebook.codes/api/invites/" + code, {
-          method: "POST",
-          headers: resHeaders,
-        });
-        const result = await res.json();
-
-        if (res.status !== 200) {
-          throw new Error(result.message);
-        } else {
-          navigate("/listClasses");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchApi();
+    sendRequest(
+      requestConfig,
+      handleError,
+      enrollClassSuccess
+    );
   };
 
   return (
