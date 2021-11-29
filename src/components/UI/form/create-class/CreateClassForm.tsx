@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useHttp from "../../../../hooks/useHttp";
 import Button from "../../button/Button";
 import InputText from "../../input-text/InputText";
 import InputDate from "../../input/input-date/InputDate";
@@ -10,12 +11,13 @@ type popupProps = {
   setSubmited: () => void;
 };
 
-const CreateClassForm = ({ onClose, setSubmited }: popupProps) => {
+const CreateClassForm = ({ onClose, setSubmited: setSubmitted }: popupProps) => {
   const [clsName, setClsName] = useState<string>("");
   const [coverImage, setCoverImage] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [expiredTime, setExpiredTime] = useState<string>("");
-
+  const {error, sendRequest} = useHttp();
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
@@ -26,53 +28,31 @@ const CreateClassForm = ({ onClose, setSubmited }: popupProps) => {
       expiredTime: expiredTime,
     };
 
-    const fetchApi = async () => {
-      const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
+    const requestConfig = {
+      url: "classes",
+      method: "POST",
+      body: data
+    }
 
-      let tokenFormat = "";
-      if (accessTokenStore) tokenFormat = accessTokenStore;
-      if (googleTokenStore) tokenFormat = googleTokenStore;
+    const handleError = () => {
+     console.log(error);
+     setSubmitted();
+      onClose();
+    }
 
-      let resHeaders: HeadersInit;
+    const createClassSuccess = (data: any) => {      
+      setSubmitted();
+      onClose();
+    }
 
-      if (accessTokenStore) {
-        resHeaders = {
-          authorization: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      } else {
-        resHeaders = {
-          tokenidgg: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      }
-
-      try {
-        const res = await fetch(
-          "https://gradebook.codes/api/classes",
-          {
-            method: "POST",
-            headers: resHeaders,
-            body: JSON.stringify(data),
-          }
-        );
-        const result = await res.json();
-
-        if (res.status !== 201) {
-          throw new Error(result.message);
-        } else {
-          console.log(result.message);
-        }
-        setSubmited();
-        onClose();
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    
 
     if (clsName.trim() !== "") {
-      fetchApi();
+      sendRequest(
+        requestConfig,
+        handleError,
+        createClassSuccess
+      );
     }
   };
 
