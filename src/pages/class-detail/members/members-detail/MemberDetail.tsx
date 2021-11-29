@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import UserInfo from "../../../../components/user-info/UserInfo";
+import useHttp from "../../../../hooks/useHttp";
 
 interface memberInfo {
   fullName: string;
@@ -28,79 +29,38 @@ const MemberDetail = ({ memberId }: memberDetailProps) => {
     facebook: "",
   });
 
+  const {error, sendRequest} = useHttp();
+
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
+    const requestConfig = {
+      url: "profile/" + memberId
+    }
 
-      let tokenFormat = "";
-      if (accessTokenStore) tokenFormat = accessTokenStore;
-      if (googleTokenStore) tokenFormat = googleTokenStore;
+    const handleError = () => {
+     console.log(error);
+     
+    }
 
-      if (accessTokenStore) {
-        try {
-          const res = await fetch(
-            "https://gradebook.codes/api/profile/" + memberId,
-            {
-              headers: {
-                Authorization: tokenFormat,
-              },
-            }
-          );
-          const result = await res.json();
+    const getMemberInfo = (data: any) => {      
+      const profileFormat = {
+        fullName: data.profile.fullname,
+        studentId: parseInt(data.profile.studentId),
+        birthday: formatDate(formatIsoDateTime(data.profile.dob)),
+        address: data.profile.address,
+        numberPhone: data.profile.numberPhone,
+        avatar: data.profile.avatar,
+        email: data.profile.email,
+        facebook: data.profile.facebook,
+      };
+      setUserInfo(profileFormat);
+    }
 
-          if (res.status !== 200) {
-            throw new Error(result.message);
-          } else {
-            const profileFormat = {
-              fullName: result.profile.fullname,
-              studentId: parseInt(result.profile.studentId),
-              birthday: formatDate(formatIsoDateTime(result.profile.dob)),
-              address: result.profile.address,
-              numberPhone: result.profile.numberPhone,
-              avatar: result.profile.avatar,
-              email: result.profile.email,
-              facebook: result.profile.facebook,
-            };
-            setUserInfo(profileFormat);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        try {
-          const res = await fetch(
-            "https://gradebook.codes/api/profile/" + memberId,
-            {
-              headers: {
-                tokenidgg: tokenFormat,
-              },
-            }
-          );
-          const result = await res.json();
-
-          if (res.status !== 200) {
-            throw new Error(result.message);
-          } else {
-            const profileFormat = {
-              fullName: result.profile.fullname,
-              studentId: parseInt(result.profile.studentId),
-              birthday: formatDate(formatIsoDateTime(result.profile.dob)),
-              address: result.profile.address,
-              numberPhone: result.profile.numberPhone,
-              avatar: result.profile.avatar,
-              email: result.profile.email,
-              facebook: result.profile.facebook,
-            };
-            setUserInfo(profileFormat);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    };
-    fetchUserInfo();
-  }, [memberId]);
+    sendRequest(
+      requestConfig,
+      handleError,
+      getMemberInfo
+    );
+  }, [memberId, error, sendRequest]);
 
   return (
     <>

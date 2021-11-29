@@ -5,6 +5,7 @@ import AddIcon from "../../components/icons/Add";
 import Container from "../../components/layouts/container/Container";
 import Card from "../../components/UI/card/Card";
 import CreateClassForm from "../../components/UI/form/create-class/CreateClassForm";
+import useHttp from "../../hooks/useHttp";
 
 interface ClassType {
   id: number;
@@ -18,69 +19,46 @@ interface ClassType {
 const HomeLogged = () => {
   const [listClasses, setListClasses] = useState<ClassType[]>([]);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [isSubmited, setIsSubmited] = useState<boolean>(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const {error, sendRequest} = useHttp();
 
   useEffect(() => {
-    const fetchApi = async () => {
-      const accessTokenStore = localStorage.getItem("accessToken");
-      const googleTokenStore = localStorage.getItem("googleToken");
+    const requestConfig = {
+      url: "classes",
+    }
 
-      let tokenFormat = "";
-      if (accessTokenStore) tokenFormat = accessTokenStore;
-      if (googleTokenStore) tokenFormat = googleTokenStore;
+    const handleError = () => {
+     console.log(error);
+     
+    }
 
-      let resHeaders: HeadersInit;
-
-      if (accessTokenStore) {
-        resHeaders = {
-          authorization: tokenFormat,
-          "Content-Type": "application/json",
+    const getClasses = (data: any) => {      
+      const dataFormat = data.data.map((item: any) => {
+        return {
+          id: item.id,
+          clsName: item.className,
+          classImage: item.coverImage,
+          desc: item.description,
+          ownerId: item.ownerId,
+          expiredDate: item.expiredTime,
         };
-      } else {
-        resHeaders = {
-          tokenidgg: tokenFormat,
-          "Content-Type": "application/json",
-        };
-      }
-      try {
-        const res = await fetch(
-          "https://gradebook.codes/api/classes",
-          {
-            headers: resHeaders,
-          }
-        );
-        const result = await res.json();
+      });
+      setListClasses(dataFormat);
+    }
 
-        if (res.status !== 200) {
-          throw new Error(result.message);
-        } else {
-          const dataFormat = result.data.map((item: any) => {
-            return {
-              id: item.id,
-              clsName: item.className,
-              classImage: item.coverImage,
-              desc: item.description,
-              ownerId: item.ownerId,
-              expiredDate: item.expiredTime,
-            };
-          });
-          setListClasses(dataFormat);
-        }
-        setIsSubmited(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchApi();
-  }, [isSubmited]);
+    sendRequest(
+      requestConfig,
+      handleError,
+      getClasses
+    );
+  }, [isSubmitted, error, sendRequest]);
 
   const closePopup = () => {
     setShowPopup(false);
   };
 
   const setSubmited = () => {
-    setIsSubmited(true);
+    setIsSubmitted(true);
   };
 
   return (
