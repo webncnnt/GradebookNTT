@@ -8,6 +8,7 @@ import InputImage from "../../components/UI/input/input-image/InputImage";
 import InputText from "../../components/UI/input/input-text/InputText";
 import UserInfo from "../../components/user-info/UserInfo";
 import { useAuth } from "../../contexts/auth-context";
+import useHttp from "../../hooks/useHttp";
 
 const UserDetail = () => {
   const authCtx = useAuth();
@@ -39,6 +40,7 @@ const UserDetail = () => {
     if (authCtx.user.avatar) return authCtx.user.avatar;
     else return "";
   });
+  const {error, sendRequest} = useHttp();
 
   const [isShowChangePassWorForm, setIsShowChangePassWorForm] =
     useState<boolean>(false);
@@ -59,46 +61,25 @@ const UserDetail = () => {
       facebook: facebook,
     };
 
-    const accessTokenStore = localStorage.getItem("accessToken");
-    const googleTokenStore = localStorage.getItem("googleToken");
-
-    let tokenFormat = "";
-    if (accessTokenStore) tokenFormat = accessTokenStore;
-    if (googleTokenStore) tokenFormat = googleTokenStore;
-
-    let resHeaders: HeadersInit;
-
-    if (accessTokenStore) {
-      resHeaders = {
-        authorization: tokenFormat,
-        "Content-Type": "application/json",
-      };
-    } else {
-      resHeaders = {
-        tokenIdGG: tokenFormat,
-        "Content-Type": "application/json",
-      };
+    const requestConfig = {
+      url: "profile/" + authCtx.user.id,
+      method: "POST",
+      body: data
     }
 
-    try {
-      const res = await fetch(
-        "https://gradebook.codes/api/profile/" + authCtx.user.id,
-        {
-          method: "PUT",
-          headers: resHeaders,
-          body: JSON.stringify(data),
-        }
-      );
-      const result = await res.json();
-
-      if (res.status !== 200) {
-        throw new Error(result.message);
-      } else {
-        authCtx.setUser(result.profile.user);
-      }
-    } catch (error) {
-      console.log(error);
+    const handleError = () => {
+     console.log(error);
     }
+
+    const getUserDetail = (data: any) => {      
+      authCtx.setUser(data.profile.user);
+    }
+
+    sendRequest(
+      requestConfig,
+      handleError,
+      getUserDetail
+    );
   };
 
   return (
