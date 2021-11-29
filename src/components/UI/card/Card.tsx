@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../button/Button";
 import Status from "./status/Status";
 import defaultClassImg from "../../../assets/images/imgClass2.png";
+import useHttp from "../../../hooks/useHttp";
 
 type cardProps = {
   id: number;
@@ -23,58 +23,31 @@ const Card = ({
 }: cardProps) => {
   const [owner, setOwner] = useState<string>("");
   const navigate = useNavigate();
-
-  let countdown: number = 0; // deadline countdown = deadline - now
-
-  const now: any = new Date(); //"now"
-  if (expiredDate) countdown = millisecondsToDays(Date.parse(expiredDate) - now);
-
+  const {error, sendRequest} = useHttp();
   useEffect(() => {
-    const accessTokenStore = localStorage.getItem("accessToken");
-    const googleTokenStore = localStorage.getItem("googleToken");
+    const requestConfig = {
+      url: "profile/" + ownerId,
+    }
 
-    let tokenFormat = "";
-    if (accessTokenStore) tokenFormat = accessTokenStore;
-    if (googleTokenStore) tokenFormat = googleTokenStore;
+    const handleError = () => {
+     console.log(error);
+    }
 
-    const fetchApi = async () => {
-      let resHeaders: HeadersInit;
-      if (accessTokenStore) {
-        resHeaders = {
-          authorization: tokenFormat,
-        };
-      } else {
-        resHeaders = {
-          tokenidgg: tokenFormat,
-        };
-      }
+    const getOwner = (data: any) => {      
+      setOwner(data.profile.fullname);
+    }
 
-      try {
-        const res = await fetch(
-          "https://gradebook.codes/api/profile/" + ownerId,
-          {
-            headers: resHeaders,
-          }
-        );
-        const result = await res.json();
-
-        if (res.status !== 200) {
-          throw new Error(result.message);
-        } else {
-          setOwner(result.profile.fullname);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchApi();
-  }, [ownerId]);
+    sendRequest(
+      requestConfig,
+      handleError,
+      getOwner
+    );
+  }, [ownerId, error, sendRequest]);
 
   return (
-    <div className="card">
-      <div className="card__side card__side--front">
-        <div className="card__head">
+    <div className="card" onClick={() => navigate("/class-detail/" + id + "/timeline")}>
+      <div className="card__box">
+      <div className="card__head">
           <div className="card__image">
             <img src={classImage ? classImage : defaultClassImg} alt="#" />
           </div>
@@ -98,19 +71,6 @@ const Card = ({
             ) : null}
           </div>
         </div>
-      </div>
-
-      <div className="card__side card__side--back">
-        <div className="card__time">
-          <p className="card__time-only">CÒN LẠI</p>
-          <p className="card__time-value">{countdown} ngày</p>
-        </div>
-
-        <Button
-          content="Vào học ngay"
-          type="secondary"
-          onClick={() => navigate("/class-detail/" + id + "/timeline")}
-        />
       </div>
     </div>
   );
@@ -139,27 +99,6 @@ const formatIsoDateTime = (date: string): string => {
   return year + "-" + month + "-" + day;
 };
 
-/*
-convert milliseconds to days
-input: milliseconds
-output: days
-*/
-const millisecondsToDays = (t: number) => {
-  let cd = 24 * 60 * 60 * 1000,
-    ch = 60 * 60 * 1000,
-    d = Math.floor(t / cd),
-    h = Math.floor((t - d * cd) / ch),
-    m = Math.round((t - d * cd - h * ch) / 60000);
 
-  if (m === 60) {
-    h++;
-    m = 0;
-  }
-  if (h === 24) {
-    d++;
-    h = 0;
-  }
-  return d;
-};
 
 export default Card;
