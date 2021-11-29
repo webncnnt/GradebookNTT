@@ -26,7 +26,7 @@ const Slide = () => {
         </div>
 
         <div className="slide__image">
-          <img src={imgsrc} alt="" className="image" />
+          <img src={imgsrc} alt="" />
         </div>
       </div>
     </Container>

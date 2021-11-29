@@ -4,8 +4,23 @@
   align-items: center;
   margin-top: 6rem;
 
+  @include respond(phone) {
+    flex-direction: column-reverse;
+  }
+
+
   &__content {
-    flex: 0 0 50%;
+    flex: 0 0 50%; 
+
+    @include respond(phone) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      & > * {
+        text-align: center;
+      }
+    }
+  
   }
 
   &__header {
@@ -13,6 +28,16 @@
     font-weight: 900;
     margin-bottom: 2rem;
     animation: moveInTop 1s ease-in-out 0s both;
+
+    @include respond(tab-land) {
+      font-size: 6rem;
+    }
+
+    @include respond(tab-port) {
+      font-size: 4rem;
+    }
+
+
   }
 
   &__sub {
@@ -25,9 +50,14 @@
   &__image {
     flex: 0 0 50%;
     animation: zoomIn 1s ease-in-out 0s both;
+
+    img{
+      width: 100%;
+    }
+
+    @include respond(phone) {
+      margin-bottom: 2rem;
+    }
   }
 }
 
-.image{
-    width: 100%;
-}
