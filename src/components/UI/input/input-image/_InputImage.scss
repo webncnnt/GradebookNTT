@@ -5,6 +5,10 @@
 
 .direction-column {
   flex-direction: column;
+
+  .input__avatar {
+    margin-bottom: 2rem;
+  }
 }
 
 .user-edit__title {
@@ -18,7 +22,7 @@
   background-color: #fff;
   box-shadow: 0 0.5rem 4rem rgba($color-black, 0.2);
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-right: 2rem;
 
   img {
     width: 100%;
