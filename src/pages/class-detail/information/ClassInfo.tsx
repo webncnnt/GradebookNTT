@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Container from "../../../components/layouts/container/Container";
+import { GradeStructure } from "../../../components/UI/GradeStructure";
 import useHttp from "../../../hooks/useHttp";
 
 const ClassInfo = () => {
@@ -46,6 +47,9 @@ const ClassInfo = () => {
         </div>
         <div className="class-info__expired">
           Ngày kết thúc: <span>{clsExpired}</span>
+        </div>
+        <div>
+          <GradeStructure />
         </div>
       </div>
     </Container>

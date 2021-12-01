@@ -6,7 +6,6 @@ const Home = lazy(() => import("../pages/home/Home"));
 const Login = lazy(() => import("../pages/login/Login"));
 const Register = lazy(() => import("../pages/register/Register"));
 
-
 const UnauthRoutes = () => {
   return (
     <Suspense fallback={<Loading />}>
@@ -15,7 +14,6 @@ const UnauthRoutes = () => {
         <Route path="/Home" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
-        
       </Routes>
     </Suspense>
   );
