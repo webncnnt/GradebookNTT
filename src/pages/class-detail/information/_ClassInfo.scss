@@ -1,5 +1,14 @@
 .class-info {
   margin-top: 2rem;
+  display: flex;
+
+  &__info {
+    flex: 0 0 45%;
+  }
+
+  &__edit-point-structure {
+    flex: 0 0 50%;
+  }
 
   &__name {
     font-size: 2.5rem;

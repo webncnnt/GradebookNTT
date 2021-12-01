@@ -40,15 +40,18 @@ const ClassInfo = () => {
   return (
     <Container>
       <div className="class-info">
-        <h1 className="class-info__name">{clsName}</h1>
-        <div className="class-info__description">{clsDescription}</div>
-        <div className="class-info__code">
-          Mã tham gia: <span>{clsCode}</span>
+        <div className="class-info__info">
+          <h1 className="class-info__name">{clsName}</h1>
+          <div className="class-info__description">{clsDescription}</div>
+          <div className="class-info__code">
+            Mã tham gia: <span>{clsCode}</span>
+          </div>
+          <div className="class-info__expired">
+            Ngày kết thúc: <span>{clsExpired}</span>
+          </div>
         </div>
-        <div className="class-info__expired">
-          Ngày kết thúc: <span>{clsExpired}</span>
-        </div>
-        <div>
+       
+        <div className="class-info__edit-point-structure">
           <GradeStructure />
         </div>
       </div>
