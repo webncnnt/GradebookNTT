@@ -10,7 +10,7 @@ import "./index.scss";
 
 type GradeStructureProps = {};
 
-export const GradeStructure = ({}: GradeStructureProps) => {
+export const GradeStructure = (props: GradeStructureProps) => {
   const [gradeAssignments, setGradeAssignments] = useState(() => {
     const gradeAssignments: GradeAssignmentModel[] = [
       { id: 1, title: "Giua ky", pos: 65536, score: 2 },
@@ -54,6 +54,7 @@ export const GradeStructure = ({}: GradeStructureProps) => {
     const newAssignment = { ...gradeAssignment, pos };
 
     // send
+    console.log(newAssignment);
   };
 
   const onAssignmentChange = (

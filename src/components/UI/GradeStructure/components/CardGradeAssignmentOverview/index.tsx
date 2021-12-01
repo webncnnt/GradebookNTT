@@ -3,7 +3,7 @@ import { GradeAssignmentModel } from "../../../../../@types/models/GradeAssignme
 import classNames from "classnames";
 import "./index.scss";
 
-type CardGradeAssignmentOverview = {
+type CardGradeAssignmentOverviewProps = {
   gradeAssignment: GradeAssignmentModel;
 } & HTMLAttributes<HTMLDivElement>;
 
@@ -11,7 +11,7 @@ export const CardGradeAssignmentOverview = ({
   gradeAssignment,
   className,
   ...rest
-}: CardGradeAssignmentOverview) => {
+}: CardGradeAssignmentOverviewProps) => {
   const { score, title } = gradeAssignment;
 
   const clzName = classNames(className, "card-grade-assignment-overview");
