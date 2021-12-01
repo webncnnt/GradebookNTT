@@ -1,0 +1,5 @@
+.grade-structure-edit {
+  &__assignment:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}
