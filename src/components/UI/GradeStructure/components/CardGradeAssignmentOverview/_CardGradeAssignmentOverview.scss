@@ -3,8 +3,9 @@
   flex-direction: column;
   padding: 1rem 2rem;
   border-radius: 10px;
-  background-color: aquamarine;
-  width: 12rem;
+  background-color: $color-primary;
+  width: max-content;
+  color: $color-white;
 }
 
 .card-grade-assignment-overview__title {
@@ -14,5 +15,4 @@
 .card-grade-assignment-overview__score {
   font-size: 4rem;
   font-weight: bold;
-  margin-top: 1rem;
 }

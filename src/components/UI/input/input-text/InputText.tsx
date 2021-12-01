@@ -4,6 +4,7 @@ type inputProps = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   validStatus?: string;
+  className?: string;
 };
 
 const InputText = ({
@@ -12,9 +13,10 @@ const InputText = ({
   onChange,
   value,
   validStatus,
+  className
 }: inputProps) => {
   return (
-    <>
+    <div className={(className ? className : "")}>
       <input
         placeholder={placeholder}
         type="text"
@@ -26,7 +28,7 @@ const InputText = ({
       <label htmlFor={id} className="label label--text">
         {placeholder}
       </label>
-    </>
+    </div>
   );
 };
 

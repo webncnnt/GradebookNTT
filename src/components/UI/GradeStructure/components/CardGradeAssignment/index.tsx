@@ -4,24 +4,29 @@ import { UpdateGradeAssignmentFormValues } from "../../../../../@types/formInput
 import { GradeAssignmentModel } from "../../../../../@types/models/GradeAssignmentModel";
 import { RemoveIcon } from "../../../../icons/Remove";
 import InputText from "../../../input/input-text/InputText";
-import "./index.scss";
 
 type CardAssignmentProps = {
   gradeAssignment: GradeAssignmentModel;
   onAssignmentChange: (
     gradeAssignment: UpdateGradeAssignmentFormValues
   ) => void;
+  onRemoveAssignment: (id: number) => void;
 } & HTMLAttributes<HTMLDivElement>;
 
 export const CardGradeAssignment = ({
   gradeAssignment,
   onAssignmentChange,
+  onRemoveAssignment,
   className,
   ...rest
 }: CardAssignmentProps) => {
   const { id, score, title } = gradeAssignment;
 
   const clz = classNames(className, "card-grade-assignment");
+
+  const removeAssignmentHandle = () => {
+    onRemoveAssignment(id);
+  }
 
   return (
     <div className={clz} {...rest}>
@@ -30,12 +35,14 @@ export const CardGradeAssignment = ({
           placeholder="Grade Name"
           id="gradeName"
           value={title}
+          className="mb2"
           onChange={(e) => {
             const newName = e.target.value;
 
             onAssignmentChange({
               id,
               title: newName,
+              score: score
             });
           }}
         />
@@ -49,6 +56,7 @@ export const CardGradeAssignment = ({
 
             onAssignmentChange({
               id,
+              title: title,
               score: newScore,
             });
           }}
@@ -56,8 +64,8 @@ export const CardGradeAssignment = ({
       </div>
 
       <div className="card-grade-assignment__action">
-        <button>
-          <RemoveIcon />
+        <button onClick={removeAssignmentHandle}>
+          <RemoveIcon className="icon--white"/>
         </button>
       </div>
     </div>

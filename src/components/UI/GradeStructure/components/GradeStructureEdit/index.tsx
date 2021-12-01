@@ -14,6 +14,7 @@ import { UpdateGradeAssignmentFormValues } from "../../../../../@types/formInput
 
 type GradeStructureEditProps = {
   gradeAssignments: GradeAssignmentModel[];
+  
   onAssignmentDragEnd: (
     result: DropResult,
     provided: ResponderProvided
@@ -21,6 +22,7 @@ type GradeStructureEditProps = {
   onAssignmentChange: (
     gradeAssignment: UpdateGradeAssignmentFormValues
   ) => void;
+  onRemoveAssignment: (id: number) => void;
 } & HTMLAttributes<HTMLDivElement>;
 
 export const GradeStructureEdit = ({
@@ -28,6 +30,7 @@ export const GradeStructureEdit = ({
   gradeAssignments,
   onAssignmentDragEnd,
   onAssignmentChange,
+  onRemoveAssignment,
   ...rest
 }: GradeStructureEditProps) => {
   const clz = classNames(className, "grade-structure-edit");
@@ -55,6 +58,7 @@ export const GradeStructureEdit = ({
                         <CardGradeAssignment
                           gradeAssignment={item}
                           onAssignmentChange={onAssignmentChange}
+                          onRemoveAssignment={onRemoveAssignment}
                         />
                       </div>
                     )}

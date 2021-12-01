@@ -1,22 +1,20 @@
 .card-create-grade-assignment {
-  background-color: black;
+  background-color: $color-white;
   display: flex;
-  border-radius: 10px;
-  flex-direction: row;
+  border-radius: 1rem;
+  box-shadow: 0 0 2rem rgba($color-black, 0.2);
   overflow: hidden;
 
   &__content {
-    display: flex;
-    flex-direction: column;
     flex: 1;
-    padding: 1rem 2rem;
+    padding: 2rem;
   }
 
   &__action {
     display: flex;
-    width: 2rem;
-    background-color: green;
-
+    width: max-content;
+    background-color: $color-green;
+    padding: 0 0.5rem;
     & > button {
       border: 0;
       background-color: transparent;

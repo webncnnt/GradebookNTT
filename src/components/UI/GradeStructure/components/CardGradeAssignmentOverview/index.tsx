@@ -1,7 +1,6 @@
 import { HTMLAttributes } from "react";
-import { GradeAssignmentModel } from "../../../../../@types/models/GradeAssignmentModel";
 import classNames from "classnames";
-import "./index.scss";
+import { GradeAssignmentModel } from "../../../../../@types/models/GradeAssignmentModel";
 
 type CardGradeAssignmentOverviewProps = {
   gradeAssignment: GradeAssignmentModel;

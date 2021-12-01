@@ -1,5 +1,13 @@
 .icon {
   font-size: 2.5rem !important;
+
+  &--white {
+    svg {
+      path {
+        fill: $color-white;
+      }
+    }
+  }
 }
 
 .frame {
