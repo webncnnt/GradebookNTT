@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { HTMLAttributes } from "react";
 import { CreateGradeAssignmentFormValues } from "../../../../../@types/formInputs/CreateGradeAssignmentFormValues";
-import { GradeAssignmentModel } from "../../../../../@types/models/GradeAssignmentModel";
 import Add from "../../../../icons/Add";
 import InputText from "../../../input/input-text/InputText";
 import "./index.scss";
