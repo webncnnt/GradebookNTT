@@ -63,7 +63,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
     ) {
       newPos =
         (gradeAssignments[destinationIndex - 1].pos +
-          gradeAssignments[destinationIndex + 1].pos) /
+          gradeAssignments[destinationIndex].pos) /
         2;
     }
 
@@ -73,11 +73,13 @@ export const GradeStructure = (props: GradeStructureProps) => {
   const onCreateAssignmentClick = (
     gradeAssignment: CreateGradeAssignmentFormValues
   ) => {
-    
+    const pos = gradeAssignments.length * 65535;
+    const newAssignment = { ...gradeAssignment, pos };
+
     const requestConfig = {
       url: "classes/" + pathname.split("/")[2] +"/gradeStructures" ,
       method: "POST",
-      body: gradeAssignment
+      body: newAssignment
     };
 
     const handleError = () => {};
@@ -133,6 +135,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
     const gradeAssignmentsClone = Array.from(gradeAssignments);
     const [removed] = gradeAssignmentsClone.splice(result.source.index, 1);
 
+ 
     const newPos = calculateNewPos(gradeAssignments, result.destination.index);
 
     const requestConfig = {
@@ -148,6 +151,8 @@ export const GradeStructure = (props: GradeStructureProps) => {
     const handleError = () => {};
 
     const getGradeAssignments = (data: any) => {
+      console.log(data);
+      
       setIsChangeAssignment(true);
     };
 

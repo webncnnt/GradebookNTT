@@ -21,8 +21,11 @@ export const CardCreateGradeAssignment = ({
 
   const CreateAssignmentHandle = () => {
     const data:CreateGradeAssignmentFormValues = {"title": gradeName, "score": parseInt(gradeScore), "pos": assignLength + 1}
-
-    onCreateClick(data);
+    if (gradeName.trim() !== "" && gradeScore.trim() !== ""){
+      onCreateClick(data);
+    }
+    setGradeName("");
+    setGradeScore("");
   }
 
   return (
