@@ -1,0 +1,26 @@
+.card-grade-assignment {
+  background-color: black;
+  display: flex;
+  border-radius: 10px;
+  flex-direction: row;
+  overflow: hidden;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem 2rem;
+  }
+
+  &__action {
+    display: flex;
+    width: 2rem;
+    background-color: red;
+
+    & > button {
+      border: 0;
+      background-color: transparent;
+      cursor: pointer;
+    }
+  }
+}
