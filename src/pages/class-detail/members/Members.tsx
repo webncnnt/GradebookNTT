@@ -10,18 +10,12 @@ import UserTable from '../../../components/UI/table/user-table/UserTable';
 import useHttp from '../../../hooks/useHttp';
 import MemberDetail from './members-detail/MemberDetail';
 import DownloadIcon from '../../../components/icons/Download';
-
-interface memberInfo {
-  id: number;
-  fullName: string;
-  avatar?: string;
-  email: string;
-  joinDate: string;
-}
+import { StudentModel } from '../../../@types/models/StudentModel';
+import { TeacherModel } from '../../../@types/models/TeacherModel';
 
 const csv_headers = [
-  { label: 'Tên', key: 'studentName' },
-  { label: 'MSSV', key: 'studentID' },
+  { label: 'StudentName', key: 'studentName' },
+  { label: 'StudentID', key: 'studentID' },
 ];
 
 const csv_data = [
@@ -31,8 +25,8 @@ const csv_data = [
 ];
 
 const Members = () => {
-  const [listTeachers, setListTeachers] = useState<memberInfo[]>([]);
-  const [listStudents, setListStudents] = useState<memberInfo[]>([]);
+  const [listTeachers, setListTeachers] = useState<TeacherModel[]>([]);
+  const [listStudents, setListStudents] = useState<StudentModel[]>([]);
   const [isShowListTeacher, setIsShowListTeacher] = useState<boolean>(true);
   const [memberIdDetail, setMemberIdDetail] = useState<number>(0);
   const [isShowInviteForm, setIsShowInviteForm] = useState<boolean>(false);
@@ -50,7 +44,6 @@ const Members = () => {
     };
 
     const getTeachers = (data: any) => {
-      console.log('Get teacher profile');
       const memberInfoFormat = data.data.teachers.map((member: any) => {
         return {
           id: member.profile.id,
@@ -66,7 +59,6 @@ const Members = () => {
   }, [pathname, error, sendRequest]);
 
   useEffect(() => {
-    console.log('Get students profile');
     const requestConfig = {
       url: 'classes/' + pathname.split('/')[2] + '/students',
     };
@@ -99,7 +91,15 @@ const Members = () => {
     skipEmptyLines: true,
   };
 
-  const handleForce = (data: any, fileInfo: any) => console.log(data, fileInfo);
+  const handleForce = (data: any, fileInfo: any) => {
+    const newListStudents = data.map((student: any) => {
+      return {
+        studentName: student.StudentName,
+        studentID: student.StudentID,
+      };
+    });
+    setListStudents(listStudents.concat(newListStudents));
+  };
 
   return (
     <Container>
@@ -116,14 +116,14 @@ const Members = () => {
                 Giảng viên
               </li>
               <li className={'members__menu-item' + (!isShowListTeacher ? ' active' : '')} onClick={() => setIsShowListTeacher(false)}>
-                Học viên
+                Sinh viên
               </li>
             </ul>
             <div className='members__list'>
               {isShowListTeacher ? (
-                <UserTable listUsers={listTeachers} onChooseMember={chooseMember} memberIdChoose={memberIdDetail} />
+                <UserTable isStudent={false} listUsers={listTeachers} onChooseMember={chooseMember} memberIdChoose={memberIdDetail} />
               ) : (
-                <UserTable listUsers={listStudents} onChooseMember={chooseMember} memberIdChoose={memberIdDetail} />
+                <UserTable isStudent={true} listUsers={listStudents} onChooseMember={chooseMember} memberIdChoose={memberIdDetail} />
               )}
             </div>
             <div className='members__downdoad-upload'>
