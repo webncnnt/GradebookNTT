@@ -1,73 +1,72 @@
 .members {
-  margin-top: 2rem;
-  display: flex;
-
-  @include respond(phone) {
-    flex-direction: column;
-  }
-
-  &__content {
-    flex: 0 0 60%;
-    margin-right: 2rem;
+    margin-top: 2rem;
+    display: flex;
 
     @include respond(phone) {
-        margin-right: 0;
-        margin-bottom: 2rem;
+        flex-direction: column;
     }
-  }
 
-  &__title-invite {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4rem;
-  }
-
-  &__title {
-    font-size: 2.6rem;
-    font-weight: 700;
-    
-  }
-
-  &__menu {
-    list-style: none;
-    display: flex;
-    border-bottom: 1px solid $color-gray-medium;
-
-    &-item {
-      font-size: 1.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      color: $color-gray;
-      position: relative;
-
-      &:not(:last-child) {
+    &__content {
+        flex: 0 0 60%;
         margin-right: 2rem;
-      }
+
+        @include respond(phone) {
+            margin-right: 0;
+            margin-bottom: 2rem;
+        }
     }
-  }
 
-  &__detail {
-    flex: 0 0 40%;
-    background-color: $color-white;
-    box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
-    border-radius: 1rem;
-    padding: 2rem;
-
-    &-avatar {
-      margin: 2rem auto;
-      width: 15rem;
-      height: 15rem;
-      background-color: $color-white;
-      box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
-      border-radius: 0.5rem;
-      overflow: hidden;
-      cursor: pointer;
-
-      img {
-        height: 100%;
-        object-fit: cover;
-      }
+    &__title-invite {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4rem;
     }
-  }
+
+    &__title {
+        font-size: 2.6rem;
+        font-weight: 700;
+    }
+
+    &__menu {
+        list-style: none;
+        display: flex;
+        border-bottom: 1px solid $color-gray-medium;
+
+        &-item {
+            font-size: 1.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: $color-gray;
+            position: relative;
+
+            &:not(:last-child) {
+                margin-right: 2rem;
+            }
+        }
+    }
+
+    &__detail {
+        flex: 0 0 40%;
+        background-color: $color-white;
+        box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
+        border-radius: 1rem;
+        padding: 2rem;
+
+        &-avatar {
+            margin: 2rem auto;
+            width: 15rem;
+            height: 15rem;
+            background-color: $color-white;
+            box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            cursor: pointer;
+
+            img {
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
 }
