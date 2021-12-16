@@ -1,72 +1,92 @@
 .members {
-    margin-top: 2rem;
-    display: flex;
+  margin-top: 2rem;
+  display: flex;
+
+  @include respond(phone) {
+    flex-direction: column;
+  }
+
+  &__content {
+    flex: 0 0 60%;
+    margin-right: 2rem;
 
     @include respond(phone) {
-        flex-direction: column;
+      margin-right: 0;
+      margin-bottom: 2rem;
     }
+  }
 
-    &__content {
-        flex: 0 0 60%;
+  &__title-invite {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+
+  &__title {
+    font-size: 2.6rem;
+    font-weight: 700;
+  }
+
+  &__menu {
+    list-style: none;
+    display: flex;
+    border-bottom: 1px solid $color-gray-medium;
+
+    &-item {
+      font-size: 1.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: $color-gray;
+      position: relative;
+
+      &:not(:last-child) {
         margin-right: 2rem;
-
-        @include respond(phone) {
-            margin-right: 0;
-            margin-bottom: 2rem;
-        }
+      }
     }
+  }
 
-    &__title-invite {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 4rem;
+  &__detail {
+    flex: 0 0 40%;
+    background-color: $color-white;
+    box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
+    border-radius: 1rem;
+    padding: 2rem;
+
+    &-avatar {
+      margin: 2rem auto;
+      width: 15rem;
+      height: 15rem;
+      background-color: $color-white;
+      box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      cursor: pointer;
+
+      img {
+        height: 100%;
+        object-fit: cover;
+      }
     }
+  }
 
-    &__title {
-        font-size: 2.6rem;
-        font-weight: 700;
-    }
+  &__downdoad-upload {
+    display: flex;
+    align-items: center;
+  }
 
-    &__menu {
-        list-style: none;
-        display: flex;
-        border-bottom: 1px solid $color-gray-medium;
+  &__download {
+    display: flex;
+    margin: 2rem;
+  }
+}
 
-        &-item {
-            font-size: 1.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: $color-gray;
-            position: relative;
+.csv-label {
+  cursor: pointer;
+}
 
-            &:not(:last-child) {
-                margin-right: 2rem;
-            }
-        }
-    }
-
-    &__detail {
-        flex: 0 0 40%;
-        background-color: $color-white;
-        box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
-        border-radius: 1rem;
-        padding: 2rem;
-
-        &-avatar {
-            margin: 2rem auto;
-            width: 15rem;
-            height: 15rem;
-            background-color: $color-white;
-            box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
-            border-radius: 0.5rem;
-            overflow: hidden;
-            cursor: pointer;
-
-            img {
-                height: 100%;
-                object-fit: cover;
-            }
-        }
-    }
+.csv-input {
+  display: none;
+  visibility: hidden;
+  opacity: none;
 }
