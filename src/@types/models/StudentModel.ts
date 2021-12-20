@@ -1,7 +1,8 @@
 export type StudentModel = {
   id: number;
-  studentName: string;
-  studentID: number;
+  userId?: number; 
+  studentName?: string;
+  studentId: string;
   fullName?: string;
   avatar?: string;
   email?: string;

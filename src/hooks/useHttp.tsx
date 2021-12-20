@@ -30,7 +30,7 @@ const useHttp = () => {
       }
 
     try {
-      const response = await fetch("https://gradebook.codes/api/" + requestConfig.url, {
+      const response = await fetch("http://localhost:8000/api/" + requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : 'GET',
         headers: requestConfig.headers ? requestConfig.headers : resHeaders,
         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,

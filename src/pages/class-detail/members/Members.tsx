@@ -14,14 +14,8 @@ import { StudentModel } from '../../../@types/models/StudentModel';
 import { TeacherModel } from '../../../@types/models/TeacherModel';
 
 const csv_headers = [
-  { label: 'StudentName', key: 'studentName' },
-  { label: 'StudentID', key: 'studentID' },
-];
-
-const csv_data = [
-  { studentName: 'Ahmed', studentID: '123' },
-  { studentName: 'ádg', studentID: '134' },
-  { studentName: 'Ahyq3med', studentID: '876' },
+  { label: 'Tên sinh viên', key: 'studentName' },
+  { label: 'MSSV', key: 'studentId' },
 ];
 
 const Members = () => {
@@ -30,21 +24,24 @@ const Members = () => {
   const [isShowListTeacher, setIsShowListTeacher] = useState<boolean>(true);
   const [memberIdDetail, setMemberIdDetail] = useState<number>(0);
   const [isShowInviteForm, setIsShowInviteForm] = useState<boolean>(false);
+  const [isUploadStudents, setIsUploadStudents] = useState<boolean>(false);
+  const [isTeacher, setIsTeacher] = useState<boolean>(false);
+
+  const userId = localStorage.getItem('userId');
 
   const { error, sendRequest } = useHttp();
 
   const pathname = window.location.pathname;
 
+  //get teacher
   useEffect(() => {
     const requestConfig = {
       url: 'classes/' + pathname.split('/')[2] + '/teachers',
     };
-    const handleError = () => {
-      console.log(error);
-    };
+    const handleError = () => {};
 
     const getTeachers = (data: any) => {
-      const memberInfoFormat = data.data.teachers.map((member: any) => {
+      const memberInfoFormat: TeacherModel[] = data.data.teachers.map((member: any) => {
         return {
           id: member.profile.id,
           fullName: member.profile.fullName,
@@ -58,32 +55,49 @@ const Members = () => {
     sendRequest(requestConfig, handleError, getTeachers);
   }, [pathname, error, sendRequest]);
 
+  //get student
   useEffect(() => {
     const requestConfig = {
-      url: 'classes/' + pathname.split('/')[2] + '/students',
+      url: 'students/getStudentsByClassId/' + pathname.split('/')[2],
     };
-    const handleError = () => {
-      console.log(error);
-    };
+    const handleError = () => {};
 
     const getStudents = (data: any) => {
-      const memberInfoFormat = data.data.students.map((member: any) => {
+      const memberInfoFormat: StudentModel[] = data.map((member: any) => {
         return {
-          id: member.profile.id,
-          fullName: member.profile.fullName,
-          avatar: member.profile.avatar,
-          email: member.profile.email,
-          joinDate: member.joinDate,
+          id: member.id,
+          fullName: member.fullName,
+          userId: member.userId,
+          studentId: member.studentId,
+          avatar: member.avatar,
+          email: member.email,
+          joinDate: member.createdAt,
         };
       });
+
       setListStudents(memberInfoFormat);
     };
     sendRequest(requestConfig, handleError, getStudents);
-  }, [pathname, error, sendRequest]);
+    setIsUploadStudents(false);
+  }, [pathname, sendRequest, isUploadStudents]);
+
+  //check teacher
+  useEffect(() => {
+    if (listTeachers.findIndex((teacher) => teacher.id === parseInt(userId ? userId : '')) >= 0) {
+      setIsTeacher(true);
+    }
+  }, [listTeachers, userId]);
 
   const chooseMember = (id: number) => {
     setMemberIdDetail(id);
   };
+
+  const csv_data = listStudents.map((student) => {
+    return {
+      studentName: student.fullName,
+      studentId: student.studentId,
+    };
+  });
 
   const papaparseOptions = {
     header: true,
@@ -92,13 +106,32 @@ const Members = () => {
   };
 
   const handleForce = (data: any, fileInfo: any) => {
-    const newListStudents = data.map((student: any) => {
-      return {
-        studentName: student.StudentName,
-        studentID: student.StudentID,
+    if (data[0]['Tên sinh viên']) {
+      const newListStudents = data.map((student: any) => {
+        return {
+          studentName: student['Tên sinh viên'],
+          studentId: student['MSSV'].toString(),
+        };
+      });
+
+      const requestConfig = {
+        url: 'students/uploadStudents',
+        method: 'POST',
+        body: {
+          students: newListStudents,
+          classId: pathname.split('/')[2],
+        },
       };
-    });
-    setListStudents(listStudents.concat(newListStudents));
+      const handleError = () => {};
+
+      const uploadStudents = (data: any) => {};
+
+      sendRequest(requestConfig, handleError, uploadStudents);
+
+      setIsUploadStudents(true);
+    } else {
+      console.log('Wrong header');
+    }
   };
 
   return (
@@ -126,29 +159,30 @@ const Members = () => {
                 <UserTable isStudent={true} listUsers={listStudents} onChooseMember={chooseMember} memberIdChoose={memberIdDetail} />
               )}
             </div>
-            <div className='members__downdoad-upload'>
-              <div className='members__download'>
-                {!isShowListTeacher ? (
-                  <CSVLink data={csv_data} filename={'list-students.csv'} headers={csv_headers}>
-                    <DownloadIcon className='btn btn--primary icon--white' />
-                  </CSVLink>
-                ) : null}
-                ;
+            {isTeacher ? (
+              <div className='members__downdoad-upload'>
+                <div className='members__download'>
+                  {!isShowListTeacher ? (
+                    <CSVLink data={csv_data} filename={'list-students.csv'} headers={csv_headers}>
+                      <DownloadIcon className='btn btn--primary icon--white' />
+                    </CSVLink>
+                  ) : null}
+                  ;
+                </div>
+                <div className='member__upload'>
+                  {!isShowListTeacher ? (
+                    <CSVReader
+                      cssClass='csv-reader-input'
+                      label={<UploadIcon className='btn btn--primary icon--white' />}
+                      onFileLoaded={handleForce}
+                      parserOptions={papaparseOptions}
+                      inputId='listStudents'
+                      inputName='listStudents'
+                    />
+                  ) : null}
+                </div>
               </div>
-              <div className='member__upload'>
-                {!isShowListTeacher ? (
-                  <CSVReader
-                    cssClass='csv-reader-input'
-                    label={<UploadIcon className='btn btn--primary icon--white' />}
-                    onFileLoaded={handleForce}
-                    parserOptions={papaparseOptions}
-                    inputId='ObiWan'
-                    inputName='ObiWan'
-                    inputStyle={{ color: 'red' }}
-                  />
-                ) : null}
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
         <div className='members__detail'>

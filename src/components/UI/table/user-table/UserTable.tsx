@@ -64,7 +64,7 @@ const UserTable = ({ listUsers, onChooseMember, memberIdChoose, isStudent }: use
               return (
                 <tr
                   className={'user-table__row' + (memberIdChoose === user.id ? ' row-active' : '')}
-                  key={user.id ? user.id : (user as StudentModel).studentID}
+                  key={user.id ? user.id : (user as StudentModel).studentId}
                   onClick={() => chooseMemberHandle(user.id)}
                 >
                   {isStudent ? (
@@ -78,7 +78,7 @@ const UserTable = ({ listUsers, onChooseMember, memberIdChoose, isStudent }: use
                           (user as StudentModel).studentName
                         )}
                       </td>
-                      <td className='user-table__student-id'>{(user as StudentModel).studentID}</td>
+                      <td className='user-table__student-id'>{(user as StudentModel).studentId}</td>
                       <td className='user-table__join-date'>{formatDate(formatIsoDateTime(user.joinDate ? user.joinDate : ''))}</td>
                     </>
                   ) : (
