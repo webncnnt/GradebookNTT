@@ -14,11 +14,18 @@
 
   &__actions {
     display: flex;
-    flex-direction: row;
   }
 
-  &__action :not(:last-child) {
-    margin-right: 10px;
-    cursor: pointer;
+  &__button {
+    text-align: center;
+    
+    &:not(:last-child) {
+      margin-right: 2rem;
+    }
+
+    span {
+      margin-bottom: 0.5rem;
+      display: block;
+    }
   }
 }
