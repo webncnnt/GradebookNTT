@@ -31,9 +31,7 @@ const MemberDetail = ({ memberId }: memberDetailProps) => {
 
   const {sendRequest} = useHttp();
 
-  useEffect(() => {
-    console.log("Get user profile");
-    
+  useEffect(() => {   
     const requestConfig = {
       url: "profile/" + memberId
     }
