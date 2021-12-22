@@ -11,7 +11,6 @@ import { groupBy } from '../../../utils/array';
 import DownloadIcon from '../../icons/Download';
 import Download2Icon from '../../icons/Download2';
 import './index.scss';
-import * as mock from './mock';
 
 const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
   const gridCols: GridEnrichedColDef[] = assignments.map((assignment) => ({
@@ -268,7 +267,7 @@ const Scores = () => {
     },
     {
       field: 'MSSV',
-      width: 200,
+      width: 120,
       type: 'date',
       renderHeader: (headerParams: any) => {
         return <>{headerParams.field}</>;
