@@ -48,7 +48,7 @@ const Scores = () => {
 
   const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
     const foundStudents = students.filter((s) => s.id === e.id);
-    const foundAssignments = assignments.filter((a) => a.title == e.field);
+    const foundAssignments = assignments.filter((a) => a.title === e.field);
     const isUpdate = e.value ? true : false;
 
     if (foundStudents.length !== 1) return;
@@ -77,7 +77,6 @@ const Scores = () => {
       handleError();
       return;
     }
-    console.log(newScore);
 
     const requestConfig = {
       url: `grades/${classId}/${gradeAssignment.id}/${student.studentId}`,
@@ -140,8 +139,6 @@ const Scores = () => {
         };
       });
 
-      console.log(gradeAssignmentsData);
-
       setAssignments(gradeAssignmentsData);
     };
 
@@ -157,7 +154,8 @@ const Scores = () => {
     const handleError = () => {};
 
     const handleSuccess = (data: any) => {
-      console.log(data.data.grades);
+      console.log(data);
+
       setGradeStudents(data.data.grades);
     };
 
@@ -177,7 +175,6 @@ const Scores = () => {
           (prev, curr) => ({ ...prev, [assignments[assignments.findIndex((a) => a.id === curr.gradeAssignmentId)].title]: curr.score }),
           {}
         );
-        console.log(assignmentIdWithScores);
 
         return { ...base, ...assignmentIdWithScores };
       }
@@ -196,37 +193,66 @@ const Scores = () => {
     skipEmptyLines: true,
   };
 
-  const handleForce = (data: any, fileInfo: any) => {
-    console.log(data);
+  const handleForce = (data: any) => {
+    if (data[0]['Tên sinh viên']) {
+      const dataAssignmentStudents = data.map((student: any) => {
+        return {
+          ...{
+            studentId: student['MSSV'].toString(),
+            score: student[assignments[0].title],
+            gradeAssignmentId: student[assignments[0].id],
+          },
+          ...{
+            studentId: student['MSSV'].toString(),
+            score: student[assignments[1].title],
+            gradeAssignmentId: student[assignments[1].id],
+          },
+        };
+      });
 
-    // if (data[0]['Tên sinh viên']) {
-    //   const newListStudents = data.map((student: any) => {
-    //     return {
-    //       studentName: student['Tên sinh viên'],
-    //       studentId: student['MSSV'].toString(),
-    //     };
-    //   });
+      const requestConfig = {
+        url: `grades/${classId}`,
+        method: 'POST',
+        body: { grades: dataAssignmentStudents },
+      };
+      const handleError = () => {};
 
-    //   const requestConfig = {
-    //     url: '',
-    //     method: 'POST',
-    //     body: {},
-    //   };
-    //   const handleError = () => {};
+      const uploadStudents = (data: any) => {
+        console.log(data);
+      };
 
-    //   const uploadStudents = (data: any) => {};
+      sendRequest(requestConfig, handleError, uploadStudents);
+    } else {
+      console.log('Wrong header');
+    }
+  };
 
-    //   sendRequest(requestConfig, handleError, uploadStudents);
-    // } else {
-    //   console.log('Wrong header');
-    // }
+  const handleForceAssignment = (data: any, grade: GradeAssignmentModel) => {
+    if (data[0]['Tên sinh viên']) {
+      const dataAssignmentStudents = data.map((student: any) => {
+        return {
+          studentId: student['MSSV'].toString(),
+          score: student[grade.title],
+        };
+      });
+
+      const requestConfig = {
+        url: `grades/${classId}/${grade.id}`,
+        method: 'POST',
+        body: { grades: dataAssignmentStudents },
+      };
+      const handleError = () => {};
+      const uploadStudents = (data: any) => {};
+      sendRequest(requestConfig, handleError, uploadStudents);
+    } else {
+      console.log('Wrong header');
+    }
   };
 
   const assignment_columns: GridColDef[] = assignments.map((grade) => {
     const assignment_name = grade.title;
-    const assignment_id = grade.id;
 
-    const template_score = [{ studentName: 'Nguyễn Văn A', studentId: '1', [assignment_name]: '1' }];
+    const template_score = [{ studentName: 'Nguyễn Văn A', studentId: '1', [grade.title]: '1' }];
 
     const groupedStudentGrades = groupBy(gradeStudents, (item) => item.studentId);
 
@@ -245,28 +271,6 @@ const Scores = () => {
       { label: assignment_name, key: assignment_name },
     ];
 
-    const handleForceAssignment = (data: any) => {
-      if (data[0]['Tên sinh viên']) {
-        const dataAssignmentStudents = data.map((student: any) => {
-          return {
-            studentId: student['MSSV'].toString(),
-            score: student[assignment_name],
-          };
-        });
-
-        const requestConfig = {
-          url: `grades/${classId}/${assignment_id}`,
-          method: 'POST',
-          body: { grades: dataAssignmentStudents },
-        };
-        const handleError = () => {};
-        const uploadStudents = (data: any) => {};
-        sendRequest(requestConfig, handleError, uploadStudents);
-      } else {
-        console.log('Wrong header');
-      }
-    };
-
     return {
       field: grade.title,
       width: 200,
@@ -275,25 +279,65 @@ const Scores = () => {
         return (
           <>
             {headerParams.field}
-            <CSVLink data={template_score} filename={`${assignment_name}.csv`} headers={scores_headers}>
+            <CSVLink data={template_score} filename={`${grade.title}.csv`} headers={scores_headers}>
               <Download2Icon className='icon--csv ml1' />
             </CSVLink>
 
-            <CSVLink data={assignment_score} filename={`${assignment_name}.csv`} headers={scores_headers}>
+            <CSVLink data={assignment_score} filename={`${grade.title}.csv`} headers={scores_headers}>
               <DownloadIcon className='icon--csv ml1' />
             </CSVLink>
 
             <CSVReader
               cssClass='csv-reader-input'
               label={<UploadIcon className='icon--csv ml1' />}
-              onFileLoaded={handleForceAssignment}
+              onFileLoaded={(data) => handleForceAssignment(data, grade)}
               parserOptions={papaparseOptions}
-              inputId='gradesAssignment'
-              inputName='gradesAssignment'
+              inputId={'assignment' + grade.id}
+              inputName={'assignment' + grade.id}
             />
           </>
         );
       },
+    };
+  });
+
+  const grades_headers_assignment = assignments.map((grades) => {
+    return {
+      label: grades.title,
+      key: grades.title,
+    };
+  });
+
+  const scores_headers = [
+    { label: 'Tên sinh viên', key: 'studentName' },
+    { label: 'MSSV', key: 'studentId' },
+  ].concat(grades_headers_assignment);
+
+  const grades_columns = assignments.map((grades) => {
+    return {
+      [grades.title]: '1',
+    };
+  });
+
+  let grades_columns_template = {};
+
+  for (let i of grades_columns) {
+    grades_columns_template = { ...grades_columns_template, ...i };
+  }
+
+  grades_columns_template = {
+    ...{
+      studentName: 'Nguyễn Văn A',
+      studentId: '1',
+    },
+    ...grades_columns_template,
+  };
+
+  const grades_board_data = dataGridRows.map((student) => {
+    return {
+      studentName: student['Tên sinh viên'],
+      studentId: student.MSSV,
+      ...student,
     };
   });
 
@@ -333,14 +377,14 @@ const Scores = () => {
 
           <div className='scores__actions'>
             <button className='scores__button btn btn--primary'>
-              <CSVLink data={[]} filename={'list-students.csv'} headers={[]}>
+              <CSVLink data={[grades_columns_template]} filename={'template-grades.csv'} headers={scores_headers}>
                 <span>Tải template</span>
                 <Download2Icon className='icon--white' />
               </CSVLink>
             </button>
 
             <button className='scores__button btn btn--primary'>
-              <CSVLink data={[]} filename={'list-students.csv'} headers={[]}>
+              <CSVLink data={grades_board_data} filename={'class-grades.csv'} headers={scores_headers}>
                 <span>Tải bảng điểm</span>
                 <DownloadIcon className='icon--white' />
               </CSVLink>
@@ -354,7 +398,7 @@ const Scores = () => {
                   <UploadIcon className='icon--white' />
                 </div>
               }
-              onFileLoaded={() => {}}
+              onFileLoaded={handleForce}
               parserOptions={papaparseOptions}
               inputId='gradesBoard'
               inputName='gradesBoard'
