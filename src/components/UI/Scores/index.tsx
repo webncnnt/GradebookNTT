@@ -145,6 +145,30 @@ const Scores = () => {
     }
   };
 
+  const handleForceAssignment = (data: any, fileInfo: any) => {
+    if (data[0]['Tên sinh viên']) {
+      const newListStudents = data.map((student: any) => {
+        return {
+          studentName: student['Tên sinh viên'],
+          studentId: student['MSSV'].toString(),
+        };
+      });
+
+      const requestConfig = {
+        url: '',
+        method: 'POST',
+        body: {},
+      };
+      const handleError = () => {};
+
+      const uploadStudents = (data: any) => {};
+
+      sendRequest(requestConfig, handleError, uploadStudents);
+    } else {
+      console.log('Wrong header');
+    }
+  };
+
   const columns = [
     {
       field: 'Tên sinh viên',
@@ -181,7 +205,7 @@ const Scores = () => {
             <CSVReader
               cssClass='csv-reader-input'
               label={<UploadIcon className='icon--csv ml1' />}
-              onFileLoaded={handleForce}
+              onFileLoaded={handleForceAssignment}
               parserOptions={papaparseOptions}
               inputId='gradesBoard'
               inputName='gradesBoard'
@@ -227,6 +251,9 @@ const Scores = () => {
       },
     },
   ];
+
+
+  
 
   return (
     <>
