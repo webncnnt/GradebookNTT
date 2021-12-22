@@ -1,4 +1,4 @@
-import { DataGrid, GridEnrichedColDef, GridEventListener, GridEvents } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridEnrichedColDef, GridEventListener, GridEvents } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import CSVReader from 'react-csv-reader';
@@ -12,36 +12,27 @@ import DownloadIcon from '../../icons/Download';
 import Download2Icon from '../../icons/Download2';
 import './index.scss';
 
-const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
-  const gridCols: GridEnrichedColDef[] = assignments.map((assignment) => ({
-    field: assignment.id.toString(),
-    headerName: assignment.title,
-    width: 200,
-    editable: true,
-    align: 'left',
-    renderCell: (params) => {
-      return <div>{params.value}</div>;
-    },
+const renderRows = (students: StudentModel[], assignments: GradeAssignmentModel[], studentGrades: StudentGradeModel[]) => {
+  const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
 
-    // TODO: render cell with button menu
-    // renderEditCell: (params) => {
-    //   return <input value={params.value?.toString()} />;
-    // },
-  }));
+  const rows = students.map((student) => {
+    const grades = groupedStudentGrades[student.studentId];
 
-  gridCols.unshift({
-    field: 'studentId',
-    headerName: 'Sinh Vien',
-    width: 200,
-    editable: true,
-    align: 'left',
+    const base = { id: student.id, 'Tên sinh viên': student.fullName, MSSV: student.studentId };
+
+    if (grades) {
+      const assignmentIdWithScores = grades.reduce((prev, curr) => {
+        const currAssignment = assignments.filter((a) => a.id === curr.gradeAssignmentId);
+        return { ...prev, [currAssignment[0].title]: curr.score };
+      }, {});
+
+      return { ...base, ...assignmentIdWithScores };
+    }
+
+    return base;
   });
 
-  return gridCols;
-};
-
-const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
-  console.log(e);
+  return rows;
 };
 
 const pathname = window.location.pathname;
@@ -54,6 +45,67 @@ const Scores = () => {
   const [gradeStudents, setGradeStudents] = useState<StudentGradeModel[]>([]);
 
   const { sendRequest } = useHttp();
+
+  const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
+    const foundStudents = students.filter((s) => s.id === e.id);
+    const foundAssignments = assignments.filter((a) => a.title == e.field);
+    const isUpdate = e.value ? true : false;
+
+    if (foundStudents.length !== 1) return;
+    if (foundAssignments.length !== 1) return;
+
+    const student = foundStudents[0];
+    const gradeAssignment = foundAssignments[0];
+
+    const handleError = () => {
+      setGradeStudents((prev) => [...prev]);
+    };
+
+    if (!e.value) {
+      handleError();
+      return;
+    }
+
+    const newScore = +e.value;
+
+    if (newScore > gradeAssignment.score) {
+      handleError();
+      return;
+    }
+
+    if (newScore < 0) {
+      handleError();
+      return;
+    }
+    console.log(newScore);
+
+    const requestConfig = {
+      url: `grades/${classId}/${gradeAssignment.id}/${student.studentId}`,
+      method: 'PATCH',
+      body: {
+        score: newScore,
+      },
+    };
+
+    const handleSuccess = (data: any) => {
+      const newGrade = data.data as StudentGradeModel;
+
+      if (isUpdate) {
+        setGradeStudents((prev) =>
+          prev.map((row) =>
+            row.studentId === newGrade.studentId && row.gradeAssignmentId === newGrade.gradeAssignmentId ? { ...row, ...newGrade } : row
+          )
+        );
+      }
+
+      if (!isUpdate) {
+        const newGradeStudents = [...gradeStudents, newGrade];
+        setGradeStudents(newGradeStudents);
+      }
+    };
+
+    sendRequest(requestConfig, handleError, handleSuccess);
+  };
 
   // Students
   useEffect(() => {
@@ -88,6 +140,8 @@ const Scores = () => {
         };
       });
 
+      console.log(gradeAssignmentsData);
+
       setAssignments(gradeAssignmentsData);
     };
 
@@ -103,6 +157,7 @@ const Scores = () => {
     const handleError = () => {};
 
     const handleSuccess = (data: any) => {
+      console.log(data.data.grades);
       setGradeStudents(data.data.grades);
     };
 
@@ -133,7 +188,6 @@ const Scores = () => {
     return rows;
   };
 
-  const dataGridCols = columnsDefinition(assignments);
   const dataGridRows = renderRows(students, gradeStudents);
 
   const papaparseOptions = {
@@ -168,7 +222,7 @@ const Scores = () => {
     // }
   };
 
-  const assignment_columns = assignments.map((grade) => {
+  const assignment_columns: GridColDef[] = assignments.map((grade) => {
     const assignment_name = grade.title;
     const assignment_id = grade.id;
 
@@ -216,7 +270,7 @@ const Scores = () => {
     return {
       field: grade.title,
       width: 200,
-      type: 'date',
+      editable: true,
       renderHeader: (headerParams: any) => {
         return (
           <>
@@ -243,11 +297,11 @@ const Scores = () => {
     };
   });
 
-  const columns = [
+  const columns: GridColDef[] = [
     {
       field: 'Tên sinh viên',
       width: 300,
-      type: 'date',
+      editable: false,
       renderHeader: (headerParams: any) => {
         return <>{headerParams.field}</>;
       },
@@ -255,7 +309,7 @@ const Scores = () => {
     {
       field: 'MSSV',
       width: 120,
-      type: 'date',
+      editable: false,
       renderHeader: (headerParams: any) => {
         return <>{headerParams.field}</>;
       },
@@ -264,7 +318,7 @@ const Scores = () => {
     {
       field: 'Tổng kết',
       width: 200,
-      type: 'date',
+      editable: false,
       renderHeader: (headerParams: any) => {
         return <>{headerParams.field}</>;
       },
