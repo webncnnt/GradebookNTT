@@ -7,20 +7,11 @@ import { StudentGradeModel } from '../../../@types/models/StudentGradeModel';
 import { StudentModel } from '../../../@types/models/StudentModel';
 import UploadIcon from '../../../components/icons/Upload';
 import useHttp from '../../../hooks/useHttp';
+import { groupBy } from '../../../utils/array';
 import DownloadIcon from '../../icons/Download';
 import Download2Icon from '../../icons/Download2';
 import './index.scss';
 import * as mock from './mock';
-import { scores_headers } from './scores-header';
-import { template_score } from './template';
-
-const rows = [
-  { id: 1, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '1232', '1': 2, '2': 1, 'Tổng kết': 3 },
-  { id: 2, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '123', '1': 2, '2': 1, 'Tổng kết': 3 },
-  { id: 3, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '143', '1': 1, '2': 0.5, 'Tổng kết': 3 },
-  { id: 4, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '090', '1': 1.25, '2': 0.25, 'Tổng kết': 3 },
-  { id: 5, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '456', '1': 1, '2': 1, 'Tổng kết': 3 },
-];
 
 const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
   const gridCols: GridEnrichedColDef[] = assignments.map((assignment) => ({
@@ -50,21 +41,33 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
   return gridCols;
 };
 
-const renderRows = (students: StudentModel[], assignments: GradeAssignmentModel[], studentGrades: StudentGradeModel[]) => {
-  students.map((student) => {
-    const base = { id: student.id, studentName: student.fullName };
-    const scores = assignments.map((assignment) => {
-      const studentGrade = studentGrades.find((grade) => grade.gradeAssignmentId === assignment.id);
-      const score = studentGrade === undefined ? null : studentGrade.score;
-      return { [assignment.id]: score };
-    });
-    return { ...base, ...scores };
+const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
+  const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
+
+  const rows = students.map((student, index) => {
+    const grades = groupedStudentGrades[student.studentId];
+
+    const base = { id: index, 'Tên sinh viên': student.fullName, MSSV: student.studentId };
+
+    if (grades) {
+      const assignmentIdWithScores = grades.reduce((prev, curr) => ({ ...prev, [curr.gradeAssignmentId]: curr.score }), {});
+
+      return { ...base, ...assignmentIdWithScores };
+    }
+
+    return base;
   });
+
+  return rows;
 };
 
 const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
   console.log(e);
 };
+
+const pathname = window.location.pathname;
+
+const classId = pathname.split('/')[2];
 
 const Scores = () => {
   const [assignments, setAssignments] = useState<GradeAssignmentModel[]>([]);
@@ -73,47 +76,77 @@ const Scores = () => {
 
   const { sendRequest } = useHttp();
 
+  // Students
   useEffect(() => {
-    // TODO: fetch
     const requestConfig = {
-      url: '',
+      url: `students/getStudentsByClassId/${classId}`,
     };
+
     const handleError = () => {};
 
-    const handleSuccess = (data: any) => {};
-    sendRequest(requestConfig, handleError, handleSuccess);
+    const handleSuccess = (data: any) => {
+      setStudents(data);
+    };
 
-    setAssignments(mock.assignments);
+    sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest]);
 
+  // Class assignments
   useEffect(() => {
-    // TODO: fetch students
     const requestConfig = {
-      url: '',
+      url: `classes/${classId}/gradeStructures`,
     };
+
     const handleError = () => {};
 
-    const handleSuccess = (data: any) => {};
-    sendRequest(requestConfig, handleError, handleSuccess);
+    const handleSuccess = (data: any) => {
+      const gradeAssignmentsData: GradeAssignmentModel[] = data.data.gradeStructure.gradeAssignments.map((item: any) => {
+        return {
+          id: item.id,
+          title: item.title,
+          pos: item.pos,
+          score: item.score,
+        };
+      });
 
-    setAssignments(mock.assignments);
+      setAssignments(gradeAssignmentsData);
+    };
+
+    sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest]);
 
+  // Class grades
   useEffect(() => {
-    // TODO: fetch grades
     const requestConfig = {
-      url: '',
+      url: `grades/${classId}`,
     };
+
     const handleError = () => {};
 
-    const handleSuccess = (data: any) => {};
-    sendRequest(requestConfig, handleError, handleSuccess);
+    const handleSuccess = (data: any) => {
+      setGradeStudents(data.data.grades);
+    };
 
-    setAssignments(mock.assignments);
+    sendRequest(requestConfig, handleError, handleSuccess);
+  }, [sendRequest]);
+
+  // Class grades
+  useEffect(() => {
+    const requestConfig = {
+      url: `grades/${classId}`,
+    };
+
+    const handleError = () => {};
+
+    const handleSuccess = (data: any) => {
+      setGradeStudents(data.data.grades);
+    };
+
+    sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest]);
 
   const dataGridCols = columnsDefinition(assignments);
-  const dataGridRows = renderRows(students, assignments, gradeStudents);
+  const dataGridRows = renderRows(students, gradeStudents);
 
   const papaparseOptions = {
     header: true,
@@ -122,52 +155,107 @@ const Scores = () => {
   };
 
   const handleForce = (data: any, fileInfo: any) => {
-    if (data[0]['Tên sinh viên']) {
-      const newListStudents = data.map((student: any) => {
-        return {
-          studentName: student['Tên sinh viên'],
-          studentId: student['MSSV'].toString(),
-        };
-      });
+    console.log(data);
 
-      const requestConfig = {
-        url: '',
-        method: 'POST',
-        body: {},
-      };
-      const handleError = () => {};
+    // if (data[0]['Tên sinh viên']) {
+    //   const newListStudents = data.map((student: any) => {
+    //     return {
+    //       studentName: student['Tên sinh viên'],
+    //       studentId: student['MSSV'].toString(),
+    //     };
+    //   });
 
-      const uploadStudents = (data: any) => {};
+    //   const requestConfig = {
+    //     url: '',
+    //     method: 'POST',
+    //     body: {},
+    //   };
+    //   const handleError = () => {};
 
-      sendRequest(requestConfig, handleError, uploadStudents);
-    } else {
-      console.log('Wrong header');
-    }
+    //   const uploadStudents = (data: any) => {};
+
+    //   sendRequest(requestConfig, handleError, uploadStudents);
+    // } else {
+    //   console.log('Wrong header');
+    // }
   };
 
-  const handleForceAssignment = (data: any, fileInfo: any) => {
-    if (data[0]['Tên sinh viên']) {
-      const newListStudents = data.map((student: any) => {
-        return {
-          studentName: student['Tên sinh viên'],
-          studentId: student['MSSV'].toString(),
-        };
-      });
+  const assignment_columns = assignments.map((grade) => {
+    const assignment_name = grade.title;
+    const assignment_id = grade.id;
 
-      const requestConfig = {
-        url: '',
-        method: 'POST',
-        body: {},
+    const template_score = [{ studentName: 'Nguyễn Văn A', studentId: '1', [assignment_name]: '1' }];
+
+    const groupedStudentGrades = groupBy(gradeStudents, (item) => item.studentId);
+
+    const assignment_score = dataGridRows.map((student) => {
+      const grades = groupedStudentGrades[student.MSSV];
+      return {
+        studentName: student['Tên sinh viên'],
+        studentId: student.MSSV,
+        [assignment_name]: grades ?? '',
       };
-      const handleError = () => {};
+    });
 
-      const uploadStudents = (data: any) => {};
+    const scores_headers = [
+      { label: 'Tên sinh viên', key: 'studentName' },
+      { label: 'MSSV', key: 'studentId' },
+      { label: assignment_name, key: assignment_name },
+    ];
 
-      sendRequest(requestConfig, handleError, uploadStudents);
-    } else {
-      console.log('Wrong header');
-    }
-  };
+    const handleForceAssignment = (data: any) => {
+      if (data[0]['Tên sinh viên']) {
+        const dataAssignmentStudents = data.map((student: any) => {
+          return {
+            studentId: student['MSSV'].toString(),
+            score: student[assignment_name],
+          };
+        });
+
+        const requestConfig = {
+          url: `grades/${classId}/${assignment_id}`,
+          method: 'POST',
+          body: { grades: dataAssignmentStudents },
+        };
+        const handleError = () => {};
+        const uploadStudents = (data: any) => {
+          console.log(data);
+        };
+        sendRequest(requestConfig, handleError, uploadStudents);
+      } else {
+        console.log('Wrong header');
+      }
+    };
+
+    return {
+      field: grade.title,
+      width: 200,
+      type: 'date',
+      renderHeader: (headerParams: any) => {
+        return (
+          <>
+            {headerParams.field}
+            <CSVLink data={template_score} filename={`${assignment_name}.csv`} headers={scores_headers}>
+              <Download2Icon className='icon--csv ml1' />
+            </CSVLink>
+
+            <CSVLink data={assignment_score} filename={`${assignment_name}.csv`} headers={scores_headers}>
+              <DownloadIcon className='icon--csv ml1' />
+            </CSVLink>
+
+            <CSVReader
+              cssClass='csv-reader-input'
+              label={<UploadIcon className='icon--csv ml1' />}
+              onFileLoaded={handleForceAssignment}
+              parserOptions={papaparseOptions}
+              inputId='gradesAssignment'
+              inputName='gradesAssignment'
+            />
+          </>
+        );
+      },
+    };
+  });
 
   const columns = [
     {
@@ -186,62 +274,7 @@ const Scores = () => {
         return <>{headerParams.field}</>;
       },
     },
-    {
-      field: '1',
-      width: 200,
-      type: 'date',
-      renderHeader: (headerParams: any) => {
-        return (
-          <>
-            {headerParams.field}
-            <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
-              <Download2Icon className='icon--csv ml1' />
-            </CSVLink>
-
-            <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
-              <DownloadIcon className='icon--csv ml1' />
-            </CSVLink>
-
-            <CSVReader
-              cssClass='csv-reader-input'
-              label={<UploadIcon className='icon--csv ml1' />}
-              onFileLoaded={handleForceAssignment}
-              parserOptions={papaparseOptions}
-              inputId='gradesBoard'
-              inputName='gradesBoard'
-            />
-          </>
-        );
-      },
-    },
-    {
-      field: '2',
-      width: 200,
-      type: 'date',
-      renderHeader: (headerParams: any) => {
-        return (
-          <>
-            {headerParams.field}
-            <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
-              <Download2Icon className='icon--csv ml1' />
-            </CSVLink>
-
-            <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
-              <DownloadIcon className='icon--csv ml1' />
-            </CSVLink>
-
-            <CSVReader
-              cssClass='csv-reader-input'
-              label={<UploadIcon className='icon--csv ml1' />}
-              onFileLoaded={handleForce}
-              parserOptions={papaparseOptions}
-              inputId='gradesBoard'
-              inputName='gradesBoard'
-            />
-          </>
-        );
-      },
-    },
+    ...assignment_columns,
     {
       field: 'Tổng kết',
       width: 200,
@@ -252,9 +285,6 @@ const Scores = () => {
     },
   ];
 
-
-  
-
   return (
     <>
       <div className='scores'>
@@ -263,14 +293,14 @@ const Scores = () => {
 
           <div className='scores__actions'>
             <button className='scores__button btn btn--primary'>
-              <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
+              <CSVLink data={[]} filename={'list-students.csv'} headers={[]}>
                 <span>Tải template</span>
                 <Download2Icon className='icon--white' />
               </CSVLink>
             </button>
 
             <button className='scores__button btn btn--primary'>
-              <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
+              <CSVLink data={[]} filename={'list-students.csv'} headers={[]}>
                 <span>Tải bảng điểm</span>
                 <DownloadIcon className='icon--white' />
               </CSVLink>
@@ -284,7 +314,7 @@ const Scores = () => {
                   <UploadIcon className='icon--white' />
                 </div>
               }
-              onFileLoaded={handleForce}
+              onFileLoaded={() => {}}
               parserOptions={papaparseOptions}
               inputId='gradesBoard'
               inputName='gradesBoard'
@@ -307,7 +337,7 @@ const Scores = () => {
               },
             }}
             autoHeight={true}
-            rows={rows}
+            rows={dataGridRows}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
