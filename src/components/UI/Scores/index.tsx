@@ -40,26 +40,6 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
   return gridCols;
 };
 
-const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
-  const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
-
-  const rows = students.map((student, index) => {
-    const grades = groupedStudentGrades[student.studentId];
-
-    const base = { id: index, 'Tên sinh viên': student.fullName, MSSV: student.studentId };
-
-    if (grades) {
-      const assignmentIdWithScores = grades.reduce((prev, curr) => ({ ...prev, [curr.gradeAssignmentId]: curr.score }), {});
-
-      return { ...base, ...assignmentIdWithScores };
-    }
-
-    return base;
-  });
-
-  return rows;
-};
-
 const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
   console.log(e);
 };
@@ -129,20 +109,29 @@ const Scores = () => {
     sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest]);
 
-  // Class grades
-  useEffect(() => {
-    const requestConfig = {
-      url: `grades/${classId}`,
-    };
+  const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
+    const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
 
-    const handleError = () => {};
+    const rows = students.map((student, index) => {
+      const grades = groupedStudentGrades[student.studentId];
 
-    const handleSuccess = (data: any) => {
-      setGradeStudents(data.data.grades);
-    };
+      const base = { id: index, 'Tên sinh viên': student.fullName, MSSV: student.studentId };
 
-    sendRequest(requestConfig, handleError, handleSuccess);
-  }, [sendRequest]);
+      if (grades) {
+        const assignmentIdWithScores = grades.reduce(
+          (prev, curr) => ({ ...prev, [assignments[assignments.findIndex((a) => a.id === curr.gradeAssignmentId)].title]: curr.score }),
+          {}
+        );
+        console.log(assignmentIdWithScores);
+
+        return { ...base, ...assignmentIdWithScores };
+      }
+
+      return base;
+    });
+
+    return rows;
+  };
 
   const dataGridCols = columnsDefinition(assignments);
   const dataGridRows = renderRows(students, gradeStudents);
@@ -217,9 +206,7 @@ const Scores = () => {
           body: { grades: dataAssignmentStudents },
         };
         const handleError = () => {};
-        const uploadStudents = (data: any) => {
-          console.log(data);
-        };
+        const uploadStudents = (data: any) => {};
         sendRequest(requestConfig, handleError, uploadStudents);
       } else {
         console.log('Wrong header');
