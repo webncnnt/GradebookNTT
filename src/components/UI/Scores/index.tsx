@@ -1,5 +1,17 @@
-import { DataGrid, GridEnrichedColDef, GridEventListener, GridEvents } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import {
+  DataGrid,
+  GridActionsColDef,
+  GridCellParams,
+  GridColDef,
+  GridEditCellProps,
+  GridEditCellPropsParams,
+  GridEnrichedColDef,
+  GridEventListener,
+  GridEvents,
+  useGridApiRef,
+} from "@mui/x-data-grid";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
 import { StudentGradeModel } from "../../../@types/models/StudentGradeModel";
 import { StudentModel } from "../../../@types/models/StudentModel";
@@ -7,39 +19,43 @@ import UploadIcon from "../../../components/icons/Upload";
 import Container from "../../../components/layouts/container/Container";
 import useHttp from "../../../hooks/useHttp";
 import { groupBy } from "../../../utils/array";
+import HeaderCell from "./components/HeaderCell";
+import ScoreCell from "./components/ScoreCell";
+import StudentOverviewCell from "./components/StudentOverviewCell";
 import "./index.scss";
-import * as mock from "./mock";
-
-const rows = [
-  { id: 1, studentId: "1232", "1": 2, "2": 1 },
-  { id: 2, studentId: "123", "1": 2, "2": 1 },
-  { id: 3, studentId: "143", "1": 1, "2": 0.5 },
-  { id: 4, studentId: "090", "1": 1.25, "2": 0.25 },
-  { id: 5, studentId: "456", "1": 1, "2": 1 },
-];
 
 const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
-  const gridCols: GridEnrichedColDef[] = assignments.map((assignment) => ({
+  const gridCols: GridColDef[] = assignments.map((assignment) => ({
     field: assignment.id.toString(),
     headerName: assignment.title,
+    disableColumnMenu: true,
+    sortable: false,
     width: 200,
     editable: true,
     align: "left",
     renderCell: (params) => {
-      return <div>{params.value}</div>;
+      return <ScoreCell value={params.value} />;
     },
-    // TODO: render cell with button menu
-    // renderEditCell: (params) => {
-    //   return <input value={params.value?.toString()} />;
-    // },
+    renderHeader: (params) => {
+      return <HeaderCell value={params.colDef.headerName} />;
+    },
+    preProcessEditCellProps: (params) => {
+      const value = params.props.value;
+      if (value && (value < 0 || value > 10)) return { ...params.props, error: true };
+      return { ...params.props, error: false };
+    },
   }));
 
   gridCols.unshift({
-    field: "studentId",
+    field: "student",
     headerName: "Sinh Vien",
-    width: 200,
-    editable: true,
+    width: 300,
+    editable: false,
     align: "left",
+    renderCell: (params) => {
+      const { fullName, id, avatar } = params.value as StudentModel;
+      return <StudentOverviewCell avatarUrl={avatar} studentName={fullName} userLink={`/users/${id}`} />;
+    },
   });
 
   return gridCols;
@@ -51,7 +67,7 @@ const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]
   const rows = students.map((student, index) => {
     const grades = groupedStudentGrades[student.studentId];
 
-    const base = { id: index, studentId: student.studentId };
+    const base = { id: index, student: student };
 
     if (grades) {
       const assignmentIdWithScores = grades.reduce((prev, curr) => ({ ...prev, [curr.gradeAssignmentId]: curr.score }), {});
@@ -64,19 +80,32 @@ const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]
   return rows;
 };
 
-const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
-  console.log(e);
-};
-
 const Scores = () => {
   const [assignments, setAssignments] = useState<GradeAssignmentModel[]>([]);
   const [students, setStudents] = useState<StudentModel[]>([]);
   const [gradeStudents, setGradeStudents] = useState<StudentGradeModel[]>([]);
+  const apiRef = useGridApiRef();
 
   const { sendRequest } = useHttp();
 
   const pathname = window.location.pathname;
   const classId = pathname.split("/")[2];
+
+  const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
+    console.log(e);
+    const requestConfig = {
+      url: `grades/${classId}/${classId}`,
+      method: "patch",
+    };
+
+    const handleError = () => {};
+
+    const handleSuccess = (data: any) => {
+      setStudents(data);
+    };
+
+    sendRequest(requestConfig, handleError, handleSuccess);
+  };
 
   // Students
   useEffect(() => {
