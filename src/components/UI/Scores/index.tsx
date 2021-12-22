@@ -65,6 +65,8 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
 const generateDataRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
   const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
 
+  console.log("generate datarow::", students);
+
   const rows = students.map((student, index) => {
     const grades = groupedStudentGrades[student.studentId];
 
@@ -103,7 +105,10 @@ const Scores = () => {
     const handleError = () => {};
 
     const handleSuccess = (data: any) => {
-      setStudents(data);
+      const studentsData = data.map((item: any) => {
+        return item as StudentModel;
+      });
+      setStudents(studentsData);
     };
 
     sendRequest(requestConfig, handleError, handleSuccess);
