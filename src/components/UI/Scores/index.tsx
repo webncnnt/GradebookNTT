@@ -1,20 +1,21 @@
-import { DataGrid, GridEnrichedColDef, GridEventListener, GridEvents } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
-import { GradeAssignmentModel } from '../../../@types/models/GradeAssignmentModel';
-import { StudentGradeModel } from '../../../@types/models/StudentGradeModel';
-import { StudentModel } from '../../../@types/models/StudentModel';
-import UploadIcon from '../../../components/icons/Upload';
-import Container from '../../../components/layouts/container/Container';
-import useHttp from '../../../hooks/useHttp';
-import './index.scss';
-import * as mock from './mock';
+import { DataGrid, GridEnrichedColDef, GridEventListener, GridEvents } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
+import { StudentGradeModel } from "../../../@types/models/StudentGradeModel";
+import { StudentModel } from "../../../@types/models/StudentModel";
+import UploadIcon from "../../../components/icons/Upload";
+import Container from "../../../components/layouts/container/Container";
+import useHttp from "../../../hooks/useHttp";
+import { groupBy } from "../../../utils/array";
+import "./index.scss";
+import * as mock from "./mock";
 
 const rows = [
-  { id: 1, studentId: '1232', '1': 2, '2': 1 },
-  { id: 2, studentId: '123', '1': 2, '2': 1 },
-  { id: 3, studentId: '143', '1': 1, '2': 0.5 },
-  { id: 4, studentId: '090', '1': 1.25, '2': 0.25 },
-  { id: 5, studentId: '456', '1': 1, '2': 1 },
+  { id: 1, studentId: "1232", "1": 2, "2": 1 },
+  { id: 2, studentId: "123", "1": 2, "2": 1 },
+  { id: 3, studentId: "143", "1": 1, "2": 0.5 },
+  { id: 4, studentId: "090", "1": 1.25, "2": 0.25 },
+  { id: 5, studentId: "456", "1": 1, "2": 1 },
 ];
 
 const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
@@ -23,7 +24,7 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
     headerName: assignment.title,
     width: 200,
     editable: true,
-    align: 'left',
+    align: "left",
     renderCell: (params) => {
       return <div>{params.value}</div>;
     },
@@ -34,26 +35,33 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
   }));
 
   gridCols.unshift({
-    field: 'studentId',
-    headerName: 'Sinh Vien',
+    field: "studentId",
+    headerName: "Sinh Vien",
     width: 200,
     editable: true,
-    align: 'left',
+    align: "left",
   });
 
   return gridCols;
 };
 
-const renderRows = (students: StudentModel[], assignments: GradeAssignmentModel[], studentGrades: StudentGradeModel[]) => {
-  students.map((student) => {
-    const base = { id: student.id, studentName: student.fullName };
-    const scores = assignments.map((assignment) => {
-      const studentGrade = studentGrades.find((grade) => grade.gradeAssignmentId === assignment.id);
-      const score = studentGrade == undefined ? null : studentGrade.score;
-      return { [assignment.id]: score };
-    });
-    return { ...base, ...scores };
+const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
+  const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
+
+  const rows = students.map((student, index) => {
+    const grades = groupedStudentGrades[student.studentId];
+
+    const base = { id: index, studentId: student.studentId };
+
+    if (grades) {
+      const assignmentIdWithScores = grades.reduce((prev, curr) => ({ ...prev, [curr.gradeAssignmentId]: curr.score }), {});
+      return { ...base, ...assignmentIdWithScores };
+    }
+
+    return base;
   });
+
+  return rows;
 };
 
 const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
@@ -67,80 +75,98 @@ const Scores = () => {
 
   const { sendRequest } = useHttp();
 
+  const pathname = window.location.pathname;
+  const classId = pathname.split("/")[2];
+
+  // Students
   useEffect(() => {
-    // TODO: fetch
     const requestConfig = {
-      url: '',
+      url: `students/getStudentsByClassId/${classId}`,
     };
+
     const handleError = () => {};
 
-    const handleSuccess = (data: any) => {};
-    sendRequest(requestConfig, handleError, handleSuccess);
+    const handleSuccess = (data: any) => {
+      setStudents(data);
+    };
 
-    setAssignments(mock.assignments);
+    sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest]);
 
+  // Class assignments
   useEffect(() => {
-    // TODO: fetch students
     const requestConfig = {
-      url: '',
+      url: `classes/${classId}/gradeStructures`,
     };
+
     const handleError = () => {};
 
-    const handleSuccess = (data: any) => {};
-    sendRequest(requestConfig, handleError, handleSuccess);
+    const handleSuccess = (data: any) => {
+      const gradeAssignmentsData: GradeAssignmentModel[] = data.data.gradeStructure.gradeAssignments.map((item: any) => {
+        return {
+          id: item.id,
+          title: item.title,
+          pos: item.pos,
+          score: item.score,
+        };
+      });
 
-    setAssignments(mock.assignments);
+      setAssignments(gradeAssignmentsData);
+    };
+
+    sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest]);
 
+  // Class grades
   useEffect(() => {
-    // TODO: fetch grades
     const requestConfig = {
-      url: '',
+      url: `grades/${classId}`,
     };
+
     const handleError = () => {};
 
-    const handleSuccess = (data: any) => {};
-    sendRequest(requestConfig, handleError, handleSuccess);
+    const handleSuccess = (data: any) => {
+      setGradeStudents(data.data.grades);
+    };
 
-    setAssignments(mock.assignments);
+    sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest]);
 
   const dataGridCols = columnsDefinition(assignments);
-  const dataGridRows = renderRows(students, assignments, gradeStudents);
+  const dataGridRows = renderRows(students, gradeStudents);
 
   return (
     <Container>
-      <div className='scores'>
-        <div className='scores__header'>
+      <div className="scores">
+        <div className="scores__header">
           <h1>Quản lý điểm số</h1>
 
-          <div className='scores__actions'>
-            <button className='scores__action'>
+          <div className="scores__actions">
+            <button className="scores__action">
               <UploadIcon />
             </button>
-            <button className='scores__action'>
+            <button className="scores__action">
               <UploadIcon />
             </button>
           </div>
         </div>
 
-        <div className='scores__datagrid'>
+        <div className="scores__datagrid">
           <DataGrid
             onCellEditCommit={handleCellEditCommit}
             sx={{
-              fontSize: '2rem',
-              '& .MuiDataGrid-editInputCell': {
-                fontSize: '2rem',
+              fontSize: "2rem",
+              "& .MuiDataGrid-editInputCell": {
+                fontSize: "2rem",
               },
-              '.MuiDataGrid-cell': {
-                border: '1px solid gray',
+              ".MuiDataGrid-cell": {
+                border: "1px solid gray",
                 borderLeft: 0,
                 borderTop: 0,
               },
             }}
             autoHeight={true}
-            rows={rows}
+            rows={dataGridRows}
             columns={dataGridCols}
             pageSize={5}
             rowsPerPageOptions={[5]}
