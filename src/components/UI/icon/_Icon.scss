@@ -8,6 +8,22 @@
       }
     }
   }
+
+  &--csv {
+    svg {
+      path {
+        fill: $color-gray-medium;
+      }
+    }
+
+    &:hover {
+      svg {
+        path {
+          fill: $color-black;
+        }
+      }
+    }
+  }
 }
 
 .frame {

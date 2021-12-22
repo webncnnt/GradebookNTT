@@ -8,17 +8,18 @@ import { StudentModel } from '../../../@types/models/StudentModel';
 import UploadIcon from '../../../components/icons/Upload';
 import useHttp from '../../../hooks/useHttp';
 import DownloadIcon from '../../icons/Download';
+import Download2Icon from '../../icons/Download2';
 import './index.scss';
 import * as mock from './mock';
 import { scores_headers } from './scores-header';
 import { template_score } from './template';
 
 const rows = [
-  { id: 1, studentId: '1232', '1': 2, '2': 1 },
-  { id: 2, studentId: '123', '1': 2, '2': 1 },
-  { id: 3, studentId: '143', '1': 1, '2': 0.5 },
-  { id: 4, studentId: '090', '1': 1.25, '2': 0.25 },
-  { id: 5, studentId: '456', '1': 1, '2': 1 },
+  { id: 1, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '1232', '1': 2, '2': 1, 'Tổng kết': 3 },
+  { id: 2, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '123', '1': 2, '2': 1, 'Tổng kết': 3 },
+  { id: 3, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '143', '1': 1, '2': 0.5, 'Tổng kết': 3 },
+  { id: 4, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '090', '1': 1.25, '2': 0.25, 'Tổng kết': 3 },
+  { id: 5, 'Tên sinh viên': 'Nguyễn Văn A', MSSV: '456', '1': 1, '2': 1, 'Tổng kết': 3 },
 ];
 
 const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
@@ -31,6 +32,7 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
     renderCell: (params) => {
       return <div>{params.value}</div>;
     },
+
     // TODO: render cell with button menu
     // renderEditCell: (params) => {
     //   return <input value={params.value?.toString()} />;
@@ -53,7 +55,7 @@ const renderRows = (students: StudentModel[], assignments: GradeAssignmentModel[
     const base = { id: student.id, studentName: student.fullName };
     const scores = assignments.map((assignment) => {
       const studentGrade = studentGrades.find((grade) => grade.gradeAssignmentId === assignment.id);
-      const score = studentGrade == undefined ? null : studentGrade.score;
+      const score = studentGrade === undefined ? null : studentGrade.score;
       return { [assignment.id]: score };
     });
     return { ...base, ...scores };
@@ -143,6 +145,89 @@ const Scores = () => {
     }
   };
 
+  const columns = [
+    {
+      field: 'Tên sinh viên',
+      width: 300,
+      type: 'date',
+      renderHeader: (headerParams: any) => {
+        return <>{headerParams.field}</>;
+      },
+    },
+    {
+      field: 'MSSV',
+      width: 200,
+      type: 'date',
+      renderHeader: (headerParams: any) => {
+        return <>{headerParams.field}</>;
+      },
+    },
+    {
+      field: '1',
+      width: 200,
+      type: 'date',
+      renderHeader: (headerParams: any) => {
+        return (
+          <>
+            {headerParams.field}
+            <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
+              <Download2Icon className='icon--csv ml1' />
+            </CSVLink>
+
+            <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
+              <DownloadIcon className='icon--csv ml1' />
+            </CSVLink>
+
+            <CSVReader
+              cssClass='csv-reader-input'
+              label={<UploadIcon className='icon--csv ml1' />}
+              onFileLoaded={handleForce}
+              parserOptions={papaparseOptions}
+              inputId='gradesBoard'
+              inputName='gradesBoard'
+            />
+          </>
+        );
+      },
+    },
+    {
+      field: '2',
+      width: 200,
+      type: 'date',
+      renderHeader: (headerParams: any) => {
+        return (
+          <>
+            {headerParams.field}
+            <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
+              <Download2Icon className='icon--csv ml1' />
+            </CSVLink>
+
+            <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
+              <DownloadIcon className='icon--csv ml1' />
+            </CSVLink>
+
+            <CSVReader
+              cssClass='csv-reader-input'
+              label={<UploadIcon className='icon--csv ml1' />}
+              onFileLoaded={handleForce}
+              parserOptions={papaparseOptions}
+              inputId='gradesBoard'
+              inputName='gradesBoard'
+            />
+          </>
+        );
+      },
+    },
+    {
+      field: 'Tổng kết',
+      width: 200,
+      type: 'date',
+      renderHeader: (headerParams: any) => {
+        return <>{headerParams.field}</>;
+      },
+    },
+  ];
+
   return (
     <>
       <div className='scores'>
@@ -153,7 +238,7 @@ const Scores = () => {
             <button className='scores__button btn btn--primary'>
               <CSVLink data={template_score} filename={'list-students.csv'} headers={scores_headers}>
                 <span>Tải template</span>
-                <DownloadIcon className='icon--white' />
+                <Download2Icon className='icon--white' />
               </CSVLink>
             </button>
 
@@ -196,7 +281,7 @@ const Scores = () => {
             }}
             autoHeight={true}
             rows={rows}
-            columns={dataGridCols}
+            columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
             disableSelectionOnClick
