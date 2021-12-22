@@ -1,6 +1,7 @@
 import {
   DataGrid,
   GridActionsColDef,
+  GridCellEditCommitParams,
   GridCellParams,
   GridColDef,
   GridEditCellProps,
@@ -61,7 +62,7 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
   return gridCols;
 };
 
-const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
+const generateDataRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
   const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
 
   const rows = students.map((student, index) => {
@@ -71,6 +72,7 @@ const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]
 
     if (grades) {
       const assignmentIdWithScores = grades.reduce((prev, curr) => ({ ...prev, [curr.gradeAssignmentId]: curr.score }), {});
+      console.log({ ...base, ...assignmentIdWithScores });
       return { ...base, ...assignmentIdWithScores };
     }
 
@@ -83,16 +85,16 @@ const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]
 const Scores = () => {
   const [assignments, setAssignments] = useState<GradeAssignmentModel[]>([]);
   const [students, setStudents] = useState<StudentModel[]>([]);
-  const [gradeStudents, setGradeStudents] = useState<StudentGradeModel[]>([]);
-  const apiRef = useGridApiRef();
+  const [rowGrades, setRowGrades] = useState<any[]>([]);
 
   const { sendRequest } = useHttp();
 
   const pathname = window.location.pathname;
   const classId = pathname.split("/")[2];
 
-  const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
-    console.log(e);
+  const handleCellEditCommit = (e: GridCellEditCommitParams) => {
+    if (e.value == null) return;
+
     const requestConfig = {
       url: `grades/${classId}/${classId}`,
       method: "patch",
@@ -155,14 +157,15 @@ const Scores = () => {
     const handleError = () => {};
 
     const handleSuccess = (data: any) => {
-      setGradeStudents(data.data.grades);
+      const grades: StudentGradeModel[] = data.data.grades.map((item: any) => item as StudentGradeModel);
+      const rows = generateDataRows(students, grades);
+      setRowGrades(rows);
     };
 
     sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest]);
 
   const dataGridCols = columnsDefinition(assignments);
-  const dataGridRows = renderRows(students, gradeStudents);
 
   return (
     <Container>
@@ -195,7 +198,7 @@ const Scores = () => {
               },
             }}
             autoHeight={true}
-            rows={dataGridRows}
+            rows={rowGrades}
             columns={dataGridCols}
             pageSize={5}
             rowsPerPageOptions={[5]}
