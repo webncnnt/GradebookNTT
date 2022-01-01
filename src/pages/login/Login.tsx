@@ -33,12 +33,14 @@ const Login = () => {
     }
   };
 
-  const responseGoogleSuccess = async (respone: any) => {
-    authCtx.onLoginWithGoogle(respone.tokenId);
+  const responseGoogleSuccess = async (response: any) => {
+    console.log(response);
+    
+    authCtx.onLoginWithGoogle(response.tokenId);
   };
 
-  const responseGoogleFailure = (respone: any) => {
-    console.log(respone);
+  const responseGoogleFailure = (response: any) => {
+    console.log(response);
   };
 
   return (

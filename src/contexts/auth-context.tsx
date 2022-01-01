@@ -198,7 +198,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
 
   const loginGoogleHandler = async (tokenId: string) => {
     const data = { token: tokenId };
-
+    
     const requestConfig = {
       url: "auth/google",
       method: "POST",

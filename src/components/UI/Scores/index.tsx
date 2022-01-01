@@ -1,29 +1,16 @@
-import {
-  DataGrid,
-  GridActionsColDef,
-  GridCellEditCommitParams,
-  GridCellParams,
-  GridColDef,
-  GridEditCellProps,
-  GridEditCellPropsParams,
-  GridEnrichedColDef,
-  GridEventListener,
-  GridEvents,
-  useGridApiRef,
-} from "@mui/x-data-grid";
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
-import { StudentGradeModel } from "../../../@types/models/StudentGradeModel";
-import { StudentModel } from "../../../@types/models/StudentModel";
-import UploadIcon from "../../../components/icons/Upload";
-import Container from "../../../components/layouts/container/Container";
-import useHttp from "../../../hooks/useHttp";
-import { groupBy } from "../../../utils/array";
-import HeaderCell from "./components/HeaderCell";
-import ScoreCell from "./components/ScoreCell";
-import StudentOverviewCell from "./components/StudentOverviewCell";
-import "./index.scss";
+import { DataGrid, GridCellEditCommitParams, GridColDef } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
+import { GradeAssignmentModel } from '../../../@types/models/GradeAssignmentModel';
+import { StudentGradeModel } from '../../../@types/models/StudentGradeModel';
+import { StudentModel } from '../../../@types/models/StudentModel';
+import UploadIcon from '../../../components/icons/Upload';
+import Container from '../../../components/layouts/container/Container';
+import useHttp from '../../../hooks/useHttp';
+import { groupBy } from '../../../utils/array';
+import HeaderCell from './components/HeaderCell';
+import ScoreCell from './components/ScoreCell';
+import StudentOverviewCell from './components/StudentOverviewCell';
+import './index.scss';
 
 const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
   const gridCols: GridColDef[] = assignments.map((assignment) => ({
@@ -33,7 +20,7 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
     sortable: false,
     width: 200,
     editable: true,
-    align: "left",
+    align: 'left',
     renderCell: (params) => {
       return <ScoreCell value={params.value} />;
     },
@@ -48,11 +35,11 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
   }));
 
   gridCols.unshift({
-    field: "student",
-    headerName: "Sinh Vien",
+    field: 'student',
+    headerName: 'Sinh Vien',
     width: 300,
     editable: false,
-    align: "left",
+    align: 'left',
     renderCell: (params) => {
       const { fullName, id, avatar } = params.value as StudentModel;
       return <StudentOverviewCell avatarUrl={avatar} studentName={fullName} userLink={`/users/${id}`} />;
@@ -65,7 +52,7 @@ const columnsDefinition = (assignments: GradeAssignmentModel[]) => {
 const generateDataRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
   const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
 
-  console.log("generate datarow::", students);
+  console.log('generate datarow::', students);
 
   const rows = students.map((student, index) => {
     const grades = groupedStudentGrades[student.studentId];
@@ -92,14 +79,14 @@ const Scores = () => {
   const { sendRequest } = useHttp();
 
   const pathname = window.location.pathname;
-  const classId = pathname.split("/")[2];
+  const classId = pathname.split('/')[2];
 
   const handleCellEditCommit = (e: GridCellEditCommitParams) => {
     if (e.value == null) return;
 
     const requestConfig = {
       url: `grades/${classId}/${classId}`,
-      method: "patch",
+      method: 'patch',
     };
 
     const handleError = () => {};
@@ -127,7 +114,7 @@ const Scores = () => {
     };
 
     sendRequest(requestConfig, handleError, handleSuccess);
-  }, [sendRequest]);
+  }, [sendRequest, classId]);
 
   // Class assignments
   useEffect(() => {
@@ -151,7 +138,7 @@ const Scores = () => {
     };
 
     sendRequest(requestConfig, handleError, handleSuccess);
-  }, [sendRequest]);
+  }, [sendRequest, classId]);
 
   // Class grades
   useEffect(() => {
@@ -168,36 +155,36 @@ const Scores = () => {
     };
 
     sendRequest(requestConfig, handleError, handleSuccess);
-  }, [sendRequest]);
+  }, [sendRequest, classId, students]);
 
   const dataGridCols = columnsDefinition(assignments);
 
   return (
     <Container>
-      <div className="scores">
-        <div className="scores__header">
+      <div className='scores'>
+        <div className='scores__header'>
           <h1>Quản lý điểm số</h1>
 
-          <div className="scores__actions">
-            <button className="scores__action">
+          <div className='scores__actions'>
+            <button className='scores__action'>
               <UploadIcon />
             </button>
-            <button className="scores__action">
+            <button className='scores__action'>
               <UploadIcon />
             </button>
           </div>
         </div>
 
-        <div className="scores__datagrid">
+        <div className='scores__datagrid'>
           <DataGrid
             onCellEditCommit={handleCellEditCommit}
             sx={{
-              fontSize: "2rem",
-              "& .MuiDataGrid-editInputCell": {
-                fontSize: "2rem",
+              fontSize: '2rem',
+              '& .MuiDataGrid-editInputCell': {
+                fontSize: '2rem',
               },
-              ".MuiDataGrid-cell": {
-                border: "1px solid gray",
+              '.MuiDataGrid-cell': {
+                border: '1px solid gray',
                 borderLeft: 0,
                 borderTop: 0,
               },
