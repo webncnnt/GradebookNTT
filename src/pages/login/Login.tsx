@@ -15,7 +15,7 @@ const Login = () => {
   const [passwordEntered, setPasswordEntered] = useState<string>("");
   const authCtx = useAuth();
 
-  const [isSubmited, setIsSubmited] = useState<boolean>(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   let emailIsValid = false;
   let passIsValid = false;
@@ -23,7 +23,7 @@ const Login = () => {
   const loginSubmitHandle = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setIsSubmited(true);
+    setIsSubmitted(true);
 
     if (emailEntered.trim() !== "") emailIsValid = true;
     if (passwordEntered.trim() !== "") passIsValid = true;
@@ -34,8 +34,6 @@ const Login = () => {
   };
 
   const responseGoogleSuccess = async (response: any) => {
-    console.log(response);
-    
     authCtx.onLoginWithGoogle(response.tokenId);
   };
 
@@ -81,7 +79,7 @@ const Login = () => {
                 value={emailEntered}
                 onChange={(e) => setEmailEntered(e.target.value)}
                 validStatus={
-                  isSubmited ? (emailIsValid ? "valid" : "invalid") : undefined
+                  isSubmitted ? (emailIsValid ? "valid" : "invalid") : undefined
                 }
               />
             </div>
@@ -92,7 +90,7 @@ const Login = () => {
                 value={passwordEntered}
                 onChange={(e) => setPasswordEntered(e.target.value)}
                 validStatus={
-                  isSubmited ? (passIsValid ? "valid" : "invalid") : undefined
+                  isSubmitted ? (passIsValid ? "valid" : "invalid") : undefined
                 }
               />
             </div>
