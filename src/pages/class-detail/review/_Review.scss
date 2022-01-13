@@ -1,0 +1,38 @@
+.review {
+  &__title {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+}
+
+.review-detail {
+  padding: 1rem;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 2rem rgba($color-black, 0.25);
+  margin-bottom: 2rem;
+  cursor: pointer;
+  font-size: 1.8rem;
+
+  & > * {
+    margin-bottom: 0.5rem;
+
+    span {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.review-detail.NEW {
+  background-color: $color-primary-light-1;
+}
+
+.review-detail.REJECTED {
+  background-color: $color-gray-medium;
+  box-shadow: none;
+}
+
+.review-detail.APPROVED {
+  background-color: $color-green-light-1;
+}

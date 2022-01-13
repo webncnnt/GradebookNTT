@@ -17,6 +17,7 @@ interface ScoreInterface {
 const StudentView = ({ assignments, studentId }: StudentViewProps) => {
   const [scores, setScores] = useState<ScoreInterface[]>([]);
   const [isShowForm, setIsShowForm] = useState<boolean>(false);
+  const [currAssignmentId, setCurrAssignmentId] = useState<number>(0);
   const { sendRequest } = useHttp();
 
   // scores
@@ -52,8 +53,14 @@ const StudentView = ({ assignments, studentId }: StudentViewProps) => {
             return (
               <li key={key}>
                 <span>{assignment.title}:</span> <span> {scores[scores.findIndex((score) => score.title === assignment.title)]?.score ?? 0}</span>
-                <Button onClick={() => setIsShowForm(true)} content='Phúc khảo' type='primary' />
-                {isShowForm ? <RequestReview assignmentId={assignment.id} studentId={studentId} onClose={() => setIsShowForm(false)} /> : null}
+                <Button
+                  onClick={() => {
+                    setCurrAssignmentId(assignment.id);
+                    setIsShowForm(true);
+                  }}
+                  content='Phúc khảo'
+                  type='primary'
+                />
               </li>
             );
           })}
@@ -62,6 +69,7 @@ const StudentView = ({ assignments, studentId }: StudentViewProps) => {
             <span>Tổng kết</span>0
           </li>
         </ul>
+        {isShowForm ? <RequestReview assignmentId={currAssignmentId} studentId={studentId} onClose={() => setIsShowForm(false)} /> : null}
       </div>
     </>
   );

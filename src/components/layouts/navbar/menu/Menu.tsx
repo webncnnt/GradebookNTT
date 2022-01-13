@@ -28,6 +28,7 @@ const Menu = () => {
         <Item content="Thành viên" link={"class-detail/" + pathname.split("/")[2] + "/members"} />
         <Item content="Thông tin lớp" link={"class-detail/" + pathname.split("/")[2] + "/info"} />
         <Item content="Điểm số" link={"class-detail/" + pathname.split("/")[2] + "/scores"} />
+        <Item content="Phúc khảo" link={"class-detail/" + pathname.split("/")[2] + "/review"} />
       </ul>
     );
   }

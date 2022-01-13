@@ -11,6 +11,8 @@ interface RequestReviewProps {
 }
 
 const RequestReview = ({ onClose, studentId, assignmentId }: RequestReviewProps) => {
+  console.log(studentId, assignmentId);
+
   const [expectedScore, setExpectedScore] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 

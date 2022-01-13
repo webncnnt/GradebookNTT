@@ -17,6 +17,7 @@ const csv_headers = [
   { label: "Tên sinh viên", key: "studentName" },
   { label: "MSSV", key: "studentId" },
 ];
+const pathname = window.location.pathname;
 
 const Members = () => {
   const [listTeachers, setListTeachers] = useState<TeacherModel[]>([]);
@@ -29,9 +30,8 @@ const Members = () => {
 
   const userId = localStorage.getItem("userId");
 
-  const { error, sendRequest } = useHttp();
+  const { sendRequest } = useHttp();
 
-  const pathname = window.location.pathname;
 
   //get teacher
   useEffect(() => {
@@ -53,7 +53,7 @@ const Members = () => {
       setListTeachers(memberInfoFormat);
     };
     sendRequest(requestConfig, handleError, getTeachers);
-  }, [pathname, error, sendRequest]);
+  }, [sendRequest]);
 
   //get student
   useEffect(() => {
@@ -81,7 +81,7 @@ const Members = () => {
     };
     sendRequest(requestConfig, handleError, getStudents);
     setIsUploadStudents(false);
-  }, [pathname, sendRequest, isUploadStudents]);
+  }, [sendRequest, isUploadStudents]);
 
   //check teacher
   useEffect(() => {
