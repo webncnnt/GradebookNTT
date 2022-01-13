@@ -32,4 +32,27 @@
   &__render-headers {
     display: flex;
   }
+
+  &__private {
+    margin-top: 2rem;
+    border-radius: 1rem;
+    background: $color-white;
+    box-shadow: 0 0 2rem rgba($color-black, 0.3);
+    padding: 1rem;
+
+    ul {
+
+      li {
+        font-size: 2rem;
+        font-weight: 300;
+        display: flex;
+        margin-bottom: 1rem;
+
+        span {
+          font-weight: 600;
+          flex: 0 0 30%;
+        }
+      }
+    }
+  }
 }

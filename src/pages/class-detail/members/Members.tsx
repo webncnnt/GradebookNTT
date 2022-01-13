@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
-import CSVReader from 'react-csv-reader';
-import { CSVLink } from 'react-csv';
+import { useEffect, useState } from "react";
+import CSVReader from "react-csv-reader";
+import { CSVLink } from "react-csv";
 
-import AddIcon from '../../../components/icons/Add';
-import UploadIcon from '../../../components/icons/Upload';
-import Container from '../../../components/layouts/container/Container';
-import InviteMemberForm from '../../../components/UI/form/invite-members/InviteMemberForm';
-import UserTable from '../../../components/UI/table/user-table/UserTable';
-import useHttp from '../../../hooks/useHttp';
-import MemberDetail from './members-detail/MemberDetail';
-import DownloadIcon from '../../../components/icons/Download';
-import { StudentModel } from '../../../@types/models/StudentModel';
-import { TeacherModel } from '../../../@types/models/TeacherModel';
+import AddIcon from "../../../components/icons/Add";
+import UploadIcon from "../../../components/icons/Upload";
+import Container from "../../../components/layouts/container/Container";
+import InviteMemberForm from "../../../components/UI/form/invite-members/InviteMemberForm";
+import UserTable from "../../../components/UI/table/user-table/UserTable";
+import useHttp from "../../../hooks/useHttp";
+import MemberDetail from "./members-detail/MemberDetail";
+import DownloadIcon from "../../../components/icons/Download";
+import { StudentModel } from "../../../@types/models/StudentModel";
+import { TeacherModel } from "../../../@types/models/TeacherModel";
 
 const csv_headers = [
-  { label: 'Tên sinh viên', key: 'studentName' },
-  { label: 'MSSV', key: 'studentId' },
+  { label: "Tên sinh viên", key: "studentName" },
+  { label: "MSSV", key: "studentId" },
 ];
 
 const Members = () => {
@@ -27,7 +27,7 @@ const Members = () => {
   const [isUploadStudents, setIsUploadStudents] = useState<boolean>(false);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
 
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
 
   const { error, sendRequest } = useHttp();
 
@@ -36,7 +36,7 @@ const Members = () => {
   //get teacher
   useEffect(() => {
     const requestConfig = {
-      url: 'classes/' + pathname.split('/')[2] + '/teachers',
+      url: "classes/" + pathname.split("/")[2] + "/teachers",
     };
     const handleError = () => {};
 
@@ -58,11 +58,13 @@ const Members = () => {
   //get student
   useEffect(() => {
     const requestConfig = {
-      url: 'students/getStudentsByClassId/' + pathname.split('/')[2],
+      url: "students/getStudentsByClassId/" + pathname.split("/")[2],
     };
     const handleError = () => {};
 
     const getStudents = (data: any) => {
+      console.log(data);
+      
       const memberInfoFormat: StudentModel[] = data.map((member: any) => {
         return {
           id: member.id,
@@ -83,7 +85,7 @@ const Members = () => {
 
   //check teacher
   useEffect(() => {
-    if (listTeachers.findIndex((teacher) => teacher.id === parseInt(userId ? userId : '')) >= 0) {
+    if (listTeachers.findIndex((teacher) => teacher.id === parseInt(userId ? userId : "")) >= 0) {
       setIsTeacher(true);
     }
   }, [listTeachers, userId]);
@@ -106,20 +108,20 @@ const Members = () => {
   };
 
   const handleForce = (data: any, fileInfo: any) => {
-    if (data[0]['Tên sinh viên']) {
+    if (data[0]["Tên sinh viên"]) {
       const newListStudents = data.map((student: any) => {
         return {
-          studentName: student['Tên sinh viên'],
-          studentId: student['MSSV'].toString(),
+          studentName: student["Tên sinh viên"],
+          studentId: student["MSSV"].toString(),
         };
       });
 
       const requestConfig = {
-        url: 'students/uploadStudents',
-        method: 'POST',
+        url: "students/uploadStudents",
+        method: "POST",
         body: {
           students: newListStudents,
-          classId: pathname.split('/')[2],
+          classId: pathname.split("/")[2],
         },
       };
       const handleError = () => {};
@@ -130,7 +132,7 @@ const Members = () => {
 
       setIsUploadStudents(true);
     } else {
-      console.log('Wrong header');
+      console.log("Wrong header");
     }
   };
 
@@ -145,10 +147,10 @@ const Members = () => {
           </div>
           <div className='members__table'>
             <ul className='members__menu'>
-              <li className={'members__menu-item' + (isShowListTeacher ? ' active' : '')} onClick={() => setIsShowListTeacher(true)}>
+              <li className={"members__menu-item" + (isShowListTeacher ? " active" : "")} onClick={() => setIsShowListTeacher(true)}>
                 Giảng viên
               </li>
-              <li className={'members__menu-item' + (!isShowListTeacher ? ' active' : '')} onClick={() => setIsShowListTeacher(false)}>
+              <li className={"members__menu-item" + (!isShowListTeacher ? " active" : "")} onClick={() => setIsShowListTeacher(false)}>
                 Sinh viên
               </li>
             </ul>
@@ -163,7 +165,7 @@ const Members = () => {
               <div className='members__downdoad-upload'>
                 <div className='members__download'>
                   {!isShowListTeacher ? (
-                    <CSVLink data={csv_data} filename={'list-students.csv'} headers={csv_headers}>
+                    <CSVLink data={csv_data} filename={"list-students.csv"} headers={csv_headers}>
                       <DownloadIcon className='btn btn--primary icon--white' />
                     </CSVLink>
                   ) : null}

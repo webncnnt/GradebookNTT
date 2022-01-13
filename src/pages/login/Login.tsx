@@ -54,7 +54,7 @@ const Login = () => {
 
           <div className="login__group-icon mb2">
             <GoogleLogin
-              clientId="387536783121-a5pvnmho8o42rdfgtb9f6i8r37bhbq14.apps.googleusercontent.com"
+              clientId="387536783121-sda7d6mg9uk1f4uktmq63tsq0rp62kg5.apps.googleusercontent.com"
               render={(renderProps) => (
                 <GoogleIcon
                   className="frame mr4"

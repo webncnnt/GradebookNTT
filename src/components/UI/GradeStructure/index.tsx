@@ -11,16 +11,15 @@ import { GradeStructureOverview } from './components/GradeStructureOverview';
 import './index.scss';
 
 type GradeStructureProps = {};
+const pathname = window.location.pathname;
 
 export const GradeStructure = (props: GradeStructureProps) => {
   const [gradeAssignments, setGradeAssignments] = useState<GradeAssignmentModel[]>([]);
-  const [isChangeAssignment, setIsChangeAssignment] = useState<boolean>(false);
+  const [isChangeAssignment, setIsChangeAssignment] = useState<number>(0);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
   const { sendRequest } = useHttp();
 
   const userId = localStorage.getItem('userId');
-
-  const pathname = window.location.pathname;
 
   useEffect(() => {
     const requestConfig = {
@@ -43,9 +42,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
     };
 
     sendRequest(requestConfig, handleError, getGradeAssignments);
-
-    setIsChangeAssignment(false);
-  }, [pathname, isChangeAssignment, sendRequest]);
+  }, [isChangeAssignment, sendRequest]);
 
   //get teacher
   useEffect(() => {
@@ -69,7 +66,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
       }
     };
     sendRequest(requestConfig, handleError, getTeachers);
-  }, [pathname, sendRequest, userId]);
+  }, [sendRequest, userId]);
 
   const calculateNewPos = (gradeAssignments: GradeAssignmentModel[], destinationIndex: number) => {
     let newPos = 0;
@@ -115,7 +112,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
 
     sendRequest(requestConfig, handleError, getGradeAssignments);
 
-    setIsChangeAssignment(true);
+    setIsChangeAssignment(isChangeAssignment + 1);
   };
 
   const onAssignmentChange = (gradeAssignments: UpdateGradeAssignmentFormValues) => {
@@ -131,7 +128,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
     const handleError = () => {};
 
     const getGradeAssignments = (data: any) => {
-      setIsChangeAssignment(true);
+      setIsChangeAssignment(isChangeAssignment + 1);
     };
 
     sendRequest(requestConfig, handleError, getGradeAssignments);
@@ -148,6 +145,8 @@ export const GradeStructure = (props: GradeStructureProps) => {
 
     const gradeAssignmentsClone = Array.from(gradeAssignments);
     const [removed] = gradeAssignmentsClone.splice(result.source.index, 1);
+    console.log(removed);
+    
 
     const newPos = calculateNewPos(gradeAssignments, result.destination.index);
 
@@ -166,7 +165,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
     const getGradeAssignments = (data: any) => {
       console.log(data);
 
-      setIsChangeAssignment(true);
+      setIsChangeAssignment(isChangeAssignment + 1);
     };
 
     sendRequest(requestConfig, handleError, getGradeAssignments);
@@ -181,7 +180,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
     const handleError = () => {};
 
     const getGradeAssignments = (data: any) => {
-      setIsChangeAssignment(true);
+      setIsChangeAssignment(isChangeAssignment + 1);
     };
 
     sendRequest(requestConfig, handleError, getGradeAssignments);

@@ -20,7 +20,7 @@ html {
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   color: $color-black;
   background-color: $color-gray-light-1;
 }
@@ -28,4 +28,8 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+ul {
+  list-style: none;
 }
