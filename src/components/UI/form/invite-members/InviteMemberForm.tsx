@@ -12,7 +12,7 @@ type inviteFormProps = {
 const InviteMemberForm = ({ onClose }: inviteFormProps) => {
   const [emailInput, setEmailInput] = useState<string>("");
   const [role, setRole] = useState<string>("1");
-  const {error, sendRequest} = useHttp();
+  const { sendRequest } = useHttp();
 
   const pathname = window.location.pathname;
 
@@ -22,54 +22,37 @@ const InviteMemberForm = ({ onClose }: inviteFormProps) => {
     const data = { email: emailInput, role: parseInt(role) };
 
     const requestConfig = {
-      url: "classes/" +
-      pathname.split("/")[2] +
-      "/invitations",
+      url: "classes/" + pathname.split("/")[2] + "/invitations",
       method: "POST",
-      body: data
-    }
+      body: data,
+    };
 
     const handleError = () => {
-     console.log(error);
       onClose();
-    }
+    };
 
-    const inviteClassSuccess = (data: any) => {      
+    const inviteClassSuccess = (data: any) => {
       onClose();
-    }
-    
-      sendRequest(
-        requestConfig,
-        handleError,
-        inviteClassSuccess
-      );
+    };
+
+    sendRequest(requestConfig, handleError, inviteClassSuccess);
   };
 
   return (
     <Popup>
-      <div className="form">
-        <h1 className="form__title">Mời tham gia</h1>
+      <div className='form'>
+        <h1 className='form__title'>Mời tham gia</h1>
         <form onSubmit={handleSubmit}>
-          <div className="form__group">
-            <InputText
-              placeholder="Email"
-              id="email-invite"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
-            />
+          <div className='form__group'>
+            <InputText placeholder='Email' id='email-invite' value={emailInput} onChange={(e) => setEmailInput(e.target.value)} />
             <InputRatio role={role} onChange={(e) => setRole(e.target.value)} />
           </div>
-          <div className="form__group-btn">
-            <div className="form__btn">
-              <Button btnType="submit" content="Mời" type="primary" />
+          <div className='form__group-btn'>
+            <div className='form__btn'>
+              <Button btnType='submit' content='Mời' type='primary' />
             </div>
-            <div className="form__btn">
-              <Button
-                btnType="reset"
-                content="Huỷ"
-                type="fill-red"
-                onClick={onClose}
-              />
+            <div className='form__btn'>
+              <Button btnType='reset' content='Huỷ' type='fill-red' onClick={onClose} />
             </div>
           </div>
         </form>

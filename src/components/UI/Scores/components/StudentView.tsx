@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { GradeAssignmentModel } from "../../../../@types/models/GradeAssignmentModel";
 import useHttp from "../../../../hooks/useHttp";
 import Button from "../../button/Button";
+import RequestReview from "../../form/request-review/RequestReview";
 
 type StudentViewProps = {
   assignments: GradeAssignmentModel[];
@@ -15,6 +16,7 @@ interface ScoreInterface {
 
 const StudentView = ({ assignments, studentId }: StudentViewProps) => {
   const [scores, setScores] = useState<ScoreInterface[]>([]);
+  const [isShowForm, setIsShowForm] = useState<boolean>(false);
   const { sendRequest } = useHttp();
 
   // scores
@@ -50,7 +52,8 @@ const StudentView = ({ assignments, studentId }: StudentViewProps) => {
             return (
               <li key={key}>
                 <span>{assignment.title}:</span> <span> {scores[scores.findIndex((score) => score.title === assignment.title)]?.score ?? 0}</span>
-                <Button content='Phúc khảo' type='primary' />
+                <Button onClick={() => setIsShowForm(true)} content='Phúc khảo' type='primary' />
+                {isShowForm ? <RequestReview assignmentId={assignment.id} studentId={studentId} onClose={() => setIsShowForm(false)} /> : null}
               </li>
             );
           })}
