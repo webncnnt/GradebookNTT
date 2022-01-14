@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import Container from "../../../../components/layouts/container/Container";
+import Button from "../../../../components/UI/button/Button";
 import InputText from "../../../../components/UI/input/input-text/InputText";
-
 import useHttp from "../../../../hooks/useHttp";
+import Comment from "./comment/Comment";
+
 
 interface ReviewDetailInterface {
   reviewId: number;
@@ -29,7 +31,9 @@ const initialReviewData = {
 
 const ReviewDetail = () => {
   const [reviewDetail, setReviewDetail] = useState<ReviewDetailInterface>(initialReviewData);
-  const [commentInput, setCommentInput] = useState<string>("");
+
+  const [scoreInput, setScoreInput] = useState<string>("");
+
   const { sendRequest } = useHttp();
   const location = useLocation();
   const { reviewId } = location.state;
@@ -43,16 +47,17 @@ const ReviewDetail = () => {
 
     const getListReview = (data: any) => {
       const dataFormat = {
-        reviewId: data.reviewid ?? 0,
-        studentName: data.studentName ?? "Nguyễn Văn A",
-        studentId: data.studentId ?? 0,
-        assignmentName: data.title ?? "Tên cột điểm",
-        assignmentId: data.assignmentId ?? 0,
-        currentScore: data.currentScore ?? 0,
-        expectedScore: data.expectedScore ?? 0,
-        message: data.message ?? "Lý do",
-        statusTeacher: data.statusTeacher ?? "NEW",
+        reviewId: data[0].reviewid ?? 0,
+        studentName: data[0].studentName ?? "Nguyễn Văn A",
+        studentId: data[0].studentId ?? 0,
+        assignmentName: data[0].title ?? "Tên cột điểm",
+        assignmentId: data[0].assignmentId ?? 0,
+        currentScore: data[0].currentscore ?? 0,
+        expectedScore: data[0].expectedScore ?? 0,
+        message: data[0].message ?? "Lý do",
+        statusTeacher: data[0].statusTeacher ?? "NEW",
       };
+
       setReviewDetail(dataFormat);
     };
     sendRequest(requestConfig, handleError, getListReview);
@@ -61,7 +66,7 @@ const ReviewDetail = () => {
   return (
     <Container>
       <div className='review-detail review-detail__info'>
-        <h3 className='review-detail__title'>Thông tin phúc khảo:</h3>
+        <h3 className='review-detail__title'>Thông tin phúc khảo</h3>
         <p>
           Cột điểm: <span>{reviewDetail.assignmentName}</span>
         </p>
@@ -81,10 +86,21 @@ const ReviewDetail = () => {
           Lý do: <span>{reviewDetail.message}</span>
         </p>
       </div>
-      <div className='review-detail review-detail__comment'>
-        <h3 className=''>Bình luận</h3>
-        <InputText placeholder='Bình luận' id='review-comment' value={commentInput} onChange={(e) => setCommentInput(e.target.value)} />
+      <div className='review-detail review-detail__form'>
+        <h3 className='review-detail__title'>Phúc khảo điểm</h3>
+        <form onSubmit={(e) => {}}>
+          <InputText
+            className='mb2'
+            placeholder='Điểm phúc khảo'
+            id='review-score'
+            value={scoreInput}
+            onChange={(e) => setScoreInput(e.target.value)}
+          />
+          <Button className='mr4' type='fill-red' btnType='reset' content='Từ chối' />
+          <Button type='primary' btnType='submit' content='Sửa điểm' />
+        </form>
       </div>
+      <Comment reviewId={reviewId} />
     </Container>
   );
 };

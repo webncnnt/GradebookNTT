@@ -62,14 +62,11 @@ const Members = () => {
     };
     const handleError = () => {};
 
-    const getStudents = (data: any) => {
-      console.log(data);
-      
+    const getStudents = (data: any) => {   
       const memberInfoFormat: StudentModel[] = data.map((member: any) => {
         return {
-          id: member.id,
+          id: member.userId,
           fullName: member.fullName,
-          userId: member.userId,
           studentId: member.studentId,
           avatar: member.avatar,
           email: member.email,

@@ -2,7 +2,6 @@ import { DataGrid, GridColDef, GridEventListener, GridEvents } from "@mui/x-data
 import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import CSVReader from "react-csv-reader";
-import { useLocation } from "react-router";
 import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
 import { StudentGradeModel } from "../../../@types/models/StudentGradeModel";
 import { StudentModel } from "../../../@types/models/StudentModel";
@@ -26,6 +25,7 @@ const Scores = () => {
   const [students, setStudents] = useState<StudentModel[]>([]);
   const [gradeStudents, setGradeStudents] = useState<StudentGradeModel[]>([]);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
+  const [assignmentReturn, setAssignmentReturn] = useState<number>(0);
 
   const authCtx = useAuth();
   const userId = authCtx.user.id;
@@ -276,7 +276,7 @@ const Scores = () => {
 
     const returnScore = () => {
       const requestConfig = {
-        url: `students/markFinalizedGrade/${grade.id}`,
+        url: `students/markFinalizedGrade/${assignmentReturn}`,
       };
 
       const handleError = () => {};
@@ -319,7 +319,13 @@ const Scores = () => {
                 inputId={"assignment" + grade.id}
                 inputName={"assignment" + grade.id}
               />
-              <CheckIcon className='icon--csv ml1' onClick={returnScore} />
+              <CheckIcon
+                className='icon--csv ml1'
+                onClick={() => {
+                  setAssignmentReturn(grade.id);
+                  returnScore();
+                }}
+              />
             </div>
           </>
         );

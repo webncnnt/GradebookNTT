@@ -27,7 +27,7 @@ const UserTable = ({ listUsers, onChooseMember, memberIdChoose, isStudent }: use
     setListMembersPerPage(listMembersInCurrentPage);
   }, [currentPage, listUsers]);
 
-  const chooseMemberHandle = (id: number) => {
+  const chooseMemberHandle = (id: number) => { 
     onChooseMember(id);
   };
 

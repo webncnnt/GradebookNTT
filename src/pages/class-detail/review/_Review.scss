@@ -47,6 +47,38 @@
       }
     }
   }
+
+  &__comment {
+    ul {
+      li {
+        margin-bottom: 2rem;
+
+        .review-detail__comment-user {
+          display: flex;
+          margin-bottom: 1rem;
+
+          img {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 999px;
+            object-fit: cover;
+          }
+
+          div {
+            margin-left: 2rem;
+            background-color: $color-gray-medium;
+            padding: 1rem;
+            border-radius: 0.5rem;
+
+            span {
+              font-weight: 600;
+              margin-bottom: 1rem;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .review-item.NEW {
