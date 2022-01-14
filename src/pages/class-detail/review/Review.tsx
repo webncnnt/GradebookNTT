@@ -31,22 +31,21 @@ const Review = () => {
     const handleError = () => {};
 
     const getListReview = (data: any) => {
-      console.log(data);
-      
       const dataFormat = data.map((review: any) => {
         return {
           reviewId: review.reviewid ?? 0,
-          studentName: review.studentName ?? "Nguyễn Văn A",
+          studentName: review.fullName ?? "Nguyễn Văn A",
           studentId: review.studentId ?? 0,
           assignmentName: review.title ?? "Tên cột điểm",
           assignmentId: review.assignmentId ?? 0,
-          currentScore: review.currentScore ?? 0,
+          currentScore: review.currentscore ?? 0,
           expectedScore: review.expectedScore ?? 0,
           message: review.message ?? "Lý do",
           statusTeacher: review.statusTeacher ?? "NEW",
         };
       });
-      setListReview(dataFormat);
+
+      setListReview(dataFormat.reverse());
     };
     sendRequest(requestConfig, handleError, getListReview);
   }, [sendRequest]);

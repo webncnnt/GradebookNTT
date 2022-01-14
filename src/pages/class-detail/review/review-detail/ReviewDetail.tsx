@@ -46,7 +46,7 @@ const ReviewDetail = () => {
     const getListReview = (data: any) => {
       const dataFormat = {
         reviewId: data[0].reviewid ?? 0,
-        studentName: data[0].studentName ?? "Nguyễn Văn A",
+        studentName: data[0].fullName ?? "Nguyễn Văn A",
         studentId: data[0].studentId ?? 0,
         assignmentName: data[0].title ?? "Tên cột điểm",
         assignmentId: data[0].assignmentId ?? 0,

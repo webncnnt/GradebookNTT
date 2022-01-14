@@ -5,15 +5,18 @@ import Loading from "../components/layouts/loading/Loading";
 const Home = lazy(() => import("../pages/home/Home"));
 const Login = lazy(() => import("../pages/login/Login"));
 const Register = lazy(() => import("../pages/register/Register"));
+const NotFound = lazy(() => import("../pages/404"));
 
 const UnauthRoutes = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/Home" element={<Home />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/Home' element={<Home />} />
+        <Route path='/Login' element={<Login />} />
+        <Route path='/Register' element={<Register />} />
+
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </Suspense>
   );

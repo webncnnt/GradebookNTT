@@ -13,6 +13,7 @@ const Review = lazy(() => import("../pages/class-detail/review/Review"));
 const ReviewDetail = lazy(() => import("../pages/class-detail/review/review-detail/ReviewDetail"));
 const Invite = lazy(() => import("../pages/invite/Invite"));
 const Grades = lazy(() => import("../pages/class-detail/grades"));
+const NotFound = lazy(() => import("../pages/404"));
 
 const AuthRoutes = () => {
   return (
@@ -40,6 +41,8 @@ const AuthRoutes = () => {
         </Route>
 
         <Route path='invites/access_token/:token' element={<Invite />} />
+
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </Suspense>
   );
