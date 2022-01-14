@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import Container from "../../../../components/layouts/container/Container";
-import Button from "../../../../components/UI/button/Button";
-import InputText from "../../../../components/UI/input/input-text/InputText";
 import useHttp from "../../../../hooks/useHttp";
+import ChangeScore from "./change-score/ChangeScore";
 import Comment from "./comment/Comment";
-
 
 interface ReviewDetailInterface {
   reviewId: number;
@@ -31,8 +29,6 @@ const initialReviewData = {
 
 const ReviewDetail = () => {
   const [reviewDetail, setReviewDetail] = useState<ReviewDetailInterface>(initialReviewData);
-
-  const [scoreInput, setScoreInput] = useState<string>("");
 
   const { sendRequest } = useHttp();
   const location = useLocation();
@@ -86,20 +82,7 @@ const ReviewDetail = () => {
           Lý do: <span>{reviewDetail.message}</span>
         </p>
       </div>
-      <div className='review-detail review-detail__form'>
-        <h3 className='review-detail__title'>Phúc khảo điểm</h3>
-        <form onSubmit={(e) => {}}>
-          <InputText
-            className='mb2'
-            placeholder='Điểm phúc khảo'
-            id='review-score'
-            value={scoreInput}
-            onChange={(e) => setScoreInput(e.target.value)}
-          />
-          <Button className='mr4' type='fill-red' btnType='reset' content='Từ chối' />
-          <Button type='primary' btnType='submit' content='Sửa điểm' />
-        </form>
-      </div>
+      <ChangeScore reviewId={reviewId} currentScore={reviewDetail.currentScore} />
       <Comment reviewId={reviewId} />
     </Container>
   );
