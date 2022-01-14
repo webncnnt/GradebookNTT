@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import { TeacherModel } from "../../../../@types/models/TeacherModel";
 import Container from "../../../../components/layouts/container/Container";
 import useHttp from "../../../../hooks/useHttp";
 import ChangeScore from "./change-score/ChangeScore";
@@ -27,12 +28,17 @@ const initialReviewData = {
   statusTeacher: "",
 };
 
+const pathname = window.location.pathname;
+
 const ReviewDetail = () => {
   const [reviewDetail, setReviewDetail] = useState<ReviewDetailInterface>(initialReviewData);
-
+  const [listTeachers, setListTeachers] = useState<TeacherModel[]>([]);
+  const [isTeacher, setIsTeacher] = useState<boolean>(false);
   const { sendRequest } = useHttp();
   const location = useLocation();
   const { reviewId } = location.state;
+
+  const userId = localStorage.getItem("userId");
 
   // get review detail
   useEffect(() => {
@@ -59,6 +65,35 @@ const ReviewDetail = () => {
     sendRequest(requestConfig, handleError, getListReview);
   }, [sendRequest, reviewId]);
 
+  //get teacher
+  useEffect(() => {
+    const requestConfig = {
+      url: "classes/" + pathname.split("/")[2] + "/teachers",
+    };
+    const handleError = () => {};
+
+    const getTeachers = (data: any) => {
+      const memberInfoFormat: TeacherModel[] = data.data.teachers.map((member: any) => {
+        return {
+          id: member.profile.id,
+          fullName: member.profile.fullName,
+          avatar: member.profile.avatar,
+          email: member.profile.email,
+          joinDate: member.joinDate,
+        };
+      });
+      setListTeachers(memberInfoFormat);
+    };
+    sendRequest(requestConfig, handleError, getTeachers);
+  }, [sendRequest]);
+
+  //check teacher
+  useEffect(() => {
+    if (listTeachers.findIndex((teacher) => teacher.id === parseInt(userId ? userId : "")) >= 0) {
+      setIsTeacher(true);
+    }
+  }, [listTeachers, userId]);
+
   return (
     <Container>
       <div className='review-detail review-detail__info'>
@@ -82,7 +117,8 @@ const ReviewDetail = () => {
           Lý do: <span>{reviewDetail.message}</span>
         </p>
       </div>
-      <ChangeScore reviewId={reviewId} currentScore={reviewDetail.currentScore} />
+      {isTeacher ? <ChangeScore reviewId={reviewId} currentScore={reviewDetail.currentScore} /> : null}
+
       <Comment reviewId={reviewId} />
     </Container>
   );

@@ -62,6 +62,8 @@ const AuthContext = React.createContext<AuthThemeContext>({
   setUser: (user: userType) => {},
 });
 
+const pathname = window.location.pathname;
+
 const AuthContextProvider = ({ children }: authctxProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
@@ -82,12 +84,12 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     updatedAt: "",
   });
 
+
   const { error, sendRequest } = useHttp();
 
-  const pathname = window.location.pathname;
 
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const userId = localStorage.getItem("userId");
 
@@ -119,7 +121,9 @@ const AuthContextProvider = ({ children }: authctxProps) => {
       setLogged
     );
   
-  }, [sendRequest, navigate, pathname]);
+  }, [sendRequest, navigate]);
+
+
 
   const logoutHandler = () => {
     localStorage.removeItem("accessToken");
