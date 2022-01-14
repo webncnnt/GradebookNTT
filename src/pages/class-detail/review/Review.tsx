@@ -31,6 +31,8 @@ const Review = () => {
     const handleError = () => {};
 
     const getListReview = (data: any) => {
+      console.log(data);
+      
       const dataFormat = data.map((review: any) => {
         return {
           reviewId: review.reviewid ?? 0,
