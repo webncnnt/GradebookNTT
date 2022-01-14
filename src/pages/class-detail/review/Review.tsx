@@ -8,6 +8,7 @@ const pathname = window.location.pathname;
 const classId = pathname.split("/")[2];
 
 interface ReviewInterface {
+  reviewId: number;
   studentName: string;
   studentId: number;
   assignmentName: string;
@@ -32,6 +33,7 @@ const Review = () => {
     const getListReview = (data: any) => {
       const dataFormat = data.map((review: any) => {
         return {
+          reviewId: review.reviewid ?? 0,
           studentName: review.studentName ?? "Nguyễn Văn A",
           studentId: review.studentId ?? 0,
           assignmentName: review.title ?? "Tên cột điểm",
@@ -56,10 +58,10 @@ const Review = () => {
             return (
               <ReviewItem
                 key={key}
+                reviewId={review.reviewId}
                 studentName={review.studentName}
                 studentId={review.studentId}
                 assignmentName={review.assignmentName}
-                assignmentId={review.assignmentId}
                 currentScore={review.currentScore}
                 expectedScore={review.expectedScore}
                 message={review.message}

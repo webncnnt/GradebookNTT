@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import useHttp from "../../../../hooks/useHttp";
 import Button from "../../button/Button";
-import InputText from "../../input-text/InputText";
+
 import InputRatio from "../../input/input-ratio/InputRatio";
+import InputText from "../../input/input-text/InputText";
 import Popup from "../../popup/Popup";
 
 type inviteFormProps = {

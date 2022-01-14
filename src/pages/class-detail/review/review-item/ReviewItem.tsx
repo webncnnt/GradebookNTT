@@ -1,26 +1,21 @@
-interface ReviewDetailProps {
+import { useNavigate } from "react-router";
+
+interface ReviewItemProps {
+  reviewId: number;
   studentName: string;
   studentId: number;
   assignmentName: string;
-  assignmentId: number;
   currentScore: number;
   expectedScore: number;
   message: string;
   statusTeacher: string;
 }
 
-const ReviewItem = ({
-  studentName,
-  studentId,
-  assignmentName,
-  assignmentId,
-  currentScore,
-  expectedScore,
-  message,
-  statusTeacher,
-}: ReviewDetailProps) => {
+const ReviewItem = ({ reviewId, studentName, studentId, assignmentName, currentScore, expectedScore, message, statusTeacher }: ReviewItemProps) => {
+  const navigate = useNavigate();
   return (
-    <div className={"review-detail " + statusTeacher}>
+    <div className={"review-item " + statusTeacher} onClick={() => navigate(`${reviewId}`, { state: { reviewId: reviewId } })}>
+      
       <h3>
         Cột điểm: <span>{assignmentName}</span>
       </h3>

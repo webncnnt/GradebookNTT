@@ -6,7 +6,7 @@
   }
 }
 
-.review-detail {
+.review-item {
   padding: 1rem;
   background-color: $color-white;
   border-radius: 0.5rem;
@@ -24,15 +24,40 @@
   }
 }
 
-.review-detail.NEW {
+.review-detail {
+  padding: 1rem;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 2rem rgba($color-black, 0.25);
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  margin-top: 2rem;
+
+  &__title {
+    margin-bottom: 2rem !important;
+  }
+
+  &__info {
+    & > * {
+      margin-bottom: 0.5rem;
+
+      span {
+        margin-left: 1rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.review-item.NEW {
   background-color: $color-primary-light-1;
 }
 
-.review-detail.REJECTED {
+.review-item.REJECTED {
   background-color: $color-gray-medium;
   box-shadow: none;
 }
 
-.review-detail.APPROVED {
+.review-item.APPROVED {
   background-color: $color-green-light-1;
 }

@@ -1,7 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import Loading from "../components/layouts/loading/Loading";
-import Review from "../pages/class-detail/review/Review";
 
 const HomeLogged = lazy(() => import("../pages/home-logged/HomeLogged"));
 const InviteByCodeForm = lazy(() => import("../pages/enroll-class/EnrollClassByCode"));
@@ -10,6 +9,8 @@ const Timeline = lazy(() => import("../pages/class-detail/timeline/Timeline"));
 const Classwork = lazy(() => import("../pages/class-detail/classwork/Classwork"));
 const Members = lazy(() => import("../pages/class-detail/members/Members"));
 const ClassInfo = lazy(() => import("../pages/class-detail/information/ClassInfo"));
+const Review = lazy(() => import("../pages/class-detail/review/Review"));
+const ReviewDetail = lazy(() => import("../pages/class-detail/review/review-detail/ReviewDetail"));
 const Invite = lazy(() => import("../pages/invite/Invite"));
 const Grades = lazy(() => import("../pages/class-detail/grades"));
 
@@ -31,7 +32,10 @@ const AuthRoutes = () => {
             <Route path='members' element={<Members />} />
             <Route path='info' element={<ClassInfo />} />
             <Route path='scores' element={<Grades />} />
-            <Route path='review' element={<Review />} />
+            <Route path='review'>
+              <Route index element={<Review />} />
+              <Route path=':reviewId' element={<ReviewDetail />} />
+            </Route>
           </Route>
         </Route>
 

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import useHttp from "../../../../hooks/useHttp";
 import Button from "../../button/Button";
-import InputText from "../../input-text/InputText";
+
 import InputDate from "../../input/input-date/InputDate";
 import InputImage from "../../input/input-image/InputImage";
+import InputText from "../../input/input-text/InputText";
 import Popup from "../../popup/Popup";
 
 type popupProps = {

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "../../components/layouts/container/Container";
 import Button from "../../components/UI/button/Button";
-import InputText from "../../components/UI/input-text/InputText";
+import InputText from "../../components/UI/input/input-text/InputText";
+
 import useHttp from "../../hooks/useHttp";
 
 const InviteByCodeForm = () => {

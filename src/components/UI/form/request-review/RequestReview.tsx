@@ -1,7 +1,8 @@
 import { useState } from "react";
 import useHttp from "../../../../hooks/useHttp";
 import Button from "../../button/Button";
-import InputText from "../../input-text/InputText";
+import InputText from "../../input/input-text/InputText";
+
 import Popup from "../../popup/Popup";
 
 interface RequestReviewProps {

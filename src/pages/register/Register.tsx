@@ -2,8 +2,9 @@ import { useState } from "react";
 import RegisterImage from "../../assets/images/Saly-22.png";
 import Container from "../../components/layouts/container/Container";
 import Button from "../../components/UI/button/Button";
-import InputText from "../../components/UI/input-text/InputText";
+
 import InputPassword from "../../components/UI/input/input-password/InputPassword";
+import InputText from "../../components/UI/input/input-text/InputText";
 import { useAuth } from "../../contexts/auth-context";
 
 
