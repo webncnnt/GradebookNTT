@@ -87,7 +87,7 @@ const ReviewDetail = () => {
       </div>
       {isTeacher && reviewDetail.statusTeacher === "NEW" ? <ChangeScore reviewId={reviewId} currentScore={reviewDetail.currentScore} /> : null}
 
-      <Comment reviewId={reviewId} />
+      <Comment reviewId={reviewId} statusTeacher={reviewDetail.statusTeacher}/>
     </Container>
   );
 };

@@ -104,7 +104,7 @@ const StudentView = ({ assignments, studentId }: StudentViewProps) => {
                       ? "Đang phúc khảo"
                       : "Đã phúc khảo"
                   }
-                  type='primary'
+                  type={myReviews.findIndex((review) => review.assignmentId === assignment.id) < 0 ? "primary" : "fill-gray"}
                 />
               </li>
             );

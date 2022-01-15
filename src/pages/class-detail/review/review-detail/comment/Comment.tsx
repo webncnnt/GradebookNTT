@@ -5,6 +5,7 @@ import useHttp from "../../../../../hooks/useHttp";
 
 interface CommentProps {
   reviewId: number;
+  statusTeacher: string;
 }
 
 interface CommentInterface {
@@ -13,7 +14,7 @@ interface CommentInterface {
   commenterAvatar: string;
 }
 
-const Comment = ({ reviewId }: CommentProps) => {
+const Comment = ({ reviewId, statusTeacher }: CommentProps) => {
   const [commentInput, setCommentInput] = useState<string>("");
   const [listComments, setListComments] = useState<CommentInterface[]>([]);
   const [getComments, setGetComments] = useState<number>(0);
@@ -80,9 +81,11 @@ const Comment = ({ reviewId }: CommentProps) => {
           );
         })}
       </ul>
-      <form onSubmit={addCommentHandle}>
-        <InputText placeholder='Bình luận' id='review-comment' value={commentInput} onChange={(e) => setCommentInput(e.target.value)} />
-      </form>
+      {statusTeacher === "NEW" ? (
+        <form onSubmit={addCommentHandle}>
+          <InputText placeholder='Bình luận' id='review-comment' value={commentInput} onChange={(e) => setCommentInput(e.target.value)} />
+        </form>
+      ) : null}
     </div>
   );
 };

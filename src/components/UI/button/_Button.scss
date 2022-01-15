@@ -45,6 +45,17 @@
     }
   }
 
+  &--fill-gray {
+    background-color: $color-gray-medium;
+    color: $color-black;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+      background-color: $color-gray-dark;
+      color: white;
+      transform: translateY(-2px);
+    }
+  }
 }
 
 .animate {
