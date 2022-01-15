@@ -29,12 +29,11 @@ const initialReviewData = {
 };
 
 const ReviewDetail = () => {
-  const [reviewDetail, setReviewDetail] = useState<ReviewDetailInterface>(initialReviewData);
-  const { sendRequest } = useHttp();
   const location = useLocation();
   const { reviewId } = location.state;
 
-  const { isTeacher } = useIsTeacher();
+  const [reviewDetail, setReviewDetail] = useState<ReviewDetailInterface>(initialReviewData);
+  const { sendRequest } = useHttp();
 
   // get review detail
   useEffect(() => {
@@ -61,6 +60,8 @@ const ReviewDetail = () => {
     sendRequest(requestConfig, handleError, getListReview);
   }, [sendRequest, reviewId]);
 
+  const { isTeacher } = useIsTeacher();
+
   return (
     <Container>
       <div className='review-detail review-detail__info'>
@@ -84,7 +85,7 @@ const ReviewDetail = () => {
           Lý do: <span>{reviewDetail.message}</span>
         </p>
       </div>
-      {isTeacher ? <ChangeScore reviewId={reviewId} currentScore={reviewDetail.currentScore} /> : null}
+      {isTeacher && reviewDetail.statusTeacher === "NEW" ? <ChangeScore reviewId={reviewId} currentScore={reviewDetail.currentScore} /> : null}
 
       <Comment reviewId={reviewId} />
     </Container>

@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react';
-import Container from '../../../components/layouts/container/Container';
-import { GradeStructure } from '../../../components/UI/GradeStructure';
-import useHttp from '../../../hooks/useHttp';
+import { useEffect, useState } from "react";
+import Container from "../../../components/layouts/container/Container";
+import { GradeStructure } from "../../../components/UI/GradeStructure";
+import useHttp from "../../../hooks/useHttp";
+
+const pathname = window.location.pathname;
 
 const ClassInfo = () => {
-  const [clsName, setClsName] = useState<string>('');
-  const [clsDescription, setClsDescription] = useState<string>('');
-  const [clsCode, setClsCode] = useState<string>('');
-  const [clsExpired, setClsExpired] = useState<string>('');
+  const [clsName, setClsName] = useState<string>("");
+  const [clsDescription, setClsDescription] = useState<string>("");
+  const [clsCode, setClsCode] = useState<string>("");
+  const [clsExpired, setClsExpired] = useState<string>("");
 
-  const { error, sendRequest } = useHttp();
-
-  const pathname = window.location.pathname;
+  const { sendRequest } = useHttp();
 
   useEffect(() => {
     const fetchApi = async () => {
       const requestConfig = {
-        url: 'classes/' + pathname.split('/')[2],
+        url: "classes/" + pathname.split("/")[2],
       };
 
       const handleError = () => {};
@@ -33,7 +33,7 @@ const ClassInfo = () => {
     };
 
     fetchApi();
-  }, [pathname, error, sendRequest]);
+  }, [sendRequest]);
 
   return (
     <Container>
@@ -63,9 +63,9 @@ input: date: string:  yyyy-mm-dd
 output: date: string:  dd/mm/yyyy
 */
 const formatDate = (date: string): string => {
-  const dateArray = date.split('-');
+  const dateArray = date.split("-");
   dateArray.reverse();
-  return dateArray.join('/');
+  return dateArray.join("/");
 };
 
 const formatIsoDateTime = (date: string): string => {
@@ -75,9 +75,9 @@ const formatIsoDateTime = (date: string): string => {
   let month: string | number = newDate.getMonth() + 1;
   let day: string | number = newDate.getDate();
 
-  if (month < 10) month = '0' + month;
-  if (day < 10) day = '0' + day;
-  return year + '-' + month + '-' + day;
+  if (month < 10) month = "0" + month;
+  if (day < 10) day = "0" + day;
+  return year + "-" + month + "-" + day;
 };
 
 export default ClassInfo;

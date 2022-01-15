@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { GradeAssignmentModel } from "../../../../@types/models/GradeAssignmentModel";
 import useHttp from "../../../../hooks/useHttp";
+import useListReview from "../../../../hooks/useListReview";
 import Button from "../../button/Button";
 import RequestReview from "../../form/request-review/RequestReview";
 
@@ -14,11 +16,43 @@ interface ScoreInterface {
   title: string;
 }
 
+interface ReviewStudentInterface {
+  reviewId: number;
+  assignmentId: number;
+  statusStudent: string;
+}
+
+const pathname = window.location.pathname;
+const pathnameArray = pathname.split("/");
+pathnameArray.pop();
+const pathnameClass = pathnameArray.join("/");
+
 const StudentView = ({ assignments, studentId }: StudentViewProps) => {
   const [scores, setScores] = useState<ScoreInterface[]>([]);
+  const [myReviews, setMyReviews] = useState<ReviewStudentInterface[]>([]);
   const [isShowForm, setIsShowForm] = useState<boolean>(false);
   const [currAssignmentId, setCurrAssignmentId] = useState<number>(0);
   const { sendRequest } = useHttp();
+
+  const navigate = useNavigate();
+
+  const { listReviews } = useListReview();
+
+  // get my review
+  useEffect(() => {
+    const data = listReviews.filter((review) => {
+      return review.studentId === studentId;
+    });
+
+    const dataFormat = data.map((item) => {
+      return {
+        reviewId: item.reviewId,
+        assignmentId: item.assignmentId,
+        statusStudent: item.statusStudent,
+      };
+    });
+    setMyReviews(dataFormat);
+  }, [listReviews, studentId]);
 
   // scores
   useEffect(() => {
@@ -55,10 +89,21 @@ const StudentView = ({ assignments, studentId }: StudentViewProps) => {
                 <span>{assignment.title}:</span> <span> {scores[scores.findIndex((score) => score.title === assignment.title)]?.score ?? 0}</span>
                 <Button
                   onClick={() => {
-                    setCurrAssignmentId(assignment.id);
-                    setIsShowForm(true);
+                    if (myReviews.findIndex((review) => review.assignmentId === assignment.id) < 0) {
+                      setCurrAssignmentId(assignment.id);
+                      setIsShowForm(true);
+                    } else {
+                      const reviewId = myReviews[myReviews.findIndex((review) => review.assignmentId === assignment.id)].reviewId;
+                      navigate(`${pathnameClass}/review/${reviewId}`, { state: { reviewId: reviewId } });
+                    }
                   }}
-                  content='Phúc khảo'
+                  content={
+                    myReviews.findIndex((review) => review.assignmentId === assignment.id) < 0
+                      ? "Phúc khảo"
+                      : myReviews[myReviews.findIndex((review) => review.assignmentId === assignment.id)].statusStudent === "PENDING"
+                      ? "Đang phúc khảo"
+                      : "Đã phúc khảo"
+                  }
                   type='primary'
                 />
               </li>

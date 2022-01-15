@@ -5,6 +5,17 @@ import InputText from "../../input/input-text/InputText";
 
 import Popup from "../../popup/Popup";
 
+interface ReviewInterface {
+  reviewId: number;
+  studentName: string;
+  studentId: number;
+  assignmentName: string;
+  currentScore: number;
+  expectedScore: number;
+  message: string;
+  statusTeacher: string;
+}
+
 interface RequestReviewProps {
   onClose: () => void;
   studentId: number;
@@ -12,8 +23,6 @@ interface RequestReviewProps {
 }
 
 const RequestReview = ({ onClose, studentId, assignmentId }: RequestReviewProps) => {
-  console.log(studentId, assignmentId);
-
   const [expectedScore, setExpectedScore] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
@@ -34,11 +43,10 @@ const RequestReview = ({ onClose, studentId, assignmentId }: RequestReviewProps)
       onClose();
     };
 
-    const inviteClassSuccess = (data: any) => {
-      onClose();
-    };
+    const getReview = (data: any) => {};
 
-    sendRequest(requestConfig, handleError, inviteClassSuccess);
+    sendRequest(requestConfig, handleError, getReview);
+    onClose();
   };
 
   return (
@@ -55,7 +63,7 @@ const RequestReview = ({ onClose, studentId, assignmentId }: RequestReviewProps)
               <Button btnType='submit' content='Gửi' type='primary' />
             </div>
             <div className='form__btn'>
-              <Button btnType='reset' content='Huỷ' type='fill-red' onClick={onClose} />
+              <Button content='Huỷ' type='fill-red' onClick={onClose} />
             </div>
           </div>
         </form>

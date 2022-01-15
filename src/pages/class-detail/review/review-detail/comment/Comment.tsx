@@ -34,7 +34,7 @@ const Comment = ({ reviewId }: CommentProps) => {
         return {
           message: comment.message ?? "",
           commenterName: comment.commentername ?? "Nguyễn Văn A",
-          commenterAvatar: comment.avatar ?? "https://i.pinimg.com/550x/19/59/d8/1959d87ad19b535b3ca42a26518c0123.jpg",
+          commenterAvatar: comment.avatar !== "" ? comment.avatar : "https://i.pinimg.com/550x/19/59/d8/1959d87ad19b535b3ca42a26518c0123.jpg",
         };
       });
       setListComments(dataTransform);
@@ -59,7 +59,7 @@ const Comment = ({ reviewId }: CommentProps) => {
       sendRequest(requestConfig, handleError, getListReview);
     }
     setCommentInput("");
-    setGetComments(getComments + 1);
+    setGetComments((cur) => cur + 1);
   };
 
   return (
