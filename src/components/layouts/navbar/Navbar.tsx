@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
+import defaultAvt from "../../../assets/images/avatar.jpg";
 import { useAuth } from "../../../contexts/auth-context";
-import SunIcon from "../../icons/Sun";
+import useHttp from "../../../hooks/useHttp";
+import NotificationIcon from "../../icons/Notification";
 import Avatar from "../../UI/avatar/Avatar";
 import Button from "../../UI/button/Button";
 import UserDropDown from "./drop-down/UserDropDown";
 import Menu from "./menu/Menu";
-import defaultAvt from "../../../assets/images/avatar.jpg";
-import useHttp from "../../../hooks/useHttp";
+import Notification from "./notification/Notification";
+
+interface NotificationInterface {
+  notifyMessage: string;
+}
 
 const Navbar = () => {
   const [isShowDropdown, setIsShowDropdown] = useState<boolean>(false);
+  const [isShowNotification, setIsShowNotification] = useState<boolean>(false);
+  const [listNoti, setListNoti] = useState<NotificationInterface[]>([]);
   const authCtx = useAuth();
   const navigate = useNavigate();
   const { sendRequest } = useHttp();
@@ -25,7 +32,13 @@ const Navbar = () => {
     const handleError = () => {};
 
     const getListReview = (data: any) => {
-      console.log(data);
+      const dataTransform = data.map((noti: any) => {
+        return {
+          notifyMessage: noti.notifyMessage,
+        };
+      });
+
+      setListNoti(dataTransform);
     };
     sendRequest(requestConfig, handleError, getListReview);
   }, [sendRequest, id]);
@@ -47,7 +60,12 @@ const Navbar = () => {
       {authCtx.isLoggedIn ? (
         <div className='navbar__btn-group'>
           <div className='navbar__btn'>
-            <SunIcon className='frame' />
+            <div className='navbar__notification'>
+              <NotificationIcon className='frame' onClick={() => setIsShowNotification(!isShowNotification)} />
+              <CSSTransition in={isShowNotification} timeout={100} classNames='dropdownTransition' unmountOnExit mountOnEnter>
+                <Notification listNotifications={listNoti} />
+              </CSSTransition>
+            </div>
           </div>
           <div className='navbar__btn navbar__user'>
             <Avatar imageSrc={authCtx.user.avatar ? authCtx.user.avatar : defaultAvt} onClick={() => setIsShowDropdown((value) => !value)} />

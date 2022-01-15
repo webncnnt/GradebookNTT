@@ -30,6 +30,46 @@
       margin-right: 2rem;
     }
   }
+
+  &__notification {
+    position: relative;
+  }
+}
+
+.notification {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  color: $color-gray-dark;
+  font-weight: 600;
+  font-size: 1.8rem;
+  box-shadow: 0 0 1rem rgba($color-black, 0.2);
+  z-index: 1000;
+
+  &__items {
+    list-style: none;
+    width: 45rem;
+    height: 70rem;
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+    width: 100%;
+    height: 6rem;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba($color-gray, 0.3);
+    }
+  }
 }
 
 .drop-down {
@@ -43,7 +83,7 @@
   font-size: 1.8rem;
   box-shadow: 0 0 1rem rgba($color-black, 0.2);
   z-index: 1000;
-  
+
   &__items {
     list-style: none;
   }
