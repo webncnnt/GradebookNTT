@@ -38,7 +38,7 @@ const Navbar = () => {
         };
       });
 
-      setListNoti(dataTransform);
+      setListNoti(dataTransform.reverse());
     };
     sendRequest(requestConfig, handleError, getListReview);
   }, [sendRequest, id]);

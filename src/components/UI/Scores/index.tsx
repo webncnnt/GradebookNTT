@@ -297,6 +297,7 @@ const Scores = () => {
     return {
       field: grade.title,
       width: 300,
+      sortable: false,
       editable: true,
       renderHeader: (headerParams: any) => {
         return (
