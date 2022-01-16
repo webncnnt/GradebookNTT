@@ -13,9 +13,10 @@ interface ReviewItemProps {
 
 const ReviewItem = ({ reviewId, studentName, studentId, assignmentName, currentScore, expectedScore, message, statusTeacher }: ReviewItemProps) => {
   const navigate = useNavigate();
+
+  const statusVn = statusTeacher === "NEW" ? "Mới" : statusTeacher === "REJECTED" ? "Từ chối" : "Chấp nhận";
   return (
     <div className={"review-item " + statusTeacher} onClick={() => navigate(`${reviewId}`, { state: { reviewId: reviewId } })}>
-      
       <h3>
         Cột điểm: <span>{assignmentName}</span>
       </h3>
@@ -33,6 +34,9 @@ const ReviewItem = ({ reviewId, studentName, studentId, assignmentName, currentS
       </p>
       <p>
         Lý do: <span>{message}</span>
+      </p>
+      <p>
+        Trạng thái: <span>{statusVn}</span>
       </p>
     </div>
   );

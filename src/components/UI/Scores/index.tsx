@@ -9,6 +9,7 @@ import { TeacherModel } from "../../../@types/models/TeacherModel";
 import UploadIcon from "../../../components/icons/Upload";
 import { useAuth } from "../../../contexts/auth-context";
 import useHttp from "../../../hooks/useHttp";
+import { calculatePercent } from "../../../utils";
 import { groupBy } from "../../../utils/array";
 import CheckIcon from "../../icons/Check";
 import DownloadIcon from "../../icons/Download";
@@ -19,11 +20,17 @@ const pathname = window.location.pathname;
 
 const classId = pathname.split("/")[2];
 
+interface FinalScoreInterface {
+  studentId: string;
+  score: number;
+}
+
 const Scores = () => {
   const [listTeachers, setListTeachers] = useState<TeacherModel[]>([]);
   const [assignments, setAssignments] = useState<GradeAssignmentModel[]>([]);
   const [students, setStudents] = useState<StudentModel[]>([]);
   const [gradeStudents, setGradeStudents] = useState<StudentGradeModel[]>([]);
+  const [finalScore, setFinalScore] = useState<FinalScoreInterface[]>([]);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
   const [assignmentReturn, setAssignmentReturn] = useState<number>(0);
 
@@ -171,6 +178,33 @@ const Scores = () => {
     sendRequest(requestConfig, handleError, handleSuccess);
   }, [sendRequest, students]);
 
+  // Calculate Final Score
+  useEffect(() => {
+    const groupedStudentGrades = groupBy(gradeStudents, (item) => item.studentId);
+    let totalScore = 0;
+
+    for (let i of assignments) {
+      totalScore += +i.score;
+    }
+
+    const rows = students.map((student, index) => {
+      let finalScore = 0;
+
+      if (groupedStudentGrades[student.studentId]) {
+        for (let i of groupedStudentGrades[student.studentId]) {
+          const assignmentIndex = assignments.findIndex((a) => a.id === i.gradeAssignmentId);
+          if (assignments) {
+            finalScore += (assignments[assignmentIndex]?.score / totalScore) * i.score;
+          }
+        }
+      }
+
+      return { studentId: student.studentId, score: calculatePercent(finalScore) };
+    });
+
+    setFinalScore(rows);
+  }, [gradeStudents, students, assignments]);
+
   const renderRows = (students: StudentModel[], studentGrades: StudentGradeModel[]) => {
     const groupedStudentGrades = groupBy(studentGrades, (item) => item.studentId);
 
@@ -185,6 +219,12 @@ const Scores = () => {
           {}
         );
 
+        if (finalScore) {
+          const scoreIndex = finalScore.findIndex((s) => s.studentId === student.studentId);
+          const summary = { "Tổng kết": finalScore[scoreIndex].score };
+          
+          return { ...base, ...assignmentIdWithScores, ...summary };
+        }
         return { ...base, ...assignmentIdWithScores };
       }
 
