@@ -1,6 +1,7 @@
 .class-info {
   margin-top: 2rem;
   display: flex;
+  flex-direction: column;
 
   &__info {
     flex: 0 0 45%;
@@ -8,6 +9,12 @@
 
   &__edit-point-structure {
     flex: 0 0 50%;
+  }
+
+  &__grade-structure__header {
+    margin-top: 3rem;
+    font-size: 2rem;
+    font-weight: bold;
   }
 
   &__name {

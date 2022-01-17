@@ -8,23 +8,11 @@ type GradeStructureOverviewProps = {
   gradeAssignments: GradeAssignmentModel[];
 } & HTMLAttributes<HTMLDivElement>;
 
-export const GradeStructureOverview = ({
-  gradeAssignments,
-  className,
-  ...rest
-}: GradeStructureOverviewProps) => {
+export const GradeStructureOverview = ({ gradeAssignments, className, ...rest }: GradeStructureOverviewProps) => {
   const clz = classNames(className, "grade-structure-overview");
 
-  const sortedGradeAssignments = gradeAssignments.sort((a, b) => {
-    return a.pos > b.pos ? 1 : -1;
-  });
-
-  const gradeStructureCardOverviews = sortedGradeAssignments.map((ga) => (
-    <CardGradeAssignmentOverview
-      className="grade-structure-overview__card"
-      gradeAssignment={ga}
-      key={ga.id}
-    />
+  const gradeStructureCardOverviews = gradeAssignments.map((ga) => (
+    <CardGradeAssignmentOverview className="grade-structure-overview__card" gradeAssignment={ga} key={ga.id} />
   ));
 
   return (
