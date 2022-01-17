@@ -222,7 +222,7 @@ const Scores = () => {
         if (finalScore) {
           const scoreIndex = finalScore.findIndex((s) => s.studentId === student.studentId);
           const summary = { "Tổng kết": finalScore[scoreIndex].score };
-          
+
           return { ...base, ...assignmentIdWithScores, ...summary };
         }
         return { ...base, ...assignmentIdWithScores };
@@ -266,9 +266,7 @@ const Scores = () => {
       };
       const handleError = () => {};
 
-      const uploadStudents = (data: any) => {
-        console.log(data);
-      };
+      const uploadStudents = (data: any) => {};
 
       sendRequest(requestConfig, handleError, uploadStudents);
     } else {
@@ -321,9 +319,7 @@ const Scores = () => {
 
       const handleError = () => {};
 
-      const uploadStudents = (data: any) => {
-        console.log(data);
-      };
+      const uploadStudents = (data: any) => {};
 
       sendRequest(requestConfig, handleError, uploadStudents);
     };
@@ -504,7 +500,7 @@ const Scores = () => {
           </div>
         </div>
       ) : (
-        <StudentView studentId={authCtx.user.studentId!} assignments={assignments} />
+        <StudentView studentId={authCtx.user.studentId!} assignments={assignments} finalScore={finalScore} />
       )}
     </>
   );

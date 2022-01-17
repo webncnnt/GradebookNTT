@@ -9,6 +9,7 @@ import RequestReview from "../../form/request-review/RequestReview";
 type StudentViewProps = {
   assignments: GradeAssignmentModel[];
   studentId: number;
+  finalScore: FinalScoreInterface[];
 };
 
 interface ScoreInterface {
@@ -22,12 +23,17 @@ interface ReviewStudentInterface {
   statusStudent: string;
 }
 
+interface FinalScoreInterface {
+  studentId: string;
+  score: number;
+}
+
 const pathname = window.location.pathname;
 const pathnameArray = pathname.split("/");
 pathnameArray.pop();
 const pathnameClass = pathnameArray.join("/");
 
-const StudentView = ({ assignments, studentId }: StudentViewProps) => {
+const StudentView = ({ assignments, studentId, finalScore }: StudentViewProps) => {
   const [scores, setScores] = useState<ScoreInterface[]>([]);
   const [myReviews, setMyReviews] = useState<ReviewStudentInterface[]>([]);
   const [isShowForm, setIsShowForm] = useState<boolean>(false);
@@ -111,7 +117,8 @@ const StudentView = ({ assignments, studentId }: StudentViewProps) => {
           })}
           <br />
           <li>
-            <span>Tổng kết</span>0
+            <span>Tổng kết</span>
+            {finalScore[finalScore.findIndex((s) => s.studentId === studentId.toString())]?.score}
           </li>
         </ul>
         {isShowForm ? <RequestReview assignmentId={currAssignmentId} studentId={studentId} onClose={() => setIsShowForm(false)} /> : null}
