@@ -1,42 +1,44 @@
-import { useEffect, useState } from 'react';
-import { DropResult } from 'react-beautiful-dnd';
-import { CreateGradeAssignmentFormValues } from '../../../@types/formInputs/CreateGradeAssignmentFormValues';
-import { UpdateGradeAssignmentFormValues } from '../../../@types/formInputs/UpdateGradeAssignmentFormsValues';
-import { GradeAssignmentModel } from '../../../@types/models/GradeAssignmentModel';
-import { TeacherModel } from '../../../@types/models/TeacherModel';
-import useHttp from '../../../hooks/useHttp';
-import { CardCreateGradeAssignment } from './components/CardCreateGradeAssignment';
-import { GradeStructureEdit } from './components/GradeStructureEdit';
-import { GradeStructureOverview } from './components/GradeStructureOverview';
-import './index.scss';
+import { useEffect, useState } from "react";
+import { DropResult } from "react-beautiful-dnd";
+import { CreateGradeAssignmentFormValues } from "../../../@types/formInputs/CreateGradeAssignmentFormValues";
+import { UpdateGradeAssignmentFormValues } from "../../../@types/formInputs/UpdateGradeAssignmentFormsValues";
+import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
+import { TeacherModel } from "../../../@types/models/TeacherModel";
+import useHttp from "../../../hooks/useHttp";
+import { CardCreateGradeAssignment } from "./components/CardCreateGradeAssignment";
+import { GradeStructureEdit } from "./components/GradeStructureEdit";
+import { GradeStructureOverview } from "./components/GradeStructureOverview";
+import "./index.scss";
 
 type GradeStructureProps = {};
 const pathname = window.location.pathname;
 
-export const GradeStructure = (props: GradeStructureProps) => {
+export const GradeStructure = ({}: GradeStructureProps) => {
   const [gradeAssignments, setGradeAssignments] = useState<GradeAssignmentModel[]>([]);
   const [isChangeAssignment, setIsChangeAssignment] = useState<number>(0);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
   const { sendRequest } = useHttp();
 
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const requestConfig = {
-      url: 'classes/' + pathname.split('/')[2] + '/gradeStructures',
+      url: "classes/" + pathname.split("/")[2] + "/gradeStructures",
     };
 
     const handleError = () => {};
 
     const getGradeAssignments = (data: any) => {
-      const gradeAssignmentsFormat = data.data.gradeStructure.gradeAssignments.map((item: GradeAssignmentModel) => {
-        return {
-          id: item.id,
-          title: item.title,
-          pos: item.pos,
-          score: item.score,
-        };
-      });
+      const gradeAssignmentsFormat = data.data.gradeStructure.gradeAssignments
+        .map((item: GradeAssignmentModel) => {
+          return {
+            id: item.id,
+            title: item.title,
+            pos: item.pos,
+            score: item.score,
+          };
+        })
+        .sort((a: GradeAssignmentModel, b: GradeAssignmentModel) => a.pos - b.pos);
 
       setGradeAssignments(gradeAssignmentsFormat);
     };
@@ -47,7 +49,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
   //get teacher
   useEffect(() => {
     const requestConfig = {
-      url: 'classes/' + pathname.split('/')[2] + '/teachers',
+      url: "classes/" + pathname.split("/")[2] + "/teachers",
     };
     const handleError = () => {};
 
@@ -61,7 +63,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
           joinDate: member.joinDate,
         };
       });
-      if (memberInfoFormat.findIndex((teacher) => teacher.id === parseInt(userId ? userId : '')) >= 0) {
+      if (memberInfoFormat.findIndex((teacher) => teacher.id === parseInt(userId ? userId : "")) >= 0) {
         setIsTeacher(true);
       }
     };
@@ -90,8 +92,8 @@ export const GradeStructure = (props: GradeStructureProps) => {
     const newAssignment = { ...gradeAssignment, pos };
 
     const requestConfig = {
-      url: 'classes/' + pathname.split('/')[2] + '/gradeStructures',
-      method: 'POST',
+      url: "classes/" + pathname.split("/")[2] + "/gradeStructures",
+      method: "POST",
       body: newAssignment,
     };
 
@@ -117,8 +119,8 @@ export const GradeStructure = (props: GradeStructureProps) => {
 
   const onAssignmentChange = (gradeAssignments: UpdateGradeAssignmentFormValues) => {
     const requestConfig = {
-      url: 'classes/' + pathname.split('/')[2] + '/gradeStructures/' + gradeAssignments.id,
-      method: 'PATCH',
+      url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + gradeAssignments.id,
+      method: "PATCH",
       body: {
         score: gradeAssignments.score,
         title: gradeAssignments.title,
@@ -128,6 +130,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
     const handleError = () => {};
 
     const getGradeAssignments = (data: any) => {
+      console.log(data);
       setIsChangeAssignment(isChangeAssignment + 1);
     };
 
@@ -145,14 +148,14 @@ export const GradeStructure = (props: GradeStructureProps) => {
 
     const gradeAssignmentsClone = Array.from(gradeAssignments);
     const [removed] = gradeAssignmentsClone.splice(result.source.index, 1);
-    console.log(removed);
-    
+    gradeAssignmentsClone.splice(result.destination!.index, 0, removed);
+    setGradeAssignments(gradeAssignmentsClone);
 
     const newPos = calculateNewPos(gradeAssignments, result.destination.index);
 
     const requestConfig = {
-      url: 'classes/' + pathname.split('/')[2] + '/gradeStructures/' + removed.id,
-      method: 'PATCH',
+      url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + removed.id,
+      method: "PATCH",
       body: {
         score: removed.score,
         title: removed.title,
@@ -162,19 +165,15 @@ export const GradeStructure = (props: GradeStructureProps) => {
 
     const handleError = () => {};
 
-    const getGradeAssignments = (data: any) => {
-      console.log(data);
-
-      setIsChangeAssignment(isChangeAssignment + 1);
-    };
+    const getGradeAssignments = (data: any) => {};
 
     sendRequest(requestConfig, handleError, getGradeAssignments);
   };
 
   const onRemoveAssignment = (assignmentID: number) => {
     const requestConfig = {
-      url: 'classes/' + pathname.split('/')[2] + '/gradeStructures/' + assignmentID,
-      method: 'DELETE',
+      url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + assignmentID,
+      method: "DELETE",
     };
 
     const handleError = () => {};
@@ -187,12 +186,12 @@ export const GradeStructure = (props: GradeStructureProps) => {
   };
 
   return (
-    <div className='grade-structure'>
-      <GradeStructureOverview className='grade-structure__overview' gradeAssignments={gradeAssignments} />
+    <div className="grade-structure">
+      <GradeStructureOverview className="grade-structure__overview" gradeAssignments={gradeAssignments} />
       {isTeacher ? (
         <>
           <GradeStructureEdit
-            className='grade-structure__edit'
+            className="grade-structure__edit"
             gradeAssignments={gradeAssignments}
             onAssignmentDragEnd={onAssignmentDragEnd}
             onAssignmentChange={onAssignmentChange}
@@ -200,7 +199,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
           />
 
           <CardCreateGradeAssignment
-            className='grade-structure__create'
+            className="grade-structure__create"
             onCreateClick={onCreateAssignmentClick}
             assignLength={gradeAssignments.length}
           />
