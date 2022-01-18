@@ -41,10 +41,9 @@ const Scores = () => {
   const { sendRequest } = useHttp();
 
   const handleCellEditCommit = (e: any) => {
-    console.log("studentas", students);
     const foundStudents = students.filter((s) => s.studentId === e.row.MSSV);
     const foundAssignments = assignments.filter((a) => a.title === e.field);
-    const isUpdate = e.value ? true : false;
+    const isUpdate = gradeStudents.some((g) => g.studentId === e.row.MSSV && g.gradeAssignmentId === foundAssignments[0].id);
 
     if (foundStudents.length !== 1) return;
     if (foundAssignments.length !== 1) return;
@@ -85,7 +84,6 @@ const Scores = () => {
     const handleSuccess = (data: any) => {
       const newGrade = data.data as StudentGradeModel;
 
-      console.log(newGrade);
       if (isUpdate) {
         setGradeStudents((prev) =>
           prev.map((row) => {
