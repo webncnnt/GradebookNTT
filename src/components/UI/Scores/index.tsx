@@ -39,8 +39,9 @@ const Scores = () => {
 
   const { sendRequest } = useHttp();
 
-  const handleCellEditCommit: GridEventListener<GridEvents.cellEditCommit> = (e) => {
-    const foundStudents = students.filter((s) => s.id === e.id);
+  const handleCellEditCommit = (e: any) => {
+    console.log("studentas", students);
+    const foundStudents = students.filter((s) => s.studentId === e.row.MSSV);
     const foundAssignments = assignments.filter((a) => a.title === e.field);
     const isUpdate = e.value ? true : false;
 
@@ -82,11 +83,12 @@ const Scores = () => {
     const handleSuccess = (data: any) => {
       const newGrade = data.data as StudentGradeModel;
 
+      console.log(newGrade);
       if (isUpdate) {
         setGradeStudents((prev) =>
-          prev.map((row) =>
-            row.studentId === newGrade.studentId && row.gradeAssignmentId === newGrade.gradeAssignmentId ? { ...row, ...newGrade } : row
-          )
+          prev.map((row) => {
+            return row.studentId === newGrade.studentId && row.gradeAssignmentId === newGrade.gradeAssignmentId ? newGrade : row;
+          })
         );
       }
 
@@ -133,6 +135,7 @@ const Scores = () => {
     const handleError = () => {};
 
     const handleSuccess = (data: any) => {
+      console.log(data);
       setStudents(data);
     };
 
@@ -339,25 +342,25 @@ const Scores = () => {
         return (
           <>
             {headerParams.field}
-            <div className='scores__render-headers'>
+            <div className="scores__render-headers">
               <CSVLink data={template_score} filename={`${grade.title}.csv`} headers={scores_headers}>
-                <Download2Icon className='icon--csv ml1' />
+                <Download2Icon className="icon--csv ml1" />
               </CSVLink>
 
               <CSVLink data={assignment_score} filename={`${grade.title}.csv`} headers={scores_headers}>
-                <DownloadIcon className='icon--csv ml1' />
+                <DownloadIcon className="icon--csv ml1" />
               </CSVLink>
 
               <CSVReader
-                cssClass='csv-reader-input'
-                label={<UploadIcon className='icon--csv ml1' />}
+                cssClass="csv-reader-input"
+                label={<UploadIcon className="icon--csv ml1" />}
                 onFileLoaded={(data) => handleForceAssignment(data, grade)}
                 parserOptions={papaparseOptions}
                 inputId={"assignment" + grade.id}
                 inputName={"assignment" + grade.id}
               />
               <CheckIcon
-                className='icon--csv ml1'
+                className="icon--csv ml1"
                 onClick={() => {
                   setAssignmentReturn(grade.id);
                   returnScore();
@@ -441,42 +444,42 @@ const Scores = () => {
   return (
     <>
       {isTeacher ? (
-        <div className='scores'>
-          <div className='scores__header'>
+        <div className="scores">
+          <div className="scores__header">
             <h1>Quản lý điểm số</h1>
 
-            <div className='scores__actions'>
-              <button className='scores__button btn btn--primary'>
+            <div className="scores__actions">
+              <button className="scores__button btn btn--primary">
                 <CSVLink data={[grades_columns_template]} filename={"template-grades.csv"} headers={scores_headers}>
                   <span>Tải template</span>
-                  <Download2Icon className='icon--white' />
+                  <Download2Icon className="icon--white" />
                 </CSVLink>
               </button>
 
-              <button className='scores__button btn btn--primary'>
+              <button className="scores__button btn btn--primary">
                 <CSVLink data={grades_board_data} filename={"class-grades.csv"} headers={scores_headers}>
                   <span>Tải bảng điểm</span>
-                  <DownloadIcon className='icon--white' />
+                  <DownloadIcon className="icon--white" />
                 </CSVLink>
               </button>
 
               <CSVReader
-                cssClass='csv-reader-input'
+                cssClass="csv-reader-input"
                 label={
-                  <div className='scores__button btn btn--primary'>
+                  <div className="scores__button btn btn--primary">
                     <span>Cập nhật bảng điểm</span>
-                    <UploadIcon className='icon--white' />
+                    <UploadIcon className="icon--white" />
                   </div>
                 }
                 onFileLoaded={handleForce}
                 parserOptions={papaparseOptions}
-                inputId='gradesBoard'
-                inputName='gradesBoard'
+                inputId="gradesBoard"
+                inputName="gradesBoard"
               />
             </div>
           </div>
 
-          <div className='scores__datagrid'>
+          <div className="scores__datagrid">
             <DataGrid
               onCellEditCommit={handleCellEditCommit}
               sx={{
