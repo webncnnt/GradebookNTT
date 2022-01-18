@@ -14,7 +14,7 @@ import "./index.scss";
 type GradeStructureProps = {};
 const pathname = window.location.pathname;
 
-export const GradeStructure = ({}: GradeStructureProps) => {
+export const GradeStructure = (props: GradeStructureProps) => {
   const [gradeAssignments, setGradeAssignments] = useState<GradeAssignmentModel[]>([]);
   const [isChangeAssignment, setIsChangeAssignment] = useState<number>(0);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);

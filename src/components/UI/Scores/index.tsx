@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef, GridEventListener, GridEvents } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import CSVReader from "react-csv-reader";

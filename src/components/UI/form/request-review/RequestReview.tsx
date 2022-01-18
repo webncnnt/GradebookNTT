@@ -5,6 +5,7 @@ import InputText from "../../input/input-text/InputText";
 
 import Popup from "../../popup/Popup";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface ReviewInterface {
   reviewId: number;
   studentName: string;
@@ -51,19 +52,19 @@ const RequestReview = ({ onClose, studentId, assignmentId }: RequestReviewProps)
 
   return (
     <Popup>
-      <div className='form'>
-        <h1 className='form__title'>Đơn phúc khảo</h1>
+      <div className="form">
+        <h1 className="form__title">Đơn phúc khảo</h1>
         <form onSubmit={handleSubmit}>
-          <div className='form__group'>
-            <InputText placeholder='Điểm số mong muốn' id='expected-score' value={expectedScore} onChange={(e) => setExpectedScore(e.target.value)} />
-            <InputText placeholder='Lý do' id='message' value={message} onChange={(e) => setMessage(e.target.value)} />
+          <div className="form__group">
+            <InputText placeholder="Điểm số mong muốn" id="expected-score" value={expectedScore} onChange={(e) => setExpectedScore(e.target.value)} />
+            <InputText placeholder="Lý do" id="message" value={message} onChange={(e) => setMessage(e.target.value)} />
           </div>
-          <div className='form__group-btn'>
-            <div className='form__btn'>
-              <Button btnType='submit' content='Gửi' type='primary' />
+          <div className="form__group-btn">
+            <div className="form__btn">
+              <Button btnType="submit" content="Gửi" type="primary" />
             </div>
-            <div className='form__btn'>
-              <Button content='Huỷ' type='fill-red' onClick={onClose} />
+            <div className="form__btn">
+              <Button content="Huỷ" type="fill-red" onClick={onClose} />
             </div>
           </div>
         </form>
