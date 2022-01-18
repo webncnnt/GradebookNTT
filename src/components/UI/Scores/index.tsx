@@ -197,7 +197,9 @@ const Scores = () => {
         for (let i of groupedStudentGrades[student.studentId]) {
           const assignmentIndex = assignments.findIndex((a) => a.id === i.gradeAssignmentId);
           if (assignments) {
-            finalScore += (assignments[assignmentIndex]?.score / totalScore) * i.score;
+            if (!Number.isNaN((assignments[assignmentIndex]?.score / totalScore) * i.score))
+              finalScore += (assignments[assignmentIndex]?.score / totalScore) * i.score;
+            console.log(finalScore);
           }
         }
       }
@@ -224,7 +226,8 @@ const Scores = () => {
 
         if (finalScore) {
           const scoreIndex = finalScore.findIndex((s) => s.studentId === student.studentId);
-          const summary = { "Tổng kết": finalScore[scoreIndex].score ?? 0 };
+
+          const summary = { "Tổng kết": Number.isNaN(finalScore[scoreIndex].score) ? 0 : finalScore[scoreIndex].score };
 
           return { ...base, ...assignmentIdWithScores, ...summary };
         }
