@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import Container from "../../components/layouts/container/Container";
-import forgotImage from "../../assets/images/Saly-16.png";
+import forgotImage from "../../assets/images/Saly-17.png";
 import InputText from "../../components/UI/input/input-text/InputText";
 import Button from "../../components/UI/button/Button";
 import useHttp from "../../hooks/useHttp";
