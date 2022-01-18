@@ -74,8 +74,6 @@ export const GradeStructure = ({}: GradeStructureProps) => {
   const calculateNewPos = (gradeAssignments: GradeAssignmentModel[], destinationIndex: number) => {
     let newPos = 0;
 
-    console.log("destionationindex::", destinationIndex);
-
     if (destinationIndex === 0) {
       newPos = gradeAssignments[0].pos / 2;
     }
@@ -122,26 +120,8 @@ export const GradeStructure = ({}: GradeStructureProps) => {
   };
 
   const onAssignmentChange = (updateAssignmentValues: UpdateGradeAssignmentFormValues) => {
-    // const requestConfig = {
-    //   url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + gradeAssignments.id,
-    //   method: "PATCH",
-    //   body: {
-    //     score: gradeAssignments.score,
-    //     title: gradeAssignments.title,
-    //   },
-    // };
-    // const handleError = () => {};
-    // const getGradeAssignments = (data: any) => {
-    //   console.log(data);
-    //   setIsChangeAssignment(isChangeAssignment + 1);
-    // };
-    // sendRequest(requestConfig, handleError, getGradeAssignments);
-
-    console.log("updateee");
-    console.log(updateAssignmentValues);
     const updatePosition = gradeAssignments.findIndex((g) => g.id === updateAssignmentValues.id);
     const oldAssignment = gradeAssignments.splice(updatePosition, 1)[0];
-
     gradeAssignments.splice(updatePosition, 0, { ...oldAssignment, ...updateAssignmentValues });
     setGradeAssignments(gradeAssignments.splice(0));
   };
@@ -200,7 +180,22 @@ export const GradeStructure = ({}: GradeStructureProps) => {
     sendRequest(requestConfig, handleError, getGradeAssignments);
   };
 
-  const handleSubmitUpdateAssignment = (updateAssignmentValues: UpdateGradeAssignmentFormValues) => {};
+  const handleSubmitUpdateAssignment = (updateAssignmentValues: UpdateGradeAssignmentFormValues) => {
+    const requestConfig = {
+      url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + updateAssignmentValues.id,
+      method: "PATCH",
+      body: {
+        score: updateAssignmentValues.score,
+        title: updateAssignmentValues.title,
+      },
+    };
+    const handleError = () => {};
+    const getGradeAssignments = (data: any) => {
+      console.log(data);
+      setIsChangeAssignment(isChangeAssignment + 1);
+    };
+    sendRequest(requestConfig, handleError, getGradeAssignments);
+  };
 
   console.log(gradeAssignments);
 
