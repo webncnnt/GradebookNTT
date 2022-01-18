@@ -93,14 +93,16 @@ const Login = () => {
                 <label htmlFor='check-remember'>Ghi nhớ tài khoản</label>
               </div>
 
-              <div className='login__remember-forgot'>Quên mật khẩu?</div>
+              <div className='login__remember-forgot'>
+                <Link to='/forgot-password'>Quên mật khẩu</Link>
+              </div>
             </div>
 
             <div className='form__group'>
               <Button btnType='submit' content='Đăng nhập' type='primary' fullsize={true} />
             </div>
             <div className='login__redirect'>
-              Bạn chưa có tài khoản?{" "}
+              Bạn chưa có tài khoản?
               <span>
                 <Link to='/register'> Đăng ký</Link>
               </span>
