@@ -1,5 +1,4 @@
-import { useState, useCallback } from "react";
-import { toast } from "react-toastify";
+import { useCallback, useState } from "react";
 
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +45,6 @@ const useHttp = () => {
       applyData(data);
     } catch (err: any) {
       setError(err.message || "Something went wrong!");
-      toast(err.message || "Something went wrong!");
     }
     setIsLoading(false);
   }, []);

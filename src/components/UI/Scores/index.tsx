@@ -2,6 +2,7 @@ import { DataGrid, GridColDef, GridEventListener, GridEvents } from "@mui/x-data
 import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import CSVReader from "react-csv-reader";
+import { toast } from "react-toastify";
 import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
 import { StudentGradeModel } from "../../../@types/models/StudentGradeModel";
 import { StudentModel } from "../../../@types/models/StudentModel";
@@ -53,6 +54,7 @@ const Scores = () => {
 
     const handleError = () => {
       setGradeStudents((prev) => [...prev]);
+      toast("Thay đổi điểm thất bại");
     };
 
     if (!e.value) {
@@ -224,7 +226,7 @@ const Scores = () => {
 
         if (finalScore) {
           const scoreIndex = finalScore.findIndex((s) => s.studentId === student.studentId);
-          const summary = { "Tổng kết": finalScore[scoreIndex].score };
+          const summary = { "Tổng kết": finalScore[scoreIndex].score ?? 0 };
 
           return { ...base, ...assignmentIdWithScores, ...summary };
         }
@@ -267,9 +269,13 @@ const Scores = () => {
         method: "POST",
         body: { grades: dataAssignmentStudents },
       };
-      const handleError = () => {};
+      const handleError = () => {
+        toast("Cập nhật điểm thất bại");
+      };
 
-      const uploadStudents = (data: any) => {};
+      const uploadStudents = (data: any) => {
+        toast("Cập nhật điểm thành công");
+      };
 
       sendRequest(requestConfig, handleError, uploadStudents);
     } else {
@@ -291,8 +297,12 @@ const Scores = () => {
         method: "POST",
         body: { grades: dataAssignmentStudents },
       };
-      const handleError = () => {};
-      const uploadStudents = (data: any) => {};
+      const handleError = () => {
+        toast("Cập nhật điểm thất bại");
+      };
+      const uploadStudents = (data: any) => {
+        toast("Cập nhật điểm thành công");
+      };
       sendRequest(requestConfig, handleError, uploadStudents);
     } else {
       console.log("Wrong header");
@@ -320,9 +330,13 @@ const Scores = () => {
         url: `students/markFinalizedGrade/${assignmentReturn}`,
       };
 
-      const handleError = () => {};
+      const handleError = () => {
+        toast("Trả điểm thất bại");
+      };
 
-      const uploadStudents = (data: any) => {};
+      const uploadStudents = (data: any) => {
+        toast("Trả điểm thành công");
+      };
 
       sendRequest(requestConfig, handleError, uploadStudents);
     };
@@ -335,13 +349,13 @@ const Scores = () => {
 
     return {
       field: grade.title,
-      width: 300,
+      width: 250,
       sortable: false,
       editable: true,
       renderHeader: (headerParams: any) => {
         return (
           <>
-            {headerParams.field}
+            {headerParams.field.lenth <= 10 ? headerParams.field : headerParams.field.substring(0, 9)}
             <div className="scores__render-headers">
               <CSVLink data={template_score} filename={`${grade.title}.csv`} headers={scores_headers}>
                 <Download2Icon className="icon--csv ml1" />
@@ -416,7 +430,7 @@ const Scores = () => {
   const columns: GridColDef[] = [
     {
       field: "Tên sinh viên",
-      width: 300,
+      width: 250,
       editable: false,
       renderHeader: (headerParams: any) => {
         return <>{headerParams.field}</>;
