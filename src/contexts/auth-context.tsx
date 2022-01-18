@@ -85,7 +85,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     updatedAt: "",
   });
 
-  const { error, sendRequest } = useHttp();
+  const { sendRequest } = useHttp();
 
   const navigate = useNavigate();
 
@@ -133,7 +133,9 @@ const AuthContextProvider = ({ children }: authctxProps) => {
       body: data,
     };
 
-    const handleError = () => {};
+    const handleError = () => {
+      toast("Đăng ký thất bại");
+    };
 
     const registerSuccess = (data: any) => {
       setMessage(data.message);
@@ -157,7 +159,9 @@ const AuthContextProvider = ({ children }: authctxProps) => {
       body: data,
     };
 
-    const handleError = () => {};
+    const handleError = () => {
+      toast("Đăng nhập thất bại");
+    };
 
     const loginSuccess = (data: any) => {
       setIsLoggedIn(true);
@@ -185,7 +189,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     };
 
     const handleError = () => {
-      console.log(error);
+      toast("Đăng nhập bằng google thất bại");
     };
 
     const loginGoogleSuccess = (data: any) => {
@@ -211,7 +215,7 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     };
 
     const handleError = () => {
-      console.log(error);
+      toast("Thay đổi mật khẩu thất bại");
     };
 
     const changePassSuccess = (data: any) => {

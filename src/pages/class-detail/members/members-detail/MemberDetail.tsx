@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import UserInfo from "../../../../components/user-info/UserInfo";
 import useHttp from "../../../../hooks/useHttp";
 
@@ -29,41 +30,40 @@ const MemberDetail = ({ memberId }: memberDetailProps) => {
     facebook: "",
   });
 
-  const {sendRequest} = useHttp();
+  const { sendRequest } = useHttp();
 
-  useEffect(() => {   
-    const requestConfig = {
-      url: "profile/" + memberId
-    }
-
-    const handleError = () => {}
-
-    const getMemberInfo = (data: any) => {      
-      const profileFormat = {
-        fullName: data.profile.fullname,
-        studentId: parseInt(data.profile.studentId),
-        birthday: formatDate(formatIsoDateTime(data.profile.dob)),
-        address: data.profile.address,
-        numberPhone: data.profile.numberPhone,
-        avatar: data.profile.avatar,
-        email: data.profile.email,
-        facebook: data.profile.facebook,
+  useEffect(() => {
+    if (memberId) {
+      const requestConfig = {
+        url: "profile/" + memberId,
       };
-      setUserInfo(profileFormat);
+
+      const handleError = () => {
+        toast("Không thể lấy thông tin người dùng");
+      };
+
+      const getMemberInfo = (data: any) => {
+        const profileFormat = {
+          fullName: data.profile.fullname,
+          studentId: parseInt(data.profile.studentId),
+          birthday: formatDate(formatIsoDateTime(data.profile.dob)),
+          address: data.profile.address,
+          numberPhone: data.profile.numberPhone,
+          avatar: data.profile.avatar,
+          email: data.profile.email,
+          facebook: data.profile.facebook,
+        };
+        setUserInfo(profileFormat);
+      };
+
+      sendRequest(requestConfig, handleError, getMemberInfo);
     }
-
-    sendRequest(
-      requestConfig,
-      handleError,
-      getMemberInfo
-    );
-
   }, [memberId, sendRequest]);
 
   return (
     <>
-      <div className="members__detail-avatar">
-        <img src={userInfo.avatar} alt="" />
+      <div className='members__detail-avatar'>
+        <img src={userInfo.avatar} alt='' />
       </div>
       <UserInfo
         fullname={userInfo.fullName}

@@ -2,6 +2,7 @@ import { DataGrid, GridColDef, GridEventListener, GridEvents } from "@mui/x-data
 import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import CSVReader from "react-csv-reader";
+import { toast } from "react-toastify";
 import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
 import { StudentGradeModel } from "../../../@types/models/StudentGradeModel";
 import { StudentModel } from "../../../@types/models/StudentModel";
@@ -52,6 +53,7 @@ const Scores = () => {
 
     const handleError = () => {
       setGradeStudents((prev) => [...prev]);
+      toast("Thay đổi điểm thất bại");
     };
 
     if (!e.value) {
@@ -264,9 +266,13 @@ const Scores = () => {
         method: "POST",
         body: { grades: dataAssignmentStudents },
       };
-      const handleError = () => {};
+      const handleError = () => {
+        toast("Cập nhật điểm thất bại");
+      };
 
-      const uploadStudents = (data: any) => {};
+      const uploadStudents = (data: any) => {
+        toast("Cập nhật điểm thành công");
+      };
 
       sendRequest(requestConfig, handleError, uploadStudents);
     } else {
@@ -288,8 +294,12 @@ const Scores = () => {
         method: "POST",
         body: { grades: dataAssignmentStudents },
       };
-      const handleError = () => {};
-      const uploadStudents = (data: any) => {};
+      const handleError = () => {
+        toast("Cập nhật điểm thất bại");
+      };
+      const uploadStudents = (data: any) => {
+        toast("Cập nhật điểm thành công");
+      };
       sendRequest(requestConfig, handleError, uploadStudents);
     } else {
       console.log("Wrong header");
@@ -317,9 +327,13 @@ const Scores = () => {
         url: `students/markFinalizedGrade/${assignmentReturn}`,
       };
 
-      const handleError = () => {};
+      const handleError = () => {
+        toast("Trả điểm thất bại");
+      };
 
-      const uploadStudents = (data: any) => {};
+      const uploadStudents = (data: any) => {
+        toast("Trả điểm thành công");
+      };
 
       sendRequest(requestConfig, handleError, uploadStudents);
     };

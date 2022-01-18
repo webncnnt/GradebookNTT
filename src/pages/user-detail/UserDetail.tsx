@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import Container from "../../components/layouts/container/Container";
 import Avatar from "../../components/UI/avatar/Avatar";
 import Button from "../../components/UI/button/Button";
@@ -12,7 +13,7 @@ import useHttp from "../../hooks/useHttp";
 
 const UserDetail = () => {
   const authCtx = useAuth();
-  
+
   const [fullname, setFullname] = useState<string>(() => {
     return authCtx.user.fullname;
   });
@@ -40,10 +41,9 @@ const UserDetail = () => {
     if (authCtx.user.avatar) return authCtx.user.avatar;
     else return "";
   });
-  const {error, sendRequest} = useHttp();
+  const { sendRequest } = useHttp();
 
-  const [isShowChangePassWorForm, setIsShowChangePassWorForm] =
-    useState<boolean>(false);
+  const [isShowChangePassWorForm, setIsShowChangePassWorForm] = useState<boolean>(false);
 
   const changeImage = (src: string) => {
     setAvatar(src);
@@ -64,34 +64,29 @@ const UserDetail = () => {
     const requestConfig = {
       url: "profile/" + authCtx.user.id,
       method: "PUT",
-      body: data
-    }
+      body: data,
+    };
 
     const handleError = () => {
-     console.log(error);
-    }
+      toast("Thay đổi thông tin thất bại");
+    };
 
-    const getUserDetail = (data: any) => {      
+    const getUserDetail = (data: any) => {
+      toast("Thay đổi thông tin thành công");
       authCtx.setUser(data.profile.user);
-    }
+    };
 
-    sendRequest(
-      requestConfig,
-      handleError,
-      getUserDetail
-    );
+    sendRequest(requestConfig, handleError, getUserDetail);
   };
 
   return (
     <Container>
-      {isShowChangePassWorForm ? (
-        <ChangePassForm onClose={() => setIsShowChangePassWorForm(false)} />
-      ) : null}
+      {isShowChangePassWorForm ? <ChangePassForm onClose={() => setIsShowChangePassWorForm(false)} /> : null}
 
-      <div className="user-detail">
-        <div className="user-detail__info">
-          <div className="user-detail__header">
-            <div className="user-detail__avatar">
+      <div className='user-detail'>
+        <div className='user-detail__info'>
+          <div className='user-detail__header'>
+            <div className='user-detail__avatar'>
               <Avatar
                 imageSrc={
                   authCtx.user.avatar
@@ -100,116 +95,67 @@ const UserDetail = () => {
                 }
               />
             </div>
-            <div className="user-detail__basic-info">
-              <div className="user-detail__name">{authCtx.user.fullname}</div>
-              <div className="user-detail__faculty">
-                Khoa công nghệ thông tin
-              </div>
+            <div className='user-detail__basic-info'>
+              <div className='user-detail__name'>{authCtx.user.fullname}</div>
+              <div className='user-detail__faculty'>Khoa công nghệ thông tin</div>
             </div>
           </div>
 
           <UserInfo
             fullname={authCtx.user.fullname}
             studentId={authCtx.user.studentId ? authCtx.user.studentId : 0}
-            birthday={
-              authCtx.user.dob
-                ? formatDate(formatIsoDateTime(authCtx.user.dob))
-                : ""
-            }
+            birthday={authCtx.user.dob ? formatDate(formatIsoDateTime(authCtx.user.dob)) : ""}
             address={authCtx.user.address ? authCtx.user.address : ""}
-            numberPhone={
-              authCtx.user.numberPhone ? authCtx.user.numberPhone : ""
-            }
+            numberPhone={authCtx.user.numberPhone ? authCtx.user.numberPhone : ""}
             email={authCtx.user.email}
             facebook={authCtx.user.facebook ? authCtx.user.facebook : ""}
           />
 
-          <Button
-            content="Thay đổi mật khẩu"
-            type="primary"
-            onClick={() => setIsShowChangePassWorForm(true)}
-          />
+          <Button content='Thay đổi mật khẩu' type='primary' onClick={() => setIsShowChangePassWorForm(true)} />
         </div>
 
-        <div className="user-detail__edit">
-          <h2 className="user-edit__title">Chỉnh sửa thông tin cá nhân</h2>
+        <div className='user-detail__edit'>
+          <h2 className='user-edit__title'>Chỉnh sửa thông tin cá nhân</h2>
 
           <form onSubmit={submitEditForm}>
-            <div className="user-detail__edit-content">
-              <div className="user-detail__edit-info">
-                <div className="form__group">
-                  <InputText
-                    placeholder="Họ và tên"
-                    id="fullname"
-                    value={fullname}
-                    onChange={(e) => setFullname(e.target.value)}
-                  />
+            <div className='user-detail__edit-content'>
+              <div className='user-detail__edit-info'>
+                <div className='form__group'>
+                  <InputText placeholder='Họ và tên' id='fullname' value={fullname} onChange={(e) => setFullname(e.target.value)} />
                 </div>
 
-                <div className="form__group">
-                  <InputText
-                    placeholder="MSSV"
-                    id="mssv"
-                    value={studentId}
-                    onChange={(e) => setStudentId(e.target.value)}
-                  />
+                <div className='form__group'>
+                  <InputText placeholder='MSSV' id='mssv' value={studentId} onChange={(e) => setStudentId(e.target.value)} />
                 </div>
 
-                <div className="form__group">
-                  <InputDate
-                    name="Ngày sinh"
-                    id="birthday"
-                    value={birthday}
-                    onChange={(e) => setBirthday(e.target.value)}
-                  />
+                <div className='form__group'>
+                  <InputDate name='Ngày sinh' id='birthday' value={birthday} onChange={(e) => setBirthday(e.target.value)} />
                 </div>
 
-                <div className="form__group">
-                  <InputText
-                    placeholder="Địa chỉ"
-                    id="address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  />
+                <div className='form__group'>
+                  <InputText placeholder='Địa chỉ' id='address' value={address} onChange={(e) => setAddress(e.target.value)} />
                 </div>
 
-                <div className="form__group">
-                  <InputText
-                    placeholder="Số điện thoại"
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
+                <div className='form__group'>
+                  <InputText placeholder='Số điện thoại' id='phone' value={phone} onChange={(e) => setPhone(e.target.value)} />
                 </div>
 
-                <div className="form__group">
-                  <InputText
-                    placeholder="Facebook"
-                    id="facebook"
-                    value={facebook}
-                    onChange={(e) => setFacebook(e.target.value)}
-                  />
+                <div className='form__group'>
+                  <InputText placeholder='Facebook' id='facebook' value={facebook} onChange={(e) => setFacebook(e.target.value)} />
                 </div>
               </div>
 
-              <div className="user-detail__edit-avatar">
-                <InputImage
-                  size="4x5"
-                  direction="column"
-                  alt="user-avatar"
-                  id="user-avatar"
-                  src={avatar}
-                  changeSrc={changeImage}
-                />
+              <div className='user-detail__edit-avatar'>
+                <InputImage size='4x5' direction='column' alt='user-avatar' id='user-avatar' src={avatar} changeSrc={changeImage} />
               </div>
             </div>
 
-            <div className="form__group-btn">
-              <div className="form__btn">
-                <Button btnType="submit" content="Lưu" type="primary" />
+            <div className='form__group-btn'>
+              <div className='form__btn'>
+                <Button btnType='submit' content='Lưu' type='primary' />
               </div>
-              <div className="form__btn">
-                <Button btnType="reset" content="Hủy" type="fill-red" />
+              <div className='form__btn'>
+                <Button btnType='reset' content='Hủy' type='fill-red' />
               </div>
             </div>
           </form>

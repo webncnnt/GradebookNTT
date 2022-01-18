@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import Button from "../../../../../components/UI/button/Button";
 import InputText from "../../../../../components/UI/input/input-text/InputText";
 import { useAuth } from "../../../../../contexts/auth-context";
@@ -26,9 +27,13 @@ const ChangeScore = ({ reviewId, currentScore }: ChangeScoreProps) => {
         method: "POST",
         body: data,
       };
-      const handleError = () => {};
+      const handleError = () => {
+        toast("Không thể thay đổi điểm số");
+      };
 
-      const getListReview = (data: any) => {};
+      const getListReview = (data: any) => {
+        toast("Chấp nhận phúc khảo");
+      };
       sendRequest(requestConfig, handleError, getListReview);
     }
   };
@@ -41,9 +46,13 @@ const ChangeScore = ({ reviewId, currentScore }: ChangeScoreProps) => {
       method: "POST",
       body: data,
     };
-    const handleError = () => {};
+    const handleError = () => {
+      toast("Không thể thay đổi điểm số");
+    };
 
-    const getListReview = (data: any) => {};
+    const getListReview = (data: any) => {
+      toast("Từ chối phúc khảo");
+    };
     sendRequest(requestConfig, handleError, getListReview);
   };
 
