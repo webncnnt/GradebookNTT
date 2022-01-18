@@ -226,7 +226,7 @@ const Scores = () => {
 
         if (finalScore) {
           const scoreIndex = finalScore.findIndex((s) => s.studentId === student.studentId);
-          const summary = { "Tổng kết": finalScore[scoreIndex].score ?? 0 };
+          const summary = { "Tổng kết": Number.isNaN(finalScore[scoreIndex].score) ? 0 : finalScore[scoreIndex].score };
 
           return { ...base, ...assignmentIdWithScores, ...summary };
         }
@@ -356,25 +356,25 @@ const Scores = () => {
         return (
           <>
             {headerParams.field.lenth <= 10 ? headerParams.field : headerParams.field.substring(0, 9)}
-            <div className="scores__render-headers">
+            <div className='scores__render-headers'>
               <CSVLink data={template_score} filename={`${grade.title}.csv`} headers={scores_headers}>
-                <Download2Icon className="icon--csv ml1" />
+                <Download2Icon className='icon--csv ml1' />
               </CSVLink>
 
               <CSVLink data={assignment_score} filename={`${grade.title}.csv`} headers={scores_headers}>
-                <DownloadIcon className="icon--csv ml1" />
+                <DownloadIcon className='icon--csv ml1' />
               </CSVLink>
 
               <CSVReader
-                cssClass="csv-reader-input"
-                label={<UploadIcon className="icon--csv ml1" />}
+                cssClass='csv-reader-input'
+                label={<UploadIcon className='icon--csv ml1' />}
                 onFileLoaded={(data) => handleForceAssignment(data, grade)}
                 parserOptions={papaparseOptions}
                 inputId={"assignment" + grade.id}
                 inputName={"assignment" + grade.id}
               />
               <CheckIcon
-                className="icon--csv ml1"
+                className='icon--csv ml1'
                 onClick={() => {
                   setAssignmentReturn(grade.id);
                   returnScore();
@@ -458,42 +458,42 @@ const Scores = () => {
   return (
     <>
       {isTeacher ? (
-        <div className="scores">
-          <div className="scores__header">
+        <div className='scores'>
+          <div className='scores__header'>
             <h1>Quản lý điểm số</h1>
 
-            <div className="scores__actions">
-              <button className="scores__button btn btn--primary">
+            <div className='scores__actions'>
+              <button className='scores__button btn btn--primary'>
                 <CSVLink data={[grades_columns_template]} filename={"template-grades.csv"} headers={scores_headers}>
                   <span>Tải template</span>
-                  <Download2Icon className="icon--white" />
+                  <Download2Icon className='icon--white' />
                 </CSVLink>
               </button>
 
-              <button className="scores__button btn btn--primary">
+              <button className='scores__button btn btn--primary'>
                 <CSVLink data={grades_board_data} filename={"class-grades.csv"} headers={scores_headers}>
                   <span>Tải bảng điểm</span>
-                  <DownloadIcon className="icon--white" />
+                  <DownloadIcon className='icon--white' />
                 </CSVLink>
               </button>
 
               <CSVReader
-                cssClass="csv-reader-input"
+                cssClass='csv-reader-input'
                 label={
-                  <div className="scores__button btn btn--primary">
+                  <div className='scores__button btn btn--primary'>
                     <span>Cập nhật bảng điểm</span>
-                    <UploadIcon className="icon--white" />
+                    <UploadIcon className='icon--white' />
                   </div>
                 }
                 onFileLoaded={handleForce}
                 parserOptions={papaparseOptions}
-                inputId="gradesBoard"
-                inputName="gradesBoard"
+                inputId='gradesBoard'
+                inputName='gradesBoard'
               />
             </div>
           </div>
 
-          <div className="scores__datagrid">
+          <div className='scores__datagrid'>
             <DataGrid
               onCellEditCommit={handleCellEditCommit}
               sx={{
