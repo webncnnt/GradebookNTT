@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import useHttp from "../hooks/useHttp";
 
 type authctxProps = {
@@ -35,6 +36,8 @@ interface AuthThemeContext {
   setUser: (user: userType) => void;
 }
 
+const pathname = window.location.pathname;
+
 const AuthContext = React.createContext<AuthThemeContext>({
   isLoggedIn: false,
   isRegisterSuccess: false,
@@ -62,8 +65,6 @@ const AuthContext = React.createContext<AuthThemeContext>({
   setUser: (user: userType) => {},
 });
 
-const pathname = window.location.pathname;
-
 const AuthContextProvider = ({ children }: authctxProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
@@ -84,60 +85,43 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     updatedAt: "",
   });
 
-
   const { error, sendRequest } = useHttp();
 
-
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const userId = localStorage.getItem("userId");
+    if (userId) {
+      const requestConfig = {
+        url: "profile/" + userId,
+      };
 
-    const requestConfig = {
-      url: "profile/" + userId,
+      const handleError = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("googleToken");
+        localStorage.removeItem("userId");
+        if (pathname !== "/" && pathname !== "/home" && pathname !== "/login" && pathname !== "/register") navigate("/login");
+      };
+
+      const setLogged = (data: any) => {
+        setIsLoggedIn(true);
+        setUser(data.profile);
+      };
+
+      sendRequest(requestConfig, handleError, setLogged);
     }
-
-    const handleError = () => {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("googleToken");
-      localStorage.removeItem("userId");
-      if (
-        pathname !== "/" &&
-        pathname !== "/home" &&
-        pathname !== "/login" &&
-        pathname !== "/register"
-      )
-        navigate("/login");
-    }
-
-    const setLogged = (data: any) => {      
-      setIsLoggedIn(true);
-      setUser(data.profile);
-    }
-
-    sendRequest(
-      requestConfig,
-      handleError,
-      setLogged
-    );
-  
   }, [sendRequest, navigate]);
-
-
 
   const logoutHandler = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("googleToken");
     localStorage.removeItem("userId");
     setIsLoggedIn(false);
+    toast("Đăng xuất");
     navigate("/login");
   };
 
-  const registerHandler = async (
-    email: string,
-    password: string,
-    fullname: string
-  ) => {
+  const registerHandler = async (email: string, password: string, fullname: string) => {
     const data = { email: email, password: password, fullname: fullname };
 
     const requestConfig = {
@@ -146,25 +130,19 @@ const AuthContextProvider = ({ children }: authctxProps) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: data
-    }
+      body: data,
+    };
 
-    const handleError = () => {
-      console.log(error);
-      
-    }
+    const handleError = () => {};
 
-    const registerSuccess = (data: any) => {      
+    const registerSuccess = (data: any) => {
       setMessage(data.message);
-        setIsRegisterSuccess(true);
-        navigate("/login");
-    }
+      setIsRegisterSuccess(true);
+      toast("Đăng ký thành công");
+      navigate("/login");
+    };
 
-    sendRequest(
-      requestConfig,
-      handleError,
-      registerSuccess
-    );
+    sendRequest(requestConfig, handleError, registerSuccess);
   };
 
   const loginHandler = async (email: string, password: string) => {
@@ -176,60 +154,50 @@ const AuthContextProvider = ({ children }: authctxProps) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: data
-    }
+      body: data,
+    };
 
-    const handleError = () => {
-      console.log(error);
-      
-    }
+    const handleError = () => {};
 
-    const loginSuccess = (data: any) => {      
+    const loginSuccess = (data: any) => {
       setIsLoggedIn(true);
       setMessage(data.message);
       setUser(data.user);
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("userId", data.user.id);
+      toast("Đăng nhập thành công");
       navigate("/listClasses");
-    }
+    };
 
-    sendRequest(
-      requestConfig,
-      handleError,
-      loginSuccess
-    );
+    sendRequest(requestConfig, handleError, loginSuccess);
   };
 
   const loginGoogleHandler = async (tokenId: string) => {
     const data = { token: tokenId };
-    
+
     const requestConfig = {
       url: "auth/google",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: data
-    }
+      body: data,
+    };
 
     const handleError = () => {
       console.log(error);
-      
-    }
+    };
 
-    const loginGoogleSuccess = (data: any) => {      
+    const loginGoogleSuccess = (data: any) => {
       setIsLoggedIn(true);
       setUser(data);
       localStorage.setItem("googleToken", tokenId);
       localStorage.setItem("userId", data.id);
+      toast("Đăng nhập bằng google thành công");
       navigate("/listClasses");
-    }
+    };
 
-    sendRequest(
-      requestConfig,
-      handleError,
-      loginGoogleSuccess
-    );
+    sendRequest(requestConfig, handleError, loginGoogleSuccess);
   };
 
   const changePassword = async (oldPass: string, newPass: string) => {
@@ -239,26 +207,22 @@ const AuthContextProvider = ({ children }: authctxProps) => {
     const requestConfig = {
       url: "auth/changePwd/" + userId,
       method: "POST",
-      body: data
-    }
+      body: data,
+    };
 
     const handleError = () => {
       console.log(error);
-      
-    }
+    };
 
-    const changePassSuccess = (data: any) => {      
+    const changePassSuccess = (data: any) => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("userId");
       setIsLoggedIn(false);
+      toast("Thay đổi mật khẩu thành công");
       navigate("/login");
-    }
+    };
 
-    sendRequest(
-      requestConfig,
-      handleError,
-      changePassSuccess
-    );
+    sendRequest(requestConfig, handleError, changePassSuccess);
   };
 
   return (

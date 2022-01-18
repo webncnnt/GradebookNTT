@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
+import { toast } from "react-toastify";
 
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -8,10 +9,10 @@ const useHttp = () => {
     setIsLoading(true);
     setError(null);
 
-    const accessTokenStore = localStorage.getItem('accessToken');
-    const googleTokenStore = localStorage.getItem('googleToken');
+    const accessTokenStore = localStorage.getItem("accessToken");
+    const googleTokenStore = localStorage.getItem("googleToken");
 
-    let tokenFormat = '';
+    let tokenFormat = "";
     if (accessTokenStore) tokenFormat = accessTokenStore;
     if (googleTokenStore) tokenFormat = googleTokenStore;
 
@@ -20,31 +21,32 @@ const useHttp = () => {
     if (accessTokenStore) {
       resHeaders = {
         authorization: tokenFormat,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       };
     } else {
       resHeaders = {
         tokenidgg: tokenFormat,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       };
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/' + requestConfig.url, {
-        method: requestConfig.method ? requestConfig.method : 'GET',
+      const response = await fetch("http://localhost:8000/api/" + requestConfig.url, {
+        method: requestConfig.method ? requestConfig.method : "GET",
         headers: requestConfig.headers ? requestConfig.headers : resHeaders,
         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
       });
 
       if (!response.ok) {
         handleError();
-        throw new Error('Request failed!');
+        throw new Error(response.statusText);
       }
 
       const data = await response.json();
       applyData(data);
     } catch (err: any) {
-      setError(err.message || 'Something went wrong!');
+      setError(err.message || "Something went wrong!");
+      toast(err.message || "Something went wrong!");
     }
     setIsLoading(false);
   }, []);

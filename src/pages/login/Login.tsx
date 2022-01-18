@@ -1,5 +1,6 @@
 import { useState } from "react";
 import GoogleLogin from "react-google-login";
+import { Link } from "react-router-dom";
 import LoginImage from "../../assets/images/Saly-16.png";
 import FacebookIcon from "../../components/icons/Facebook";
 import GithubIcon from "../../components/icons/Github";
@@ -52,28 +53,33 @@ const Login = () => {
 
   return (
     <Container>
-      <div className="login">
-        <div className="login__img">
-          <img src={LoginImage} alt="" />
+      <div className='login'>
+        <div className='login__img'>
+          <img src={LoginImage} alt='' />
         </div>
-        <div className="login__content">
-          <h2 className="login__title mb2">Đăng nhập</h2>
+        <div className='login__content'>
+          <h2 className='login__title mb2'>Đăng nhập</h2>
 
-          <p className="login__sub-title mb2">Đăng nhập hệ thống bằng</p>
+          <p className='login__sub-title mb2'>Đăng nhập hệ thống bằng</p>
 
-          <div className="login__group-icon mb2">
+          <div className='login__group-icon mb2'>
             <GoogleLogin
+<<<<<<< HEAD
               clientId="387536783121-sda7d6mg9uk1f4uktmq63tsq0rp62kg5.apps.googleusercontent.com"
               render={(renderProps) => <GoogleIcon className="frame mr4" onClick={renderProps.onClick} />}
+=======
+              clientId='387536783121-sda7d6mg9uk1f4uktmq63tsq0rp62kg5.apps.googleusercontent.com'
+              render={(renderProps) => <GoogleIcon className='frame mr4' onClick={renderProps.onClick} />}
+>>>>>>> d572cb8e7f60fee2e115b57c8d6bad88dac4d46f
               onSuccess={responseGoogleSuccess}
               onFailure={responseGoogleFailure}
               cookiePolicy={"single_host_origin"}
             />
-            <FacebookIcon className="frame mr4" />
-            <GithubIcon className="frame" />
+            <FacebookIcon className='frame mr4' />
+            <GithubIcon className='frame' />
           </div>
 
-          <div className="login__or mb2">Hoặc</div>
+          <div className='login__or mb2'>Hoặc</div>
 
           <form className="w100" onSubmit={handleSubmit(handleSubmitLogin)}>
             <div className="form__group">
@@ -85,7 +91,7 @@ const Login = () => {
                 errorText={errors.email?.message}
               />
             </div>
-            <div className="form__group">
+            <div className='form__group'>
               <InputPassword
                 {...register("password")}
                 placeholder="Mật khẩu"
@@ -101,7 +107,9 @@ const Login = () => {
                 <label htmlFor="check-remember">Ghi nhớ tài khoản</label>
               </div>
 
-              <div className="login__remember-forgot">Quên mật khẩu?</div>
+              <div className='login__remember-forgot'>
+                <Link to='/forgot-password'>Quên mật khẩu</Link>
+              </div>
             </div>
 
             <div className="form__group">
