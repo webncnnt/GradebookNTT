@@ -20,19 +20,16 @@ const HomeLogged = () => {
   const [listClasses, setListClasses] = useState<ClassType[]>([]);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const {error, sendRequest} = useHttp();
+  const { sendRequest } = useHttp();
 
   useEffect(() => {
     const requestConfig = {
       url: "classes",
-    }
+    };
 
-    const handleError = () => {
-     console.log(error);
-     
-    }
+    const handleError = () => {};
 
-    const getClasses = (data: any) => {      
+    const getClasses = (data: any) => {
       const dataFormat = data.data.map((item: any) => {
         return {
           id: item.id,
@@ -44,42 +41,33 @@ const HomeLogged = () => {
         };
       });
       setListClasses(dataFormat);
-    }
+    };
 
-    sendRequest(
-      requestConfig,
-      handleError,
-      getClasses
-    );
-  }, [isSubmitted, error, sendRequest]);
+    sendRequest(requestConfig, handleError, getClasses);
+  }, [isSubmitted, sendRequest]);
 
   const closePopup = () => {
     setShowPopup(false);
   };
 
-  const setSubmited = () => {
+  const setSubmitted = () => {
     setIsSubmitted(true);
   };
 
   return (
     <Container>
-      <CSSTransition
-        in={showPopup}
-        timeout={300}
-        classNames="popup"
-        unmountOnExit
-      >
-        <CreateClassForm onClose={closePopup} setSubmitted={setSubmited} />
+      <CSSTransition in={showPopup} timeout={300} classNames='popup' unmountOnExit>
+        <CreateClassForm onClose={closePopup} setSubmitted={setSubmitted} />
       </CSSTransition>
 
-      <div className="homeLogged">
-        <div className="homeLogged__header">
-          <h1 className="homeLogged__title">Danh sách lớp</h1>
-          <div className="navbar__btn">
-            <AddIcon className="frame" onClick={() => setShowPopup(true)} />
+      <div className='homeLogged'>
+        <div className='homeLogged__header'>
+          <h1 className='homeLogged__title'>Danh sách lớp</h1>
+          <div className='navbar__btn'>
+            <AddIcon className='frame' onClick={() => setShowPopup(true)} />
           </div>
         </div>
-        <div className="homeLogged__classes">
+        <div className='homeLogged__classes'>
           {listClasses.map((cls) => {
             return (
               <Card
