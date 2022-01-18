@@ -54,11 +54,9 @@ const Members = () => {
     };
     sendRequest(requestConfig, handleError, getTeachers);
   }, [sendRequest]);
-  console.log(isUploadStudents);
+
   //get student
   useEffect(() => {
-    console.log("asfasdf");
-
     const requestConfig = {
       url: "students/getStudentsByClassId/" + pathname.split("/")[2],
     };
