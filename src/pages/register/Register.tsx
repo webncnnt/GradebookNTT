@@ -6,48 +6,36 @@ import Button from "../../components/UI/button/Button";
 import InputPassword from "../../components/UI/input/input-password/InputPassword";
 import InputText from "../../components/UI/input/input-text/InputText";
 import { useAuth } from "../../contexts/auth-context";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
+const schema = Yup.object().shape({
+  fullname: Yup.string().required("Full name is required").min(5, "Full name must be at least 5 characters long"),
+  email: Yup.string()
+    .required("Email is required")
+    .matches(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "Invalid email"
+    ),
+  password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+  passwordConfirm: Yup.string().oneOf([Yup.ref("password"), null], "Passwords must match"),
+});
 
 const Register = () => {
-  const [emailEntered, setEmailEntered] = useState<string>("");
-  const [passwordEntered, setPasswordEntered] = useState<string>("");
-  const [passwordAgainEntered, setPasswordAgainEntered] = useState<string>("");
-  const [fullnameEntered, setFullnameEntered] = useState<string>("");
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-
   const authCtx = useAuth();
 
-  let emailIsValid = false;
-  let passIsValid = false;
-  let passAgainIsValid = false;
-  let nameIsValid = false;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+  });
 
-  if (emailEntered.trim() !== "") emailIsValid = true;
-  if (passwordEntered.trim() !== "") passIsValid = true;
-  if (
-    passwordAgainEntered.trim() !== "" &&
-    passwordAgainEntered === passwordEntered
-  )
-    passAgainIsValid = true;
-  if (fullnameEntered.trim() !== "") nameIsValid = true;
-
-  const registerSubmitHandle = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setIsSubmitted(true);
-
-    if (emailEntered.trim() !== "") emailIsValid = true;
-    if (passwordEntered.trim() !== "") passIsValid = true;
-    if (
-      passwordAgainEntered.trim() !== "" &&
-      passwordAgainEntered === passwordEntered
-    )
-      passAgainIsValid = true;
-    if (fullnameEntered.trim() !== "") nameIsValid = true;
-
-    if (emailIsValid && passIsValid && passAgainIsValid && nameIsValid) {
-      authCtx.onRegister(emailEntered, passwordEntered, fullnameEntered);
-    }
+  const registerSubmitHandle = ({ email, password, fullname }: any) => {
+    authCtx.onRegister(email, password, fullname);
   };
 
   return (
@@ -59,55 +47,43 @@ const Register = () => {
         <div className="register__content">
           <h2 className="register__title mb2">Đăng ký</h2>
 
-          <form className="w100" onSubmit={registerSubmitHandle}>
+          <form className="w100" onSubmit={handleSubmit(registerSubmitHandle)}>
             <div className="form__group">
               <InputText
+                {...register("email")}
                 placeholder="Email"
                 id="username_register"
-                value={emailEntered}
-                onChange={(e) => setEmailEntered(e.target.value)}
-                validStatus={
-                  isSubmitted ? (emailIsValid ? "valid" : "invalid") : undefined
-                }
+                validStatus={errors.email !== undefined ? "invalid" : undefined}
+                errorText={errors.email?.message}
               />
             </div>
 
             <div className="form__group">
               <InputPassword
+                {...register("password")}
                 placeholder="Mật khẩu"
                 id="password_register"
-                value={passwordEntered}
-                onChange={(e) => setPasswordEntered(e.target.value)}
-                validStatus={
-                  isSubmitted ? (passIsValid ? "valid" : "invalid") : undefined
-                }
+                validStatus={errors.password !== undefined ? "invalid" : undefined}
+                errorText={errors.password?.message}
               />
             </div>
 
             <div className="form__group">
               <InputPassword
+                {...register("passwordConfirm")}
                 placeholder="Nhập lại mật khẩu"
                 id="password_register-again"
-                value={passwordAgainEntered}
-                onChange={(e) => setPasswordAgainEntered(e.target.value)}
-                validStatus={
-                  isSubmitted
-                    ? passAgainIsValid
-                      ? "valid"
-                      : "invalid"
-                    : undefined
-                }
+                validStatus={errors.passwordConfirm !== undefined ? "invalid" : undefined}
+                errorText={errors.passwordConfirm?.message}
               />
             </div>
             <div className="form__group">
               <InputText
+                {...register("fullname")}
                 placeholder="Họ và tên"
                 id="fullname_register"
-                value={fullnameEntered}
-                onChange={(e) => setFullnameEntered(e.target.value)}
-                validStatus={
-                  isSubmitted ? (nameIsValid ? "valid" : "invalid") : undefined
-                }
+                validStatus={errors.fullname !== undefined ? "invalid" : undefined}
+                errorText={errors.fullname?.message}
               />
             </div>
 

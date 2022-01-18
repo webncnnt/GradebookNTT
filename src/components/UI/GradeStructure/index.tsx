@@ -8,6 +8,7 @@ import useHttp from "../../../hooks/useHttp";
 import { CardCreateGradeAssignment } from "./components/CardCreateGradeAssignment";
 import { GradeStructureEdit } from "./components/GradeStructureEdit";
 import { GradeStructureOverview } from "./components/GradeStructureOverview";
+
 import "./index.scss";
 
 type GradeStructureProps = {};
@@ -72,6 +73,9 @@ export const GradeStructure = ({}: GradeStructureProps) => {
 
   const calculateNewPos = (gradeAssignments: GradeAssignmentModel[], destinationIndex: number) => {
     let newPos = 0;
+
+    console.log("destionationindex::", destinationIndex);
+
     if (destinationIndex === 0) {
       newPos = gradeAssignments[0].pos / 2;
     }
@@ -88,7 +92,7 @@ export const GradeStructure = ({}: GradeStructureProps) => {
   };
 
   const onCreateAssignmentClick = (gradeAssignment: CreateGradeAssignmentFormValues) => {
-    const pos = gradeAssignments.length * 65535;
+    const pos = gradeAssignments.length * 65535 + 65535;
     const newAssignment = { ...gradeAssignment, pos };
 
     const requestConfig = {
@@ -117,24 +121,29 @@ export const GradeStructure = ({}: GradeStructureProps) => {
     setIsChangeAssignment(isChangeAssignment + 1);
   };
 
-  const onAssignmentChange = (gradeAssignments: UpdateGradeAssignmentFormValues) => {
-    const requestConfig = {
-      url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + gradeAssignments.id,
-      method: "PATCH",
-      body: {
-        score: gradeAssignments.score,
-        title: gradeAssignments.title,
-      },
-    };
+  const onAssignmentChange = (updateAssignmentValues: UpdateGradeAssignmentFormValues) => {
+    // const requestConfig = {
+    //   url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + gradeAssignments.id,
+    //   method: "PATCH",
+    //   body: {
+    //     score: gradeAssignments.score,
+    //     title: gradeAssignments.title,
+    //   },
+    // };
+    // const handleError = () => {};
+    // const getGradeAssignments = (data: any) => {
+    //   console.log(data);
+    //   setIsChangeAssignment(isChangeAssignment + 1);
+    // };
+    // sendRequest(requestConfig, handleError, getGradeAssignments);
 
-    const handleError = () => {};
+    console.log("updateee");
+    console.log(updateAssignmentValues);
+    const updatePosition = gradeAssignments.findIndex((g) => g.id === updateAssignmentValues.id);
+    const oldAssignment = gradeAssignments.splice(updatePosition, 1)[0];
 
-    const getGradeAssignments = (data: any) => {
-      console.log(data);
-      setIsChangeAssignment(isChangeAssignment + 1);
-    };
-
-    sendRequest(requestConfig, handleError, getGradeAssignments);
+    gradeAssignments.splice(updatePosition, 0, { ...oldAssignment, ...updateAssignmentValues });
+    setGradeAssignments(gradeAssignments.splice(0));
   };
 
   const onAssignmentDragEnd = (result: DropResult) => {
@@ -147,11 +156,14 @@ export const GradeStructure = ({}: GradeStructureProps) => {
     }
 
     const gradeAssignmentsClone = Array.from(gradeAssignments);
-    const [removed] = gradeAssignmentsClone.splice(result.source.index, 1);
-    gradeAssignmentsClone.splice(result.destination!.index, 0, removed);
-    setGradeAssignments(gradeAssignmentsClone);
 
     const newPos = calculateNewPos(gradeAssignments, result.destination.index);
+    const [removed] = gradeAssignmentsClone.splice(result.source.index, 1);
+    removed.pos = newPos;
+
+    gradeAssignmentsClone.splice(result.destination!.index, 0, removed);
+
+    setGradeAssignments(gradeAssignmentsClone);
 
     const requestConfig = {
       url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + removed.id,
@@ -165,9 +177,12 @@ export const GradeStructure = ({}: GradeStructureProps) => {
 
     const handleError = () => {};
 
-    const getGradeAssignments = (data: any) => {};
+    const getGradeAssignmentUpdated = (data: any) => {
+      console.log(gradeAssignments);
+      console.log(data);
+    };
 
-    sendRequest(requestConfig, handleError, getGradeAssignments);
+    sendRequest(requestConfig, handleError, getGradeAssignmentUpdated);
   };
 
   const onRemoveAssignment = (assignmentID: number) => {
@@ -185,6 +200,10 @@ export const GradeStructure = ({}: GradeStructureProps) => {
     sendRequest(requestConfig, handleError, getGradeAssignments);
   };
 
+  const handleSubmitUpdateAssignment = (updateAssignmentValues: UpdateGradeAssignmentFormValues) => {};
+
+  console.log(gradeAssignments);
+
   return (
     <div className="grade-structure">
       <GradeStructureOverview className="grade-structure__overview" gradeAssignments={gradeAssignments} />
@@ -193,6 +212,7 @@ export const GradeStructure = ({}: GradeStructureProps) => {
           <GradeStructureEdit
             className="grade-structure__edit"
             gradeAssignments={gradeAssignments}
+            onSubmitUpdateAssignment={handleSubmitUpdateAssignment}
             onAssignmentDragEnd={onAssignmentDragEnd}
             onAssignmentChange={onAssignmentChange}
             onRemoveAssignment={onRemoveAssignment}

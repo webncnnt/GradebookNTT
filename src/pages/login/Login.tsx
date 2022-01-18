@@ -9,28 +9,37 @@ import Button from "../../components/UI/button/Button";
 import InputPassword from "../../components/UI/input/input-password/InputPassword";
 import InputText from "../../components/UI/input/input-text/InputText";
 import { useAuth } from "../../contexts/auth-context";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Link } from "react-router-dom";
+
+const schema = Yup.object().shape({
+  email: Yup.string()
+    .required("Email is required")
+    .matches(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "Invalid email"
+    ),
+  password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+});
 
 const Login = () => {
   const [emailEntered, setEmailEntered] = useState<string>("");
   const [passwordEntered, setPasswordEntered] = useState<string>("");
   const authCtx = useAuth();
 
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+  });
 
-  let emailIsValid = false;
-  let passIsValid = false;
-
-  const loginSubmitHandle = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setIsSubmitted(true);
-
-    if (emailEntered.trim() !== "") emailIsValid = true;
-    if (passwordEntered.trim() !== "") passIsValid = true;
-
-    if (emailIsValid && passIsValid) {
-      authCtx.onLogin(emailEntered, passwordEntered);
-    }
+  const handleSubmitLogin = (data: any) => {
+    authCtx.onLogin(data.email, data.password);
   };
 
   const responseGoogleSuccess = async (response: any) => {
@@ -55,12 +64,7 @@ const Login = () => {
           <div className="login__group-icon mb2">
             <GoogleLogin
               clientId="387536783121-sda7d6mg9uk1f4uktmq63tsq0rp62kg5.apps.googleusercontent.com"
-              render={(renderProps) => (
-                <GoogleIcon
-                  className="frame mr4"
-                  onClick={renderProps.onClick}
-                />
-              )}
+              render={(renderProps) => <GoogleIcon className="frame mr4" onClick={renderProps.onClick} />}
               onSuccess={responseGoogleSuccess}
               onFailure={responseGoogleFailure}
               cookiePolicy={"single_host_origin"}
@@ -71,37 +75,29 @@ const Login = () => {
 
           <div className="login__or mb2">Hoặc</div>
 
-          <form className="w100" onSubmit={loginSubmitHandle}>
+          <form className="w100" onSubmit={handleSubmit(handleSubmitLogin)}>
             <div className="form__group">
               <InputText
+                {...register("email")}
                 placeholder="Email"
                 id="username"
-                value={emailEntered}
-                onChange={(e) => setEmailEntered(e.target.value)}
-                validStatus={
-                  isSubmitted ? (emailIsValid ? "valid" : "invalid") : undefined
-                }
+                validStatus={errors.email !== undefined ? "invalid" : undefined}
+                errorText={errors.email?.message}
               />
             </div>
             <div className="form__group">
               <InputPassword
+                {...register("password")}
                 placeholder="Mật khẩu"
                 id="password"
-                value={passwordEntered}
-                onChange={(e) => setPasswordEntered(e.target.value)}
-                validStatus={
-                  isSubmitted ? (passIsValid ? "valid" : "invalid") : undefined
-                }
+                validStatus={errors.password !== undefined ? "invalid" : undefined}
+                errorText={errors.password?.message}
               />
             </div>
 
             <div className="login__remember mb2">
               <div className="login__remember-checkbox">
-                <input
-                  type="checkbox"
-                  id="check-remember"
-                  name="check-remember"
-                />
+                <input type="checkbox" id="check-remember" name="check-remember" />
                 <label htmlFor="check-remember">Ghi nhớ tài khoản</label>
               </div>
 
@@ -109,15 +105,13 @@ const Login = () => {
             </div>
 
             <div className="form__group">
-              <Button
-                btnType="submit"
-                content="Đăng nhập"
-                type="primary"
-                fullsize={true}
-              />
+              <Button btnType="submit" content="Đăng nhập" type="primary" fullsize={true} />
             </div>
             <div className="login__redirect">
-              Bạn chưa có tài khoản? <span>Đăng ký</span>
+              Bạn chưa có tài khoản?{" "}
+              <span>
+                <Link to="/register">Đăng ký</Link>
+              </span>
             </div>
           </form>
         </div>

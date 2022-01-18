@@ -1,12 +1,6 @@
 import classNames from "classnames";
 import { HTMLAttributes } from "react";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-  ResponderProvided,
-} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, DropResult, ResponderProvided } from "react-beautiful-dnd";
 import { CardGradeAssignment } from "../CardGradeAssignment";
 import { GradeAssignmentModel } from "../../../../../@types/models/GradeAssignmentModel";
 import "./index.scss";
@@ -14,14 +8,10 @@ import { UpdateGradeAssignmentFormValues } from "../../../../../@types/formInput
 
 type GradeStructureEditProps = {
   gradeAssignments: GradeAssignmentModel[];
-  
-  onAssignmentDragEnd: (
-    result: DropResult,
-    provided: ResponderProvided
-  ) => void;
-  onAssignmentChange: (
-    gradeAssignment: UpdateGradeAssignmentFormValues
-  ) => void;
+
+  onAssignmentDragEnd: (result: DropResult, provided: ResponderProvided) => void;
+  onAssignmentChange: (gradeAssignment: UpdateGradeAssignmentFormValues) => void;
+  onSubmitUpdateAssignment: (gradeAssignment: UpdateGradeAssignmentFormValues) => void;
   onRemoveAssignment: (id: number) => void;
 } & HTMLAttributes<HTMLDivElement>;
 
@@ -30,6 +20,7 @@ export const GradeStructureEdit = ({
   gradeAssignments,
   onAssignmentDragEnd,
   onAssignmentChange,
+  onSubmitUpdateAssignment,
   onRemoveAssignment,
   ...rest
 }: GradeStructureEditProps) => {
@@ -43,11 +34,7 @@ export const GradeStructureEdit = ({
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {gradeAssignments.map((item, index) => {
                 return (
-                  <Draggable
-                    key={item.id}
-                    draggableId={`${item.id}`}
-                    index={index}
-                  >
+                  <Draggable key={item.id} draggableId={`${item.id}`} index={index}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
@@ -56,6 +43,7 @@ export const GradeStructureEdit = ({
                         className="grade-structure-edit__assignment"
                       >
                         <CardGradeAssignment
+                          onSubmitUpdateAssignment={onSubmitUpdateAssignment}
                           gradeAssignment={item}
                           onAssignmentChange={onAssignmentChange}
                           onRemoveAssignment={onRemoveAssignment}
