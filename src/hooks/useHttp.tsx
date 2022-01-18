@@ -29,8 +29,10 @@ const useHttp = () => {
       };
     }
 
+    const api = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PROD_API_PREFIX : process.env.REACT_APP_DEV_API_PREFIX;
+
     try {
-      const response = await fetch("http://localhost:8000/api/" + requestConfig.url, {
+      const response = await fetch(api + requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
         headers: requestConfig.headers ? requestConfig.headers : resHeaders,
         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
