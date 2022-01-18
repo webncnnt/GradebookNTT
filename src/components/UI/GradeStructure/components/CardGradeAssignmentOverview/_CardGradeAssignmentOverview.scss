@@ -4,8 +4,8 @@
   padding: 1rem 2rem;
   border-radius: 10px;
   background-color: $color-primary;
-  width: max-content;
   color: $color-white;
+  width: 12rem;
 }
 
 .card-grade-assignment-overview__title {
@@ -15,4 +15,6 @@
 .card-grade-assignment-overview__score {
   font-size: 4rem;
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

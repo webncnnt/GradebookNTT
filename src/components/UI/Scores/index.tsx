@@ -223,7 +223,7 @@ const Scores = () => {
 
         if (finalScore) {
           const scoreIndex = finalScore.findIndex((s) => s.studentId === student.studentId);
-          const summary = { "Tổng kết": finalScore[scoreIndex].score };
+          const summary = { "Tổng kết": finalScore[scoreIndex].score ?? 0 };
 
           return { ...base, ...assignmentIdWithScores, ...summary };
         }
@@ -346,13 +346,13 @@ const Scores = () => {
 
     return {
       field: grade.title,
-      width: 300,
+      width: 250,
       sortable: false,
       editable: true,
       renderHeader: (headerParams: any) => {
         return (
           <>
-            {headerParams.field}
+            {headerParams.field.lenth <= 10 ? headerParams.field : headerParams.field.substring(0, 9)}
             <div className='scores__render-headers'>
               <CSVLink data={template_score} filename={`${grade.title}.csv`} headers={scores_headers}>
                 <Download2Icon className='icon--csv ml1' />
@@ -427,7 +427,7 @@ const Scores = () => {
   const columns: GridColDef[] = [
     {
       field: "Tên sinh viên",
-      width: 300,
+      width: 250,
       editable: false,
       renderHeader: (headerParams: any) => {
         return <>{headerParams.field}</>;

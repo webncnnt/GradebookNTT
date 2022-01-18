@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import CSVReader from "react-csv-reader";
 import { CSVLink } from "react-csv";
+import { toast } from "react-toastify";
 
 import AddIcon from "../../../components/icons/Add";
 import UploadIcon from "../../../components/icons/Upload";
@@ -25,13 +26,12 @@ const Members = () => {
   const [isShowListTeacher, setIsShowListTeacher] = useState<boolean>(true);
   const [memberIdDetail, setMemberIdDetail] = useState<number>(0);
   const [isShowInviteForm, setIsShowInviteForm] = useState<boolean>(false);
-  const [isUploadStudents, setIsUploadStudents] = useState<boolean>(false);
+  const [isUploadStudents, setIsUploadStudents] = useState<number>(0);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
 
   const userId = localStorage.getItem("userId");
 
   const { sendRequest } = useHttp();
-
 
   //get teacher
   useEffect(() => {
@@ -62,7 +62,7 @@ const Members = () => {
     };
     const handleError = () => {};
 
-    const getStudents = (data: any) => {   
+    const getStudents = (data: any) => {
       const memberInfoFormat: StudentModel[] = data.map((member: any) => {
         return {
           id: member.userId,
@@ -77,7 +77,6 @@ const Members = () => {
       setListStudents(memberInfoFormat);
     };
     sendRequest(requestConfig, handleError, getStudents);
-    setIsUploadStudents(false);
   }, [sendRequest, isUploadStudents]);
 
   //check teacher
@@ -121,13 +120,17 @@ const Members = () => {
           classId: pathname.split("/")[2],
         },
       };
-      const handleError = () => {};
+      const handleError = () => {
+        toast("Cập nhật danh sách sinh viên thất bại");
+      };
 
-      const uploadStudents = (data: any) => {};
+      const uploadStudents = (data: any) => {
+        toast("Cập nhật danh sách sinh viên thành công");
+      };
 
       sendRequest(requestConfig, handleError, uploadStudents);
 
-      setIsUploadStudents(true);
+      setIsUploadStudents((curr) => curr + 1);
     } else {
       console.log("Wrong header");
     }

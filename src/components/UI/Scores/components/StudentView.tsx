@@ -118,7 +118,7 @@ const StudentView = ({ assignments, studentId, finalScore }: StudentViewProps) =
           <br />
           <li>
             <span>Tổng kết</span>
-            {finalScore[finalScore.findIndex((s) => s.studentId === studentId.toString())]?.score}
+            {finalScore[finalScore.findIndex((s) => s.studentId === studentId?.toString())]?.score}
           </li>
         </ul>
         {isShowForm ? <RequestReview assignmentId={currAssignmentId} studentId={studentId} onClose={() => setIsShowForm(false)} /> : null}

@@ -10,28 +10,34 @@ import Button from "../../components/UI/button/Button";
 import InputPassword from "../../components/UI/input/input-password/InputPassword";
 import InputText from "../../components/UI/input/input-text/InputText";
 import { useAuth } from "../../contexts/auth-context";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = Yup.object().shape({
+  email: Yup.string()
+    .required("Email is required")
+    .matches(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "Invalid email"
+    ),
+  password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+});
 
 const Login = () => {
-  const [emailEntered, setEmailEntered] = useState<string>("");
-  const [passwordEntered, setPasswordEntered] = useState<string>("");
   const authCtx = useAuth();
 
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+  });
 
-  let emailIsValid = false;
-  let passIsValid = false;
-
-  const loginSubmitHandle = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setIsSubmitted(true);
-
-    if (emailEntered.trim() !== "") emailIsValid = true;
-    if (passwordEntered.trim() !== "") passIsValid = true;
-
-    if (emailIsValid && passIsValid) {
-      authCtx.onLogin(emailEntered, passwordEntered);
-    }
+  const handleSubmitLogin = (data: any) => {
+    authCtx.onLogin(data.email, data.password);
   };
 
   const responseGoogleSuccess = async (response: any) => {
@@ -44,67 +50,67 @@ const Login = () => {
 
   return (
     <Container>
-      <div className='login'>
-        <div className='login__img'>
-          <img src={LoginImage} alt='' />
+      <div className="login">
+        <div className="login__img">
+          <img src={LoginImage} alt="" />
         </div>
-        <div className='login__content'>
-          <h2 className='login__title mb2'>Đăng nhập</h2>
+        <div className="login__content">
+          <h2 className="login__title mb2">Đăng nhập</h2>
 
-          <p className='login__sub-title mb2'>Đăng nhập hệ thống bằng</p>
+          <p className="login__sub-title mb2">Đăng nhập hệ thống bằng</p>
 
-          <div className='login__group-icon mb2'>
+          <div className="login__group-icon mb2">
             <GoogleLogin
-              clientId='387536783121-sda7d6mg9uk1f4uktmq63tsq0rp62kg5.apps.googleusercontent.com'
-              render={(renderProps) => <GoogleIcon className='frame mr4' onClick={renderProps.onClick} />}
+              clientId="387536783121-sda7d6mg9uk1f4uktmq63tsq0rp62kg5.apps.googleusercontent.com"
+              render={(renderProps) => <GoogleIcon className="frame mr4" onClick={renderProps.onClick} />}
               onSuccess={responseGoogleSuccess}
               onFailure={responseGoogleFailure}
               cookiePolicy={"single_host_origin"}
             />
-            <FacebookIcon className='frame mr4' />
-            <GithubIcon className='frame' />
+            <FacebookIcon className="frame mr4" />
+            <GithubIcon className="frame" />
           </div>
 
-          <div className='login__or mb2'>Hoặc</div>
+          <div className="login__or mb2">Hoặc</div>
 
-          <form className='w100' onSubmit={loginSubmitHandle}>
-            <div className='form__group'>
+          <form className="w100" onSubmit={handleSubmit(handleSubmitLogin)}>
+            <div className="form__group">
               <InputText
-                placeholder='Email'
-                id='username'
-                value={emailEntered}
-                onChange={(e) => setEmailEntered(e.target.value)}
-                validStatus={isSubmitted ? (emailIsValid ? "valid" : "invalid") : undefined}
+                {...register("email")}
+                placeholder="Email"
+                id="username"
+                validStatus={errors.email !== undefined ? "invalid" : undefined}
+                errorText={errors.email?.message}
               />
             </div>
-            <div className='form__group'>
+            <div className="form__group">
               <InputPassword
-                placeholder='Mật khẩu'
-                id='password'
-                value={passwordEntered}
-                onChange={(e) => setPasswordEntered(e.target.value)}
-                validStatus={isSubmitted ? (passIsValid ? "valid" : "invalid") : undefined}
+                {...register("password")}
+                placeholder="Mật khẩu"
+                id="password"
+                validStatus={errors.password !== undefined ? "invalid" : undefined}
+                errorText={errors.password?.message}
               />
             </div>
 
-            <div className='login__remember mb2'>
-              <div className='login__remember-checkbox'>
-                <input type='checkbox' id='check-remember' name='check-remember' />
-                <label htmlFor='check-remember'>Ghi nhớ tài khoản</label>
+            <div className="login__remember mb2">
+              <div className="login__remember-checkbox">
+                <input type="checkbox" id="check-remember" name="check-remember" />
+                <label htmlFor="check-remember">Ghi nhớ tài khoản</label>
               </div>
 
-              <div className='login__remember-forgot'>
-                <Link to='/forgot-password'>Quên mật khẩu</Link>
+              <div className="login__remember-forgot">
+                <Link to="/forgot-password">Quên mật khẩu</Link>
               </div>
             </div>
 
-            <div className='form__group'>
-              <Button btnType='submit' content='Đăng nhập' type='primary' fullsize={true} />
+            <div className="form__group">
+              <Button btnType="submit" content="Đăng nhập" type="primary" fullsize={true} />
             </div>
-            <div className='login__redirect'>
-              Bạn chưa có tài khoản?
+            <div className="login__redirect">
+              Bạn chưa có tài khoản?{" "}
               <span>
-                <Link to='/register'> Đăng ký</Link>
+                <Link to="/register">Đăng ký</Link>
               </span>
             </div>
           </form>
