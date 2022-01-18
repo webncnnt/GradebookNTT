@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Container from "../../components/layouts/container/Container";
 import forgotImage from "../../assets/images/Saly-17.png";
 import InputText from "../../components/UI/input/input-text/InputText";
@@ -21,7 +19,6 @@ const schema = Yup.object().shape({
 });
 
 const ResetPass = () => {
-  const [emailEntered, setEmailEntered] = useState<string>("");
   const navigate = useNavigate();
 
   const { sendRequest } = useHttp();

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import GoogleLogin from "react-google-login";
 import { Link } from "react-router-dom";
 import LoginImage from "../../assets/images/Saly-16.png";

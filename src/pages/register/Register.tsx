@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import RegisterImage from "../../assets/images/Saly-22.png";
 import Container from "../../components/layouts/container/Container";
@@ -99,7 +98,11 @@ const Register = () => {
               <Button btnType="submit" content="Đăng ký" type="primary" fullsize={true} />
             </div>
             <div className="register__redirect">
-              Bạn đã có tài khoản? <span> <Link to='/login'>Đăng nhập</Link></span>
+              Bạn đã có tài khoản?{" "}
+              <span>
+                {" "}
+                <Link to="/login">Đăng nhập</Link>
+              </span>
             </div>
           </form>
         </div>

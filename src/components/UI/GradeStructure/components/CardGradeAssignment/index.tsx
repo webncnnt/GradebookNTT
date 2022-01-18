@@ -7,6 +7,7 @@ import InputText from "../../../input/input-text/InputText";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import UpdateIcon from "../../../../icons/Update";
 
 type CardAssignmentProps = {
   gradeAssignment: GradeAssignmentModel;
@@ -82,7 +83,7 @@ export const CardGradeAssignment = ({
 
         <div className="card-grade-assignment__action">
           <button className="card-grade-assignment__action card-grade-assignment__action--save" type="submit">
-            <RemoveIcon className="icon--white" />
+            <UpdateIcon className="icon--white" />
           </button>
           <button className="card-grade-assignment__action card-grade-assignment__action--remove" onClick={removeAssignmentHandle}>
             <RemoveIcon className="icon--white" />
