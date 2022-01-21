@@ -157,10 +157,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
 
     const handleError = () => {};
 
-    const getGradeAssignmentUpdated = (data: any) => {
-      console.log(gradeAssignments);
-      console.log(data);
-    };
+    const getGradeAssignmentUpdated = (data: any) => {};
 
     sendRequest(requestConfig, handleError, getGradeAssignmentUpdated);
   };
@@ -197,15 +194,13 @@ export const GradeStructure = (props: GradeStructureProps) => {
     sendRequest(requestConfig, handleError, getGradeAssignments);
   };
 
-  console.log(gradeAssignments);
-
   return (
-    <div className="grade-structure">
-      <GradeStructureOverview className="grade-structure__overview" gradeAssignments={gradeAssignments} />
+    <div className='grade-structure'>
+      <GradeStructureOverview className='grade-structure__overview' gradeAssignments={gradeAssignments} />
       {isTeacher ? (
         <>
           <GradeStructureEdit
-            className="grade-structure__edit"
+            className='grade-structure__edit'
             gradeAssignments={gradeAssignments}
             onSubmitUpdateAssignment={handleSubmitUpdateAssignment}
             onAssignmentDragEnd={onAssignmentDragEnd}
@@ -214,7 +209,7 @@ export const GradeStructure = (props: GradeStructureProps) => {
           />
 
           <CardCreateGradeAssignment
-            className="grade-structure__create"
+            className='grade-structure__create'
             onCreateClick={onCreateAssignmentClick}
             assignLength={gradeAssignments.length}
           />
