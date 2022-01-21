@@ -8,8 +8,9 @@ const Invite = () => {
   const navigate = useNavigate();
   const { sendRequest } = useHttp();
 
-  const pathname = window.location.pathname;
+  const pathname = window.location.pathname.substring(1);
   const query = window.location.search;
+  console.log("32213546");
 
   const onInviteHandle = () => {
     const requestConfig = {
