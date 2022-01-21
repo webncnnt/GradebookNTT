@@ -125,7 +125,7 @@ const Members = () => {
 
       const uploadStudents = (data: any) => {
         console.log(data);
-
+        
         const memberInfoFormat: StudentModel[] = data.map((member: any) => {
           return {
             id: member.userId,

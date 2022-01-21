@@ -42,64 +42,68 @@ const Scores = () => {
   const { sendRequest } = useHttp();
 
   const handleCellEditCommit = (e: any) => {
-    const foundStudents = students.filter((s) => s.studentId === e.row.MSSV);
-    const foundAssignments = assignments.filter((a) => a.title === e.field);
-    const isUpdate = gradeStudents.some((g) => g.studentId === e.row.MSSV && g.gradeAssignmentId === foundAssignments[0].id);
+    if (e.row) {
+      const foundStudents = students.filter((s) => s.studentId === e.row.MSSV);
+      const foundAssignments = assignments.filter((a) => a.title === e.field);
+      const isUpdate = gradeStudents.some((g) => g.studentId === e.row.MSSV && g.gradeAssignmentId === foundAssignments[0].id);
 
-    if (foundStudents.length !== 1) return;
-    if (foundAssignments.length !== 1) return;
+      if (foundStudents.length !== 1) return;
+      if (foundAssignments.length !== 1) return;
 
-    const student = foundStudents[0];
-    const gradeAssignment = foundAssignments[0];
+      const student = foundStudents[0];
+      const gradeAssignment = foundAssignments[0];
 
-    const handleError = () => {
-      setGradeStudents((prev) => [...prev]);
-      toast("Thay đổi điểm thất bại");
-    };
+      const handleError = () => {
+        setGradeStudents((prev) => [...prev]);
+        toast("Thay đổi điểm thất bại");
+      };
 
-    if (!e.value) {
-      handleError();
-      return;
-    }
-
-    const newScore = +e.value;
-
-    if (newScore > gradeAssignment.score) {
-      handleError();
-      return;
-    }
-
-    if (newScore < 0) {
-      handleError();
-      return;
-    }
-
-    const requestConfig = {
-      url: `grades/${classId}/${gradeAssignment.id}/${student.studentId}`,
-      method: "PATCH",
-      body: {
-        score: newScore,
-      },
-    };
-
-    const handleSuccess = (data: any) => {
-      const newGrade = data.data as StudentGradeModel;
-
-      if (isUpdate) {
-        setGradeStudents((prev) =>
-          prev.map((row) => {
-            return row.studentId === newGrade.studentId && row.gradeAssignmentId === newGrade.gradeAssignmentId ? newGrade : row;
-          })
-        );
+      if (!e.value) {
+        handleError();
+        return;
       }
 
-      if (!isUpdate) {
-        const newGradeStudents = [...gradeStudents, newGrade];
-        setGradeStudents(newGradeStudents);
-      }
-    };
+      const newScore = +e.value;
 
-    sendRequest(requestConfig, handleError, handleSuccess);
+      if (newScore > gradeAssignment.score) {
+        handleError();
+        return;
+      }
+
+      if (newScore < 0) {
+        handleError();
+        return;
+      }
+
+      const requestConfig = {
+        url: `grades/${classId}/${gradeAssignment.id}/${student.studentId}`,
+        method: "PATCH",
+        body: {
+          score: newScore,
+        },
+      };
+
+      const handleSuccess = (data: any) => {
+        const newGrade = data.data as StudentGradeModel;
+
+        if (isUpdate) {
+          setGradeStudents((prev) =>
+            prev.map((row) => {
+              return row.studentId === newGrade.studentId && row.gradeAssignmentId === newGrade.gradeAssignmentId ? newGrade : row;
+            })
+          );
+        }
+
+        if (!isUpdate) {
+          const newGradeStudents = [...gradeStudents, newGrade];
+          setGradeStudents(newGradeStudents);
+        }
+
+        toast("Thay đổi điểm thành công");
+      };
+
+      sendRequest(requestConfig, handleError, handleSuccess);
+    }
   };
 
   //get teacher
@@ -197,13 +201,16 @@ const Scores = () => {
         for (let i of groupedStudentGrades[student.studentId]) {
           const assignmentIndex = assignments.findIndex((a) => a.id === i.gradeAssignmentId);
           if (assignments) {
-            if (!Number.isNaN((assignments[assignmentIndex]?.score / totalScore) * i.score))
-              finalScore += (assignments[assignmentIndex]?.score / totalScore) * i.score;
+            if (assignments[assignmentIndex]) {
+              if (!Number.isNaN(assignments[assignmentIndex].score * i.score)) {
+                finalScore += assignments[assignmentIndex].score * i.score;
+              }
+            }
           }
         }
       }
 
-      return { studentId: student.studentId, score: calculatePercent(finalScore) };
+      return { studentId: student.studentId, score: calculatePercent(finalScore / totalScore) };
     });
 
     setFinalScore(rows);
