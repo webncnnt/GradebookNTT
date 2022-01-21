@@ -1,10 +1,12 @@
 import { useCallback, useState } from "react";
 
+type HandleErrorCallback = (error?: any) => void;
+
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const sendRequest = useCallback(async (requestConfig, handleError, applyData) => {
+  const sendRequest = useCallback(async (requestConfig, handleError: HandleErrorCallback, applyData) => {
     setIsLoading(true);
     setError(null);
 
@@ -39,7 +41,7 @@ const useHttp = () => {
       });
 
       if (!response.ok) {
-        handleError();
+        handleError(response);
         throw new Error(response.statusText);
       }
 

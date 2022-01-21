@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
+import { toast } from "react-toastify";
 import { CreateGradeAssignmentFormValues } from "../../../@types/formInputs/CreateGradeAssignmentFormValues";
 import { UpdateGradeAssignmentFormValues } from "../../../@types/formInputs/UpdateGradeAssignmentFormsValues";
 import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
@@ -99,31 +100,18 @@ export const GradeStructure = (props: GradeStructureProps) => {
       body: newAssignment,
     };
 
-    const handleError = () => {};
+    const handleError = () => {
+      toast("fdgfjkfg create error", { type: "error" });
+    };
 
     const getGradeAssignments = (data: any) => {
-      const gradeAssignmentsFormat = data.data.gradeStructure.gradeAssignments.map((item: GradeAssignmentModel) => {
-        return {
-          id: item.id,
-          title: item.title,
-          pos: item.pos,
-          score: item.score,
-        };
-      });
-
-      setGradeAssignments(gradeAssignmentsFormat);
+      const newGradeAssignment = data.data.gradeAssignment as GradeAssignmentModel;
+      setGradeAssignments((prev) => [...prev, newGradeAssignment]);
     };
 
     sendRequest(requestConfig, handleError, getGradeAssignments);
 
     setIsChangeAssignment(isChangeAssignment + 1);
-  };
-
-  const onAssignmentChange = (updateAssignmentValues: UpdateGradeAssignmentFormValues) => {
-    const updatePosition = gradeAssignments.findIndex((g) => g.id === updateAssignmentValues.id);
-    const oldAssignment = gradeAssignments.splice(updatePosition, 1)[0];
-    gradeAssignments.splice(updatePosition, 0, { ...oldAssignment, ...updateAssignmentValues });
-    setGradeAssignments(gradeAssignments.splice(0));
   };
 
   const onAssignmentDragEnd = (result: DropResult) => {
@@ -155,49 +143,31 @@ export const GradeStructure = (props: GradeStructureProps) => {
       },
     };
 
-    const handleError = () => {};
-
-    const getGradeAssignmentUpdated = (data: any) => {
-      console.log(gradeAssignments);
-      console.log(data);
+    const handleError = () => {
+      toast("Cannot update grade assignment", { type: "error" });
     };
 
-    sendRequest(requestConfig, handleError, getGradeAssignmentUpdated);
+    const handleSuccess = (data: any) => {};
+
+    sendRequest(requestConfig, handleError, handleSuccess);
   };
 
-  const onRemoveAssignment = (assignmentID: number) => {
+  const handleGradeAssignmentDelete = (id: number) => {
     const requestConfig = {
-      url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + assignmentID,
+      url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + id,
       method: "DELETE",
     };
 
-    const handleError = () => {};
-
-    const getGradeAssignments = (data: any) => {
-      setIsChangeAssignment(isChangeAssignment + 1);
+    const handleError = (err: any) => {
+      toast("Cannot delete selected grade assignments", { type: "error" });
     };
 
-    sendRequest(requestConfig, handleError, getGradeAssignments);
+    const handleSuccess = (_: any) => {
+      setGradeAssignments((gradeAssignments) => gradeAssignments.filter((item) => item.id !== id));
+    };
+
+    sendRequest(requestConfig, handleError, handleSuccess);
   };
-
-  const handleSubmitUpdateAssignment = (updateAssignmentValues: UpdateGradeAssignmentFormValues) => {
-    const requestConfig = {
-      url: "classes/" + pathname.split("/")[2] + "/gradeStructures/" + updateAssignmentValues.id,
-      method: "PATCH",
-      body: {
-        score: updateAssignmentValues.score,
-        title: updateAssignmentValues.title,
-      },
-    };
-    const handleError = () => {};
-    const getGradeAssignments = (data: any) => {
-      console.log(data);
-      setIsChangeAssignment(isChangeAssignment + 1);
-    };
-    sendRequest(requestConfig, handleError, getGradeAssignments);
-  };
-
-  console.log(gradeAssignments);
 
   return (
     <div className="grade-structure">
@@ -205,12 +175,10 @@ export const GradeStructure = (props: GradeStructureProps) => {
       {isTeacher ? (
         <>
           <GradeStructureEdit
+            onGradeAssignmentDelete={handleGradeAssignmentDelete}
             className="grade-structure__edit"
             gradeAssignments={gradeAssignments}
-            onSubmitUpdateAssignment={handleSubmitUpdateAssignment}
             onAssignmentDragEnd={onAssignmentDragEnd}
-            onAssignmentChange={onAssignmentChange}
-            onRemoveAssignment={onRemoveAssignment}
           />
 
           <CardCreateGradeAssignment

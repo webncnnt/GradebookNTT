@@ -4,24 +4,18 @@ import { DragDropContext, Draggable, Droppable, DropResult, ResponderProvided } 
 import { CardGradeAssignment } from "../CardGradeAssignment";
 import { GradeAssignmentModel } from "../../../../../@types/models/GradeAssignmentModel";
 import "./index.scss";
-import { UpdateGradeAssignmentFormValues } from "../../../../../@types/formInputs/UpdateGradeAssignmentFormsValues";
 
 type GradeStructureEditProps = {
   gradeAssignments: GradeAssignmentModel[];
-
   onAssignmentDragEnd: (result: DropResult, provided: ResponderProvided) => void;
-  onAssignmentChange: (gradeAssignment: UpdateGradeAssignmentFormValues) => void;
-  onSubmitUpdateAssignment: (gradeAssignment: UpdateGradeAssignmentFormValues) => void;
-  onRemoveAssignment: (id: number) => void;
+  onGradeAssignmentDelete?: (id: number) => void;
 } & HTMLAttributes<HTMLDivElement>;
 
 export const GradeStructureEdit = ({
   className,
   gradeAssignments,
   onAssignmentDragEnd,
-  onAssignmentChange,
-  onSubmitUpdateAssignment,
-  onRemoveAssignment,
+  onGradeAssignmentDelete,
   ...rest
 }: GradeStructureEditProps) => {
   const clz = classNames(className, "grade-structure-edit");
@@ -42,12 +36,7 @@ export const GradeStructureEdit = ({
                         {...provided.dragHandleProps}
                         className="grade-structure-edit__assignment"
                       >
-                        <CardGradeAssignment
-                          onSubmitUpdateAssignment={onSubmitUpdateAssignment}
-                          gradeAssignment={item}
-                          onAssignmentChange={onAssignmentChange}
-                          onRemoveAssignment={onRemoveAssignment}
-                        />
+                        <CardGradeAssignment onGradeAssignmentDelete={onGradeAssignmentDelete} gradeAssignment={item} />
                       </div>
                     )}
                   </Draggable>
