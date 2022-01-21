@@ -34,6 +34,7 @@ const Scores = () => {
   const [finalScore, setFinalScore] = useState<FinalScoreInterface[]>([]);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
   const [assignmentReturn, setAssignmentReturn] = useState<number>(0);
+  const [isUploadScore, setIsUploadScore] = useState<number>(0);
 
   const authCtx = useAuth();
   const userId = authCtx.user.id;
@@ -41,64 +42,68 @@ const Scores = () => {
   const { sendRequest } = useHttp();
 
   const handleCellEditCommit = (e: any) => {
-    const foundStudents = students.filter((s) => s.studentId === e.row.MSSV);
-    const foundAssignments = assignments.filter((a) => a.title === e.field);
-    const isUpdate = gradeStudents.some((g) => g.studentId === e.row.MSSV && g.gradeAssignmentId === foundAssignments[0].id);
+    if (e.row) {
+      const foundStudents = students.filter((s) => s.studentId === e.row.MSSV);
+      const foundAssignments = assignments.filter((a) => a.title === e.field);
+      const isUpdate = gradeStudents.some((g) => g.studentId === e.row.MSSV && g.gradeAssignmentId === foundAssignments[0].id);
 
-    if (foundStudents.length !== 1) return;
-    if (foundAssignments.length !== 1) return;
+      if (foundStudents.length !== 1) return;
+      if (foundAssignments.length !== 1) return;
 
-    const student = foundStudents[0];
-    const gradeAssignment = foundAssignments[0];
+      const student = foundStudents[0];
+      const gradeAssignment = foundAssignments[0];
 
-    const handleError = () => {
-      setGradeStudents((prev) => [...prev]);
-      toast("Thay đổi điểm thất bại");
-    };
+      const handleError = () => {
+        setGradeStudents((prev) => [...prev]);
+        toast("Thay đổi điểm thất bại");
+      };
 
-    if (!e.value) {
-      handleError();
-      return;
-    }
-
-    const newScore = +e.value;
-
-    if (newScore > gradeAssignment.score) {
-      handleError();
-      return;
-    }
-
-    if (newScore < 0) {
-      handleError();
-      return;
-    }
-
-    const requestConfig = {
-      url: `grades/${classId}/${gradeAssignment.id}/${student.studentId}`,
-      method: "PATCH",
-      body: {
-        score: newScore,
-      },
-    };
-
-    const handleSuccess = (data: any) => {
-      const newGrade = data.data as StudentGradeModel;
-
-      if (isUpdate) {
-        setGradeStudents((prev) =>
-          prev.map((row) => {
-            return row.studentId === newGrade.studentId && row.gradeAssignmentId === newGrade.gradeAssignmentId ? newGrade : row;
-          })
-        );
+      if (!e.value) {
+        handleError();
+        return;
       }
 
-      if (!isUpdate) {
-        const newGradeStudents = [...gradeStudents, newGrade];
-        setGradeStudents(newGradeStudents);
-      }
-    };
+      const newScore = +e.value;
 
-    sendRequest(requestConfig, handleError, handleSuccess);
+      if (newScore > gradeAssignment.score) {
+        handleError();
+        return;
+      }
+
+      if (newScore < 0) {
+        handleError();
+        return;
+      }
+
+      const requestConfig = {
+        url: `grades/${classId}/${gradeAssignment.id}/${student.studentId}`,
+        method: "PATCH",
+        body: {
+          score: newScore,
+        },
+      };
+
+      const handleSuccess = (data: any) => {
+        const newGrade = data.data as StudentGradeModel;
+
+        if (isUpdate) {
+          setGradeStudents((prev) =>
+            prev.map((row) => {
+              return row.studentId === newGrade.studentId && row.gradeAssignmentId === newGrade.gradeAssignmentId ? newGrade : row;
+            })
+          );
+        }
+
+        if (!isUpdate) {
+          const newGradeStudents = [...gradeStudents, newGrade];
+          setGradeStudents(newGradeStudents);
+        }
+
+        toast("Thay đổi điểm thành công");
+      };
+
+      sendRequest(requestConfig, handleError, handleSuccess);
+    }
   };
 
   //get teacher
@@ -135,7 +140,6 @@ const Scores = () => {
     const handleError = () => {};
 
     const handleSuccess = (data: any) => {
-      console.log(data);
       setStudents(data);
     };
 
@@ -179,7 +183,7 @@ const Scores = () => {
     };
 
     sendRequest(requestConfig, handleError, handleSuccess);
-  }, [sendRequest, students]);
+  }, [sendRequest, students, isUploadScore]);
 
   // Calculate Final Score
   useEffect(() => {
@@ -197,14 +201,16 @@ const Scores = () => {
         for (let i of groupedStudentGrades[student.studentId]) {
           const assignmentIndex = assignments.findIndex((a) => a.id === i.gradeAssignmentId);
           if (assignments) {
-            if (!Number.isNaN((assignments[assignmentIndex]?.score / totalScore) * i.score))
-              finalScore += (assignments[assignmentIndex]?.score / totalScore) * i.score;
-            console.log(finalScore);
+            if (assignments[assignmentIndex]) {
+              if (!Number.isNaN(assignments[assignmentIndex].score * i.score)) {
+                finalScore += assignments[assignmentIndex].score * i.score;
+              }
+            }
           }
         }
       }
 
-      return { studentId: student.studentId, score: calculatePercent(finalScore) };
+      return { studentId: student.studentId, score: calculatePercent(finalScore / totalScore) };
     });
 
     setFinalScore(rows);
@@ -250,20 +256,25 @@ const Scores = () => {
 
   const handleForce = (data: any) => {
     if (data[0]["Tên sinh viên"]) {
-      const dataAssignmentStudents = data.map((student: any) => {
-        return {
-          ...{
+      const dataAssignmentStudentsArr = data.map((student: any) => {
+        return assignments.map((assignment) => {
+          // console.log(student, assignment.title);
+
+          return {
             studentId: student["MSSV"].toString(),
-            score: student[assignments[0].title],
-            gradeAssignmentId: student[assignments[0].id],
-          },
-          ...{
-            studentId: student["MSSV"].toString(),
-            score: student[assignments[1].title],
-            gradeAssignmentId: student[assignments[1].id],
-          },
-        };
+            score: getValueByKey(student, assignment.title),
+            gradeAssignmentId: assignment.title === getKey(student, assignment.title) ? assignment.id : -1,
+          };
+        });
       });
+
+      const dataAssignmentStudents = [];
+
+      for (let i of dataAssignmentStudentsArr) {
+        for (let j of i) {
+          dataAssignmentStudents.push(j);
+        }
+      }
 
       const requestConfig = {
         url: `grades/${classId}`,
@@ -275,6 +286,7 @@ const Scores = () => {
       };
 
       const uploadStudents = (data: any) => {
+        setIsUploadScore((curr) => curr + 1);
         toast("Cập nhật điểm thành công");
       };
 
@@ -302,6 +314,8 @@ const Scores = () => {
         toast("Cập nhật điểm thất bại");
       };
       const uploadStudents = (data: any) => {
+        setIsUploadScore((curr) => curr + 1);
+        console.log("asgasdg");
         toast("Cập nhật điểm thành công");
       };
       sendRequest(requestConfig, handleError, uploadStudents);
@@ -357,25 +371,25 @@ const Scores = () => {
         return (
           <>
             {headerParams.field.lenth <= 10 ? headerParams.field : headerParams.field.substring(0, 9)}
-            <div className="scores__render-headers">
+            <div className='scores__render-headers'>
               <CSVLink data={template_score} filename={`${grade.title}.csv`} headers={scores_headers}>
-                <Download2Icon className="icon--csv ml1" />
+                <Download2Icon className='icon--csv ml1' />
               </CSVLink>
 
               <CSVLink data={assignment_score} filename={`${grade.title}.csv`} headers={scores_headers}>
-                <DownloadIcon className="icon--csv ml1" />
+                <DownloadIcon className='icon--csv ml1' />
               </CSVLink>
 
               <CSVReader
-                cssClass="csv-reader-input"
-                label={<UploadIcon className="icon--csv ml1" />}
+                cssClass='csv-reader-input'
+                label={<UploadIcon className='icon--csv ml1' />}
                 onFileLoaded={(data) => handleForceAssignment(data, grade)}
                 parserOptions={papaparseOptions}
                 inputId={"assignment" + grade.id}
                 inputName={"assignment" + grade.id}
               />
               <CheckIcon
-                className="icon--csv ml1"
+                className='icon--csv ml1'
                 onClick={() => {
                   setAssignmentReturn(grade.id);
                   returnScore();
@@ -459,42 +473,42 @@ const Scores = () => {
   return (
     <>
       {isTeacher ? (
-        <div className="scores">
-          <div className="scores__header">
+        <div className='scores'>
+          <div className='scores__header'>
             <h1>Quản lý điểm số</h1>
 
-            <div className="scores__actions">
-              <button className="scores__button btn btn--primary">
+            <div className='scores__actions'>
+              <button className='scores__button btn btn--primary'>
                 <CSVLink data={[grades_columns_template]} filename={"template-grades.csv"} headers={scores_headers}>
                   <span>Tải template</span>
-                  <Download2Icon className="icon--white" />
+                  <Download2Icon className='icon--white' />
                 </CSVLink>
               </button>
 
-              <button className="scores__button btn btn--primary">
+              <button className='scores__button btn btn--primary'>
                 <CSVLink data={grades_board_data} filename={"class-grades.csv"} headers={scores_headers}>
                   <span>Tải bảng điểm</span>
-                  <DownloadIcon className="icon--white" />
+                  <DownloadIcon className='icon--white' />
                 </CSVLink>
               </button>
 
               <CSVReader
-                cssClass="csv-reader-input"
+                cssClass='csv-reader-input'
                 label={
-                  <div className="scores__button btn btn--primary">
+                  <div className='scores__button btn btn--primary'>
                     <span>Cập nhật bảng điểm</span>
-                    <UploadIcon className="icon--white" />
+                    <UploadIcon className='icon--white' />
                   </div>
                 }
                 onFileLoaded={handleForce}
                 parserOptions={papaparseOptions}
-                inputId="gradesBoard"
-                inputName="gradesBoard"
+                inputId='gradesBoard'
+                inputName='gradesBoard'
               />
             </div>
           </div>
 
-          <div className="scores__datagrid">
+          <div className='scores__datagrid'>
             <DataGrid
               onCellEditCommit={handleCellEditCommit}
               sx={{
@@ -525,3 +539,17 @@ const Scores = () => {
 };
 
 export default Scores;
+
+function getValueByKey(object: object, key1: string) {
+  for (const [key, value] of Object.entries(object)) {
+    if (key === key1) return value;
+  }
+  return -1;
+}
+
+function getKey(object: object, key1: string) {
+  for (const [key] of Object.entries(object)) {
+    if (key === key1) return key;
+  }
+  return -1;
+}

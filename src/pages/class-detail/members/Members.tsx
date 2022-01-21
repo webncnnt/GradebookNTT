@@ -26,7 +26,6 @@ const Members = () => {
   const [isShowListTeacher, setIsShowListTeacher] = useState<boolean>(true);
   const [memberIdDetail, setMemberIdDetail] = useState<number>(0);
   const [isShowInviteForm, setIsShowInviteForm] = useState<boolean>(false);
-  const [isUploadStudents, setIsUploadStudents] = useState<number>(0);
   const [isTeacher, setIsTeacher] = useState<boolean>(false);
 
   const userId = localStorage.getItem("userId");
@@ -77,7 +76,7 @@ const Members = () => {
       setListStudents(memberInfoFormat);
     };
     sendRequest(requestConfig, handleError, getStudents);
-  }, [sendRequest, isUploadStudents]);
+  }, [sendRequest]);
 
   //check teacher
   useEffect(() => {
@@ -125,12 +124,25 @@ const Members = () => {
       };
 
       const uploadStudents = (data: any) => {
+        console.log(data);
+        
+        const memberInfoFormat: StudentModel[] = data.map((member: any) => {
+          return {
+            id: member.userId,
+            fullName: member.fullName,
+            studentId: member.studentId,
+            avatar: member.avatar,
+            email: member.email,
+            joinDate: member.createdAt,
+          };
+        });
+
+        setListStudents(memberInfoFormat);
+
         toast("Cập nhật danh sách sinh viên thành công");
       };
 
       sendRequest(requestConfig, handleError, uploadStudents);
-
-      setIsUploadStudents((curr) => curr + 1);
     } else {
       console.log("Wrong header");
     }

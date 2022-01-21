@@ -56,11 +56,12 @@ const Comment = ({ reviewId, statusTeacher }: CommentProps) => {
       };
       const handleError = () => {};
 
-      const getListReview = (data: any) => {};
+      const getListReview = (data: any) => {
+        setGetComments((cur) => cur + 1);
+      };
       sendRequest(requestConfig, handleError, getListReview);
     }
     setCommentInput("");
-    setGetComments((cur) => cur + 1);
   };
 
   return (
