@@ -541,7 +541,7 @@ function getValueByKey(object: object, key1: string) {
 }
 
 function getKey(object: object, key1: string) {
-  for (const [key, value] of Object.entries(object)) {
+  for (const [key] of Object.entries(object)) {
     if (key === key1) return key;
   }
   return -1;
