@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { StudentModel } from '../../../../@types/models/StudentModel';
-import { TeacherModel } from '../../../../@types/models/TeacherModel';
-import Avatar from '../../avatar/Avatar';
-import Pagination from '../../pagination/Pagination';
+import { useEffect, useState } from "react";
+import { StudentModel } from "../../../../@types/models/StudentModel";
+import { TeacherModel } from "../../../../@types/models/TeacherModel";
+import Avatar from "../../avatar/Avatar";
+import Pagination from "../../pagination/Pagination";
 
 type user = TeacherModel | StudentModel;
 
@@ -27,8 +27,8 @@ const UserTable = ({ listUsers, onChooseMember, memberIdChoose, isStudent }: use
     setListMembersPerPage(listMembersInCurrentPage);
   }, [currentPage, listUsers]);
 
-  const chooseMemberHandle = (id: number) => { 
-    onChooseMember(id);
+  const chooseMemberHandle = (id: number) => {
+    if (id) onChooseMember(id);
   };
 
   const onChangeCurrentPage = (page: number) => {
@@ -63,7 +63,7 @@ const UserTable = ({ listUsers, onChooseMember, memberIdChoose, isStudent }: use
             listMembersPerPage.map((user) => {
               return (
                 <tr
-                  className={'user-table__row' + (memberIdChoose === user.id ? ' row-active' : '')}
+                  className={"user-table__row" + (memberIdChoose === user.id ? " row-active" : "")}
                   key={user.id ? user.id : (user as StudentModel).studentId}
                   onClick={() => chooseMemberHandle(user.id)}
                 >
@@ -79,7 +79,7 @@ const UserTable = ({ listUsers, onChooseMember, memberIdChoose, isStudent }: use
                         )}
                       </td>
                       <td className='user-table__student-id'>{(user as StudentModel).studentId}</td>
-                      <td className='user-table__join-date'>{formatDate(formatIsoDateTime(user.joinDate ? user.joinDate : ''))}</td>
+                      <td className='user-table__join-date'>{formatDate(formatIsoDateTime(user.joinDate ? user.joinDate : ""))}</td>
                     </>
                   ) : (
                     <>
@@ -91,7 +91,7 @@ const UserTable = ({ listUsers, onChooseMember, memberIdChoose, isStudent }: use
                         ) : null}
                       </td>
                       <td className='user-table__email'>{user.email}</td>
-                      <td className='user-table__join-date'>{formatDate(formatIsoDateTime(user.joinDate ? user.joinDate : ''))}</td>
+                      <td className='user-table__join-date'>{formatDate(formatIsoDateTime(user.joinDate ? user.joinDate : ""))}</td>
                     </>
                   )}
                 </tr>
@@ -112,23 +112,23 @@ input: date: string:  yyyy-mm-dd
 output: date: string:  dd/mm/yyyy
 */
 const formatDate = (date: string): string => {
-  if (date.trim() === '') return '';
-  const dateArray = date.split('-');
+  if (date.trim() === "") return "";
+  const dateArray = date.split("-");
   dateArray.reverse();
-  return dateArray.join('/');
+  return dateArray.join("/");
 };
 
 const formatIsoDateTime = (date: string): string => {
-  if (date.trim() === '') return '';
+  if (date.trim() === "") return "";
   const newDate = new Date(date);
 
   let year: string | number = newDate.getFullYear();
   let month: string | number = newDate.getMonth() + 1;
   let day: string | number = newDate.getDate();
 
-  if (month < 10) month = '0' + month;
-  if (day < 10) day = '0' + day;
-  return year + '-' + month + '-' + day;
+  if (month < 10) month = "0" + month;
+  if (day < 10) day = "0" + day;
+  return year + "-" + month + "-" + day;
 };
 
 export default UserTable;
