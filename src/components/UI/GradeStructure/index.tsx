@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
 import { toast } from "react-toastify";
 import { CreateGradeAssignmentFormValues } from "../../../@types/formInputs/CreateGradeAssignmentFormValues";
-import { UpdateGradeAssignmentFormValues } from "../../../@types/formInputs/UpdateGradeAssignmentFormsValues";
 import { GradeAssignmentModel } from "../../../@types/models/GradeAssignmentModel";
 import { TeacherModel } from "../../../@types/models/TeacherModel";
 import useHttp from "../../../hooks/useHttp";
