@@ -67,8 +67,8 @@ const Scores = () => {
 
       const newScore = +e.value;
 
-      if (newScore > gradeAssignment.score) {
-        toast("Điểm không được lớn hơn điểm tối đa của cột", { type: "error" });
+      if (newScore > 10) {
+        toast("Điểm không được lớn hơn điểm tối đa", { type: "error" });
         return;
       }
 
@@ -468,7 +468,7 @@ const Scores = () => {
       width: 200,
       editable: false,
       renderHeader: () => {
-        return <>{"Tổng kết (10)"}</>;
+        return <>{"Tổng kết"}</>;
       },
     },
   ];
